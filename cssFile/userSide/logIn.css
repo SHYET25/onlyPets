@@ -1,0 +1,214 @@
+.container-fluid {
+    height: 100vh;
+}
+
+.row {
+    height: 100%;
+}
+
+#logoSide {
+    background-color: #f2f2f2;
+    background-image: url(../../media/images/utilities/bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#logoSide img {
+    max-width: 100%;
+    width: 90%;
+    height: auto;
+}
+
+#loginSide {
+    background: linear-gradient(135deg, #38BCFF 0%, #38BCFF 78%, #FFFFFF 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 20px; /* Added padding */
+    z-index: 1;
+}
+
+#loginSide img.paw {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    width: 90%;
+    height: auto;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+#loginSide .form-control {
+    border-radius: 25px; /* Rounded inputs */
+    padding: 15px;
+    z-index: 1;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#btnLog {
+    width: 40%; /* Full width for button */
+    border-radius: 25px;
+    background-color: #ffd259;
+    border-color: #ffd259;
+    color: black;
+    padding: 15px;
+    font-weight: bolder;
+    font-size: larger;
+    cursor: pointer; /* Makes the button clickable */
+}
+
+#btnSign {
+    width: 40%; /* Full width for button */
+    border-radius: 25px;
+    background-color: #ffd259;
+    border-color: #ffd259;
+    color: black;
+    padding: 15px;
+    font-weight: bolder;
+    font-size: larger;
+    cursor: pointer; /* Makes the button clickable */
+}
+
+#phoneGroup {
+    display: flex;
+    align-items: center;
+}
+
+#countryCode {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 10px;
+    width: 30%;
+    height: 56px;
+    transform: translateY(-9%);
+    cursor: pointer;
+}
+
+#contNumber {
+    border-top-right-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+    border-top-left-radius: 0 !important;   /* Force no top-left radius */
+    border-bottom-left-radius: 0 !important; /* Force no bottom-left radius */
+    border-left: none !important; /* Smooth join with dropdown */
+    border: 1px solid #ccc !important;
+    width: 70%;
+    padding: 10px;
+    box-shadow: none !important; /* Remove Bootstrap shadows */
+}
+
+
+
+/* Remove outline on focus for better UX */
+#countryCode:focus,
+#contNumber:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(56, 188, 255, 0.5);
+}
+
+
+#togglePassword {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.input-group {
+    position: relative;
+}
+
+/* Entry Animation: Fade In and Slide Up */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Exit Animation: Fade Out and Slide Down */
+@keyframes fadeOutDown {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+}
+
+/* Logo Side Animation */
+#logoSide img {
+    animation: fadeInUp 1.2s ease-in-out;
+   
+}
+
+/* Login Form Container Animation */
+#loginSide .w-75,
+#btnLog,
+#btnSign {
+    animation: fadeInUp 1.5s ease-in-out;
+}
+
+/* Paw Image Animation */
+
+
+/* Exit Animation Class (to be added via JS) */
+.exit {
+    animation: fadeOutDown 0.8s ease-in-out forwards;
+}
+
+
+@media (max-width: 768px) {
+    #logoSide {
+        height: 20vh;
+    }
+
+    #logoSide img {
+        max-width: 90%;
+    }
+
+    #loginSide {
+        height: 80vh;
+        padding: 20px;
+    }
+
+    #loginSide img.paw {
+        width: 500px;
+    }
+
+    #loginSide .w-75 {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    #countryCode {
+        width: 40%;
+    }
+
+    #contNumber {
+        width: 60%;
+    }
+}
