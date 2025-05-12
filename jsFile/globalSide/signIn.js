@@ -38,6 +38,7 @@ $('#btnLog').click(function(e) {
                     window.location.href = 'ownerHome.html';
                 } else {
                     alert('Unknown user role. Please contact support.');
+                    location.reload();
                 }
             } else if (res.status === 'unverified') {
                 if (confirm(res.message + " Do you want to verify now?")) {
@@ -49,6 +50,7 @@ $('#btnLog').click(function(e) {
                 }
             } else {
                 alert(res.message);
+                location.reload();
             }
         },
         error: function() {
