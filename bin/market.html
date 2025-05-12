@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="paw.png" type="image/png">
+    <title>market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="cssFile/userSide/market.css">
+    <style>
+        /* Navbar Styling */
+        
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" style="display: none;">
+        <img src="media/images/utilities/loading.gif" alt="Loading...">
+    </div>
+<!-- 🌐 Desktop Navigation Bar -->
+<nav class="navbar navbar-expand-lg desktop-nav">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="media/images/utilities/pawing.png" alt="Logo">
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="userHome.html"><i class="fas fa-home"></i></a></li>
+                <li class="nav-item"><a class="nav-link active" href="market.html"><i class="fas fa-store iconUnderline"></i></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-users"></i></a></li>
+                <li class="nav-item"><a class="nav-link" href="vet.html"><i class="fas fa-stethoscope"></i></a></li>
+            </ul>
+        </div>
+        <div class="d-flex align-items-center nav-icons">
+            <i class="fas fa-search" id="searchIcon"></i>
+            <i class="fas fa-comments" id="chatIcon"></i>
+            <i class="fas fa-bell" id="bellIcon"></i>
+        
+            <!-- Profile Icon changed to a profile picture -->
+            <img src="media/images/profiles/123.jpg" id="profileIcon" alt="Profile Picture" class="rounded-circle" width="35" height="35">
+        </div>
+    </div>
+</nav>
+
+<div id="chatDropdown">
+    <h4>Chats</h4>
+    <hr>
+    <div class="chat-message">
+        <img class="profile-img" src="media/images/profiles/213.jpg" alt="Profile Picture">
+        <div class="message-details">
+            <p class="name">John Doe</p>
+            <p class="message">Hey! How are you doing today? I wanted to ask about...</p>
+            <span class="time">10:30 AM</span>
+        </div>
+    </div>
+    <div class="chat-message">
+        <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
+        <div class="message-details">
+            <p class="name">Jane Smith</p>
+            <p class="message">I'm good! Let's catch up soon.</p>
+            <span class="time">10:32 AM</span>
+        </div>
+    </div>
+    <!-- Add more messages as needed -->
+</div>
+
+
+
+<div id="bellDropdown">
+    <h4>Notifications</h4>
+    <hr>
+    <div class="notification-message">
+        <img class="profile-img" src="media/images/profiles/213.jpg" alt="Profile Picture">
+        <div class="notification-details">
+            <p class="name">John Doe</p>
+            <p class="notification">Commented on the link you shared..</p>
+            <span class="time">10:30 AM</span>
+        </div>
+    </div>
+    <div class="notification-message">
+        <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
+        <div class="notification-details">
+            <p class="name">Jane Smith</p>
+            <p class="notification">Reacted to your post.</p>
+            <span class="time">10:32 AM</span>
+        </div>
+    </div>
+    <!-- Add more messages as needed -->
+</div>
+
+<div id="profileDropdown" class="dropdown-menu">
+    <!-- Profile Section -->
+    <a class="dropdown-item d-flex align-items-center" href="userProfile.html">
+        <img src="media/images/profiles/123.jpg" id="userProfile" alt="Profile Picture" class="rounded-circle me-2" width="40" height="40">
+        <span><strong>John Doe</strong></span>
+    </a>
+    <div class="dropdown-divider"></div>
+
+    <!-- Settings -->
+    <a class="dropdown-item" href="#">
+        <i class="fas fa-cog me-2"></i> Settings
+    </a>
+
+    <!-- Logout -->
+    <a class="dropdown-item text-danger" href="index.html">
+        <i class="fas fa-sign-out-alt me-2"></i> Logout
+    </a>
+</div>
+
+<!-- 📱 Mobile Top Bar -->
+<div class="mobile-top">
+    <a class="navbar-brand" href="#">
+        <img src="media/images/utilities/pawing.png" alt="Logo">
+    </a>
+    <div class="mobile-icons">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-comments"></i>
+    </div>
+</div>
+
+<!-- 📱 Mobile Bottom Navigation -->
+<div class="mobile-nav">
+    <a href="#"><i class="fas fa-home"></i></a>
+    <a href="#"><i class="fas fa-store"></i></a>
+    <a href="#"><i class="fas fa-stethoscope"></i></a>
+    <a href="#"><i class="fas fa-bell"></i></a>
+    <a href="#"><i class="fas fa-user-circle"></i></a>
+</div>
+
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">  <!-- Changed to extra-large modal -->
+        <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                
+                <!-- Enlarged Search Bar -->
+                <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search for users, pets, or topics...">
+                
+                <!-- Recent Searches Title -->
+                <h6 class="mb-3">Recent Searches</h6>
+                
+                <!-- Recent Searches in Two Rows -->
+                <div id="recentSearches" class="row">
+                    
+                    <!-- Search Item 1 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/123.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>John Doe</strong><br>
+                                <small class="text-muted">New York, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Item 2 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/456.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>Emma Smith</strong><br>
+                                <small class="text-muted">Los Angeles, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Item 3 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/789.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>Oliver Brown</strong><br>
+                                <small class="text-muted">Chicago, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Item 4 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/321.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>Sophia Lee</strong><br>
+                                <small class="text-muted">San Francisco, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Item 5 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/654.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>Michael Green</strong><br>
+                                <small class="text-muted">Houston, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Item 6 -->
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center border rounded p-2">
+                            <img src="media/images/profiles/987.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <strong>Emily Davis</strong><br>
+                                <small class="text-muted">Miami, USA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="publicContent" style="padding-left: 20px; padding-right: 20px;">
+    
+    <div class="row" id="contents">
+        <div id="leftSide" class="col-md-3">
+            <!-- Search Bar -->
+            <div id="searchBar" class="card p-3 mb-3">
+                <div class="d-flex align-items-center">
+                    <input type="text" id="searchInputs" class="form-control" placeholder="Search products...">
+                    <i id="filter" class="fa-solid fa-filter"></i>
+                </div>
+            </div>
+             
+            
+        
+            <!-- Sell an Item -->
+            
+            <button id="sellItem" class="btn btn-primary w-100"><i id="cartIcon" class="fa-solid fa-cart-shopping"></i>Sell an Item</button>
+
+            <!-- Sell an Item Modal -->
+            <div class="modal fade" id="sellItemModal" tabindex="-1" aria-labelledby="sellItemModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="sellItemModalLabel" class="modal-title">Sell an Item</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- File Upload -->
+                            <label for="itemImages" class="form-label">Upload Photos</label>
+                            <input type="file" id="itemImages" class="form-control mb-3" multiple accept="image/*">
+
+                            <!-- Caption -->
+                            <label for="itemCaption" class="form-label">Caption</label>
+                            <textarea id="itemCaption" class="form-control mb-3" rows="3" placeholder="Write a caption..."></textarea>
+
+                            <!-- Price -->
+                            <label for="itemPrice" class="form-label">Price</label>
+                            <input type="number" id="itemPrice" class="form-control" placeholder="Enter price in USD">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="postItem">Post Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Chats Card -->
+            <div id="customerChats" class="card p-3 mb-3">
+                
+                <div id="chatList" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Sample Chat Item -->
+                    <div class="chat-item d-flex align-items-center mb-2" data-customer="John Doe" data-message="Is this still available?">
+                        <img src="media/images/profiles/123.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 1">
+                        <div>
+                            <strong>John Doe</strong><br>
+                            <small>Is this still available?</small>
+                        </div>
+                    </div>
+
+                    <div class="chat-item d-flex align-items-center mb-2" data-customer="Jane Smith" data-message="Can I get a discount?">
+                        <img src="media/images/profiles/213.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 2">
+                        <div>
+                            <strong>Jane Smith</strong><br>
+                            <small>Can I get a discount?</small>
+                        </div>
+                    </div>
+
+                    <div class="chat-item d-flex align-items-center mb-2" data-customer="Mike Johnson" data-message="When can you ship this?">
+                        <img src="media/images/profiles/321.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 3">
+                        <div>
+                            <strong>Mike Johnson</strong><br>
+                            <small>When can you ship this?</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary w-100 mt-2" id="viewChatsButton">View All Chats</button>
+            </div>
+
+            <!-- Chat Modal -->
+            <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="chatModalLabel" class="modal-title">Chat with <span id="customerName"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="chatContent">
+                            <!-- Chat content will be dynamically loaded here -->
+                        </div>
+                        <div class="modal-footer">
+                            <input type="text" id="chatInput" class="form-control me-2" placeholder="Type a message...">
+                            <button type="button" class="btn btn-primary" id="sendMessage">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="viewChat" tabindex="-1" aria-labelledby="viewChatLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="viewChatLabel" class="modal-title">Chat with <span id="customerName"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="viewChatContent">
+                            <div id="chatList" style="max-height: 250px; overflow-y: auto;">
+                                <!-- Sample Chat Item -->
+                                <div class="chat-item d-flex align-items-center mb-2" data-customer="John Doe" data-message="Is this still available?">
+                                    <img src="media/images/profiles/123.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 1">
+                                    <div>
+                                        <strong>John Doe</strong><br>
+                                        <small>Is this still available?</small>
+                                    </div>
+                                </div>
+            
+                                <div class="chat-item d-flex align-items-center mb-2" data-customer="Jane Smith" data-message="Can I get a discount?">
+                                    <img src="media/images/profiles/213.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 2">
+                                    <div>
+                                        <strong>Jane Smith</strong><br>
+                                        <small>Can I get a discount?</small>
+                                    </div>
+                                </div>
+            
+                                <div class="chat-item d-flex align-items-center mb-2" data-customer="Mike Johnson" data-message="When can you ship this?">
+                                    <img src="media/images/profiles/321.jpg" class="rounded-circle me-2" width="40" height="40" alt="Customer 3">
+                                    <div>
+                                        <strong>Mike Johnson</strong><br>
+                                        <small>When can you ship this?</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+            <!-- Carousel -->
+            <div id="carouselExampleIndicators" class="carousel slide small-carousel" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="media/images/ads/1.png" class="d-block w-100" alt="First slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="media/images/ads/2.png" class="d-block w-100" alt="Second slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="media/images/ads/3.png" class="d-block w-100" alt="Third slide">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="centerPart" class="col-md-6">
+
+            <div class="row" id="productGrid">
+                <!-- Product Card 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Product Card 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/2.jpg" class="card-img-top product-card-img-top" alt="Product 2">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 2</h5>
+                            <p class="card-text product-card-text">$29.99</p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Product Card 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/3.jpg" class="card-img-top product-card-img-top" alt="Product 3">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 3</h5>
+                            <p class="card-text product-card-text">$39.99</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 product-card">
+                        <img src="media/images/products/1.jpg" class="card-img-top product-card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title product-card-title">Product Name 1</h5>
+                            <p class="card-text product-card-text">$19.99</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        
+        <div id="rightSide" class="col-md-3">
+            
+            <div id="petList" class="card p-3">
+                <h5>Your Pets</h5>
+                <div class="pet-item d-flex align-items-center mb-2">
+                    <img src="media/images/petPics/retriever.jpg" alt="Pet 1" class="pet-img me-2">
+                    <div>
+                        <div class="fw-bold">Buddy</div>
+                        <div class="text-muted">Golden Retriever</div>
+                    </div>
+                </div>
+                <div class="pet-item d-flex align-items-center mb-2">
+                    <img src="media/images/petPics/siamese.jpg" alt="Pet 2" class="pet-img me-2">
+                    <div>
+                        <div class="fw-bold">Mittens</div>
+                        <div class="text-muted">Siamese Cat</div>
+                    </div>
+                </div>
+            </div>
+            <div id="onlineFriends" class="card p-3">
+                <h5>Online Friends</h5>
+                <div class="friend-item d-flex align-items-center mb-2">
+                    <img src="media/images/profiles/123.jpg" alt="Friend 1" class="friend-img me-2">
+                    <div>
+                        <div class="fw-bold">Alex Johnson</div> 
+                        <div class="text-success">Online</div>
+                    </div>
+                </div>
+                <div class="friend-item d-flex align-items-center mb-2">
+                    <img src="media/images/profiles/213.jpg" alt="Friend 2" class="friend-img me-2">
+                    <div>
+                        <div class="fw-bold">Samantha Lee</div>
+                        <div class="text-success">Online</div>
+                    </div>
+                </div>
+                <div class="friend-item d-flex align-items-center mb-2">
+                    <img src="media/images/profiles/dsa.jpg" alt="Friend 2" class="friend-img me-2">
+                    <div>
+                        <div class="fw-bold">Naldo Deguro</div>
+                        <div class="text-success">Online</div>
+                    </div>
+                </div>
+                <div class="friend-item d-flex align-items-center mb-2">
+                    <img src="media/images/profiles/321.jpg" alt="Friend 2" class="friend-img me-2">
+                    <div>
+                        <div class="fw-bold">Alexa Beal</div>
+                        <div class="text-success">Online</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 🔄 Tabs Switching Logic -->
+<script>
+    $(document).ready(function() {
+        
+        function showLoadingScreen() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }
+
+        window.addEventListener('load', hideLoadingScreen);
+
+        window.addEventListener('beforeunload', showLoadingScreen);
+
+       
+
+        // Apply the loading screen to links with the loading-link class
+        document.querySelectorAll('a.loading-link').forEach(function(anchor) {
+            anchor.addEventListener('click', function() {
+                showLoadingScreen();
+            });
+        });
+       
+             
+   
+
+        // Toggle the dropdown visibility when bell icon is clicked
+        $('#profileIcon').click(function() {
+            $('#profileDropdown').toggle();
+        });
+
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#profileIcon, #profileDropdown').length) {
+                $('#profileDropdown').hide();
+            }
+        });
+
+        $('#chatIcon').click(function() {
+            $('#chatDropdown').toggle();
+        });
+
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#chatIcon, #chatDropdown').length) {
+                $('#chatDropdown').hide();
+            }
+        });
+
+        document.getElementById('searchIcon').addEventListener('click', function () {
+            const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+            searchModal.show();
+        });
+
+        $('#bellIcon').click(function() {
+            $('#bellDropdown').toggle();
+        });
+
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#bellIcon, #bellDropdown').length) {
+                $('#bellDropdown').hide();
+            }
+        });
+
+        // Tabs switching logic
+        $('#publicTab').on('click', function() {
+            $(this).addClass('active');
+            $('#personalizedTab').removeClass('active');
+            $('#publicContent').show();
+            $('#personalizedContent').hide();
+        });
+
+        $('#personalizedTab').on('click', function() {
+            $(this).addClass('active');
+            $('#publicTab').removeClass('active');
+            $('#publicContent').hide();
+            $('#personalizedContent').show();
+        });
+
+        $('#postButton').click(function() {
+            const postText = $('#postText').val();
+            const postImage = $('#postImage')[0].files[0];
+            if (postText || postImage) {
+                alert('Post submitted!');
+            } else {
+                alert('Please write something or add a photo.');
+            }
+        });
+
+        // Handle chat-item click
+        document.querySelectorAll('.chat-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const customerName = this.getAttribute('data-customer');
+                const lastMessage = this.getAttribute('data-message');
+
+                // Set modal title and load chat content
+                document.getElementById('customerName').textContent = customerName;
+                document.getElementById('chatContent').innerHTML = `
+                    <div class="d-flex align-items-start mb-3">
+                        <img src="media/images/default-profile.png" class="rounded-circle me-2" width="40" height="40" alt="${customerName}">
+                        <div class="bg-light p-2 rounded">
+                            <strong>${customerName}:</strong> ${lastMessage}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start justify-content-end mb-3">
+                        <div class="bg-primary text-white p-2 rounded">
+                            <strong>You:</strong> Sure! Let me check.
+                        </div>
+                    </div>
+                `;
+
+                // Initialize modals
+                const viewChatModalElement = document.getElementById('viewChat');
+                const chatModalElement = document.getElementById('chatModal');
+
+                const viewChatModal = bootstrap.Modal.getInstance(viewChatModalElement) || new bootstrap.Modal(viewChatModalElement);
+                const chatModal = bootstrap.Modal.getInstance(chatModalElement) || new bootstrap.Modal(chatModalElement);
+
+                // Hide the viewChat modal and show the chatModal
+                viewChatModal.hide();
+                chatModal.show();
+            });
+        });
+
+        // Handle "View All Chats" button click
+        $('#viewChatsButton').on('click', function () {
+            const viewChatModalElement = document.getElementById('viewChat');
+            const viewChatModal = bootstrap.Modal.getInstance(viewChatModalElement) || new bootstrap.Modal(viewChatModalElement);
+            viewChatModal.show();
+        });
+
+    
+        // Handle sending a new message
+        document.getElementById('sendMessage').addEventListener('click', function () {
+            const userMessage = document.getElementById('chatInput').value.trim();
+    
+            if (userMessage !== '') {
+                const messageBubble = `
+                    <div class="d-flex align-items-start justify-content-end mb-3">
+                        <div class="bg-primary text-white p-2 rounded">
+                            <strong>You:</strong> ${userMessage}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('chatContent').insertAdjacentHTML('beforeend', messageBubble);
+                document.getElementById('chatInput').value = '';
+            }
+        });
+
+        document.getElementById('postButton').addEventListener('click', function () {
+            const sellItemModal = new bootstrap.Modal(document.getElementById('sellItemModal'));
+            sellItemModal.show();
+        });
+    
+        // Handle posting the item
+        document.getElementById('postItem').addEventListener('click', function () {
+            const images = document.getElementById('itemImages').files;
+            const caption = document.getElementById('itemCaption').value.trim();
+            const price = document.getElementById('itemPrice').value.trim();
+    
+            // Basic validation
+            if (!images.length) {
+                alert('Please upload at least one photo.');
+                return;
+            }
+            if (!caption) {
+                alert('Please add a caption.');
+                return;
+            }
+            if (!price || isNaN(price) || price <= 0) {
+                alert('Please enter a valid price.');
+                return;
+            }
+    
+            // For demonstration purposes
+            alert(`Item Posted:\n- Photos: ${images.length}\n- Caption: ${caption}\n- Price: $${price}`);
+    
+            // Close the modal
+            const sellItemModal = bootstrap.Modal.getInstance(document.getElementById('sellItemModal'));
+            sellItemModal.hide();
+    
+            // Optionally reset the form fields
+            document.getElementById('itemImages').value = '';
+            document.getElementById('itemCaption').value = '';
+            document.getElementById('itemPrice').value = '';
+        });
+
+        $('.pet-item').click(function() {
+          
+            window.location.href = "petProfile.html";
+
+        });
+        
+    });
+</script>
+
+
+</body>
+</html>

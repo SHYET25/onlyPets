@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community</title>
+    <link rel="icon" href="media/images/utilities/paw.png" type="image/png">
+
+    <!-- BS LINKS -->
+    <!-- <link rel="stylesheet" href="../../bsCSS/bootstrap.css">
+    <link rel="stylesheet" href="../../bsCSS/bootstrap.min.css"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+
+    <!-- Font Awesome Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Page CSS and JS -->
+    <link rel="stylesheet" href="../../cssFile/coachingCSS.css">
+
+    <style>
+   
+
+        *::-webkit-scrollbar {
+            width: 8px;
+        }
+        *::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        *::-webkit-scrollbar-thumb {
+            background-color: #cccccc;
+            border-radius: 10px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #38b6ff;
+            margin: 0;
+            padding: 0;
+            font-family: helvetica, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: transparent;
+            color: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0.3rem;
+        }
+
+        .navbar .navbar-brand img {
+            height: 50px;
+            width: 65%;
+            margin-left: 30px;
+        }
+
+        .navbar .nav-item .nav-link {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+            margin-right: 10px;
+        }
+
+        .navbar .nav-item .nav-link:hover {
+            color: #f3f3f3;
+        }
+
+        .navbar .form-control {
+            border-radius: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        .navbar .search-icon {
+            font-size: 2rem; /* Increased size */
+            cursor: pointer;
+            color: black;
+        }
+
+        .navbar .search-icon:hover {
+            color: #f3f3f3;
+        }
+
+        .navbar .form-control.show {
+            display: block; /* Show input when the icon is clicked */
+        }
+
+        /* Add equal margin between icons */
+        .navbar .nav-link {
+            margin-left: 15px;
+          
+        }
+
+        
+        /* Add equal margin between icons except the last child */
+        .navbar .d-flex i {
+            font-size: 2rem; /* Increase icon size */
+            margin-left: 15px; /* Equal margin between icons */
+            margin-left: 15px; /* Equal margin between icons */
+            cursor: pointer;
+            color: black;
+            transition: color 0.3s;
+        }
+        
+        /* Hover effect for icons */
+        .navbar .d-flex i:hover {
+            color: #f3f3f3;
+        }
+
+        #chatDropdown {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 100px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            width: 400px; /* Adjusted width for better visibility */
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-message {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+            padding: 5px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .chat-message:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-img {
+            width: 45px; /* Adjusted size for better proportion */
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .message-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .message {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        
+        .time {
+            font-size: 11px;
+            color: #aaa;
+            align-self: flex-end;
+        }
+        
+        /* Hover effect for messages */
+        .chat-message:hover {
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+        
+        #chatDropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chatDropdown::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 3px;
+        }
+        
+        #chatDropdown::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+
+        #bellDropdown {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            width: 400px; /* Adjusted width for better visibility */
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+        
+        .notification-message {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+            padding: 5px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .notification-message:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-img {
+            width: 45px; /* Adjusted size for better proportion */
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .notification-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .notification {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        
+        .time {
+            font-size: 11px;
+            color: #aaa;
+            align-self: flex-end;
+        }
+        
+        .notification-message:hover {
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+        
+        #bellDropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #bellDropdown::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 3px;
+        }
+        
+        #bellDropdown::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+    
+        /* Sidebar Styling */
+        .sidebar {
+            height: calc(100% - 100px);
+            width: 80px;
+            position: fixed;
+            top: 54%;
+            left: 30px;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Space between top links and bottom icon */
+            align-items: center; /* Center items horizontally */
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-top: 10px;
+        }
+        
+        .sidebar a {
+            margin-bottom: 10px; /* Adjust spacing between top links */
+            text-decoration: none;
+            font-size: 2rem;
+            color: #333333;
+            display: block;
+            transition: 0.3s;
+        }
+
+        
+        .sidebar a:hover {
+            color: #ffff;
+        }
+
+            /* Make the icon's background red and circular when active */
+        .sidebar .top-links a .active {
+            background-color: #38b6ff;
+            border-radius: 50%;
+            color: #000; /* Change icon color to white */
+            padding: 10px; /* Add some padding for the circular effect */
+        }
+
+        .sidebar .top-links a i {
+            transition: all 0.3s ease; /* Smooth transition for background color and size */
+        }
+
+        /* Hover effect for icons */
+        .sidebar .top-links a:hover .active {
+            background-color: #38b6ff;
+            color: white;
+        }
+
+        /* Ensure the inactive state doesn't have the circle background */
+        .sidebar .top-links a i {
+            background: none;
+            border-radius: 0;
+        }
+
+        .sidebar .top-links a .deactive {
+            background-color: transparent;
+            border-radius: 50%;
+            color: #000; /* Change icon color to white */
+            padding: 10px; /* Add some padding for the circular effect */
+            font-size: 2rem;
+        }
+
+        /* Hover effect for icons */
+        .sidebar .top-links a:hover .deactive {
+            background-color: transparent;
+            color: white;
+            font-size: 2rem;
+        }
+
+
+
+        
+        .sidebar .bottom-icon {
+            margin-bottom: 10px; /* Keep space from the bottom of the sidebar */
+            color: #333333;
+            font-size: 2rem;
+            transition: 0.3s;
+        }
+        
+        .sidebar .bottom-icon:hover {
+            color: #ffffff;
+        }
+
+        .top-links a {
+            /* No margin applied here so the first child stays at the top */
+            padding-top: 20px;
+        }
+        
+        .top-links a:not(:first-child) {
+            margin-top: 20px; /* Add margin only to links except the first one */
+        }
+        
+        
+        
+
+        /* Main content area */
+        #main {
+            background-color: #38b6ff;
+            background-image: url('media/images/utilities/bgMain.png'); /* Update this line */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100%;
+            overflow-x: hidden;
+            padding-top: 10vh;
+        }
+        
+
+        .active {
+            color: white;
+        }
+
+        #imageModal{
+            z-index: 10000;
+        }
+
+        #loadingScreen {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 10000; /* Ensure it's above other content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loadingScreen img {
+            width: 300px; /* Adjust size as needed */
+            height: 400px; /* Adjust size as needed */
+        }
+
+        /* Responsive Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .active {
+            color:white;
+        }
+
+        hr{
+            color:gray;
+            
+        }
+
+        .contentType{
+            margin-left: 0px;
+        }
+
+        .contentTypeButtonDeactive {
+            margin-left: 100px;
+            background-color: transparent;
+            border-radius: 25px;
+            width: 150px;
+            font-weight: 900;
+        }
+
+        .contentTypeButtonActive {
+            margin-left: 100px;
+            background-color: #ffde59;
+            border-radius: 25px;
+            width: 150px;
+            font-weight: 900;
+        }
+
+        .contentTypeButtonActive:hover {
+            margin-left: 100px;
+            background-color: #9c7d00;
+            border-radius: 25px;
+            width: 150px;
+            font-weight: 900;
+        }
+
+        #main {
+            background-color: #38b6ff;
+            background-image: url('media/images/utilities/bgMain.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+
+        #publicContainer, #personalizedContainer {
+       
+            height: 100%;
+            overflow: hidden;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+       #personalizedContainer:hover {
+            overflow: auto; /* Add scroll if content overflows */
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+        #publicContainer:hover {
+            overflow: auto; /* Add scroll if content overflows */
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+        #rightContent {
+       
+            height: 100%; /* Match height with the main section */
+            overflow-y: auto; /* Add scroll if content overflows */
+            padding: 10px;
+        }
+
+        #leftContent {
+       
+            height: 100%; /* Match height with the main section */
+            overflow-y: auto; /* Add scroll if content overflows */
+            padding: 10px;
+        }
+
+        #middleContent {
+            height: 100%; /* Match height with the main section */
+            overflow-y: auto; /* Add scroll if content overflows */
+            padding: 10px;
+        }
+
+
+        
+
+        
+
+        #centerContent {
+       
+            height: 100%; /* Match height with the main section */
+            padding: 0%;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        
+
+        
+        
+        
+        .mainContent{
+        
+            height: 100%;
+            margin-top: 0.5%;
+            width: 100%;
+        }
+
+        #postComposer {
+            width: 100%; /* Default width in "public" */
+            height: 60px; /* Collapsed height */
+            overflow: hidden; /* Hide content when collapsed */
+            transition: height 0.6s ease; /* Smooth transition for height */
+            border-radius: 15px;
+            text-align: center;
+            background-color: #85d2ff;
+            border-color: #85d2ff;
+        }
+
+        #inviteCard {
+            width: 100%; /* Default width in "public" */
+            height: 60px; /* Collapsed height */
+            overflow: hidden; /* Hide content when collapsed */
+            transition: height 0.6s ease; /* Smooth transition for height */
+            border-radius: 15px;
+            text-align: center;
+            background-color: #85d2ff;
+            border-color: #85d2ff;
+        }
+
+        #inviteCard:hover {
+            height: 40%; /* Expand to a fixed height on hover */
+        }
+        
+        /* Add this fallback to ensure consistent behavior */
+        #inviteCard:focus,
+        #inviteCard:active {
+            width: 100%; /* Maintain 100% width if focused or active */
+            height: 220px; /* Set height to same as hover to maintain consistency */
+        }
+
+        #inviteCard h5{
+            font-weight: 900;
+         }
+
+
+        #inviteList {
+       
+            height: 100%;
+            overflow: hidden;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+       #inviteList:hover {
+            overflow: auto; /* Add scroll if content overflows */
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+        .invites:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .allignments {
+            text-align: left;
+        }
+
+        #postComposer h5{
+            font-weight: 900;
+         }
+ 
+
+        #petMateList {
+            width: 100%; /* Default width in "public" */
+            margin-top: 10px;
+            height: 58%; /* Collapsed height */
+            overflow: hidden;
+            border-radius: 15px;
+            text-align: center;
+            background-color: #85d2ff;
+            border-color: #85d2ff;
+        }
+
+        .petMateH5 {
+            font-weight: 900;
+            background-color: #38b6ff;
+            padding: 10px;
+            width: 100%;
+            border-radius: 10px;
+           
+        }
+
+        .petMateH5 h5{
+            font-weight: 900;
+            background-color: #38b6ff;
+           
+        }
+
+    
+        .petCollection {
+            height: 100%;
+           
+            scrollbar-gutter: stable; 
+            overflow: hidden;
+        }
+
+        .petCollection:hover {
+            overflow: auto;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            height: 100%;
+        }
+
+        .pet-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .pet-img-profile {
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 3px;
+        }
+
+
+        .pet-item:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pet-item {
+            
+            
+            padding: 10px;
+        }
+        
+        
+        .pet-item img {
+            border: 2px solid #007bff;
+        }
+
+        .pet-item-profile img{
+            border: 4px solid #000;
+        }
+
+        .pet-name {
+            flex: 1; /* Ensures the name stays on the leftmost side */
+            text-align: left; /* Align text to the left */
+        }
+        
+        #postComposer:hover {
+            height: 50%; /* Expand to a fixed height on hover */
+        }
+        
+        .pet-img, .friend-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        #petList{
+            margin-top: 10px;
+        }
+
+        /* Add this fallback to ensure consistent behavior */
+        #postComposer:focus,
+        #postComposer:active {
+            width: 100%; /* Maintain 100% width if focused or active */
+            height: 220px; /* Set height to same as hover to maintain consistency */
+        }
+
+        #groupList {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 15px;
+            background-color: #85d2ff;
+            border-color: #85d2ff;
+            overflow: hidden;
+        }
+        
+        .groupHeader {
+            background-color: #38b6ff;
+            padding: 10px;
+            border-radius: 10px;
+            color: black;
+        }
+        
+        .groupCollection {
+            max-height:200px;
+            overflow-y: auto;
+        }
+
+        .groupCollection {
+       
+            height: 100%;
+            overflow: hidden;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+
+       .groupCollection:hover {
+            overflow: auto; /* Add scroll if content overflows */
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            
+        }
+        
+        .groupCollection::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .groupCollection::-webkit-scrollbar-thumb {
+            background-color: #007bff;
+            border-radius: 10px;
+        }
+        
+        .group-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+        }
+        
+        .group-item {
+            padding: 10px;
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        .group-item:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+        
+
+        
+        
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .post-header .fw-bold {
+            font-size: 16px;
+        }
+        
+        .post-header .text-muted {
+            font-size: 14px;
+        }
+        
+        .post-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-content {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .post-footer {
+            font-size: 14px;
+        }
+        
+        .tagged-users .tagged-user {
+            color: #38BCFF;
+        }
+        
+        .post-time {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .post-actions button {
+            border: 1px solid #ddd;
+            background-color: #f7f7f7;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .post-actions button:hover {
+            background-color: #e1e1e1;
+        }
+        
+        .post-actions i {
+            margin-right: 5px;
+        }
+        
+        .post-actions button:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        .post-actions .btn-light {
+            border-radius: 25px;
+        }
+        
+        .postFas {
+            font-size: 1rem;
+        }
+        
+        .post-content img {
+            object-fit: cover;  /* Ensures images fill the container without distortion */
+            border-radius: 8px; /* Adds rounded corners to images */
+            max-width: 100%; /* Ensures image doesn't exceed container width */
+            height: auto; /* Maintains aspect ratio */
+        }
+        
+        .post-actions .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        #postScope {
+            opacity: 0.5;
+            font-size: 12px;
+            padding: 5px;
+        }
+        
+        .googleMapInvite {
+            text-decoration: none;
+            color: #000;
+        }
+        
+    </style>
+
+    
+
+</head>
+<body>
+<div id="loadingScreen" style="display: none;">
+        <img src="media/images/utilities/loading.gif" alt="Loading...">
+    </div>
+    
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="ownerHome.html">
+                <img src="media/images/utilities/pawing.png" alt="Logo" height="40">
+            </a>
+
+            <!-- Centered Buttons -->
+            <div class="d-flex contentType">
+                
+            </div>
+
+            <!-- Right-Side Icons -->
+            <div class="d-flex">
+                <!-- Search Bar Icon -->
+
+                <a href="#" class="nav-link">
+                    <i class="fas fa-search fa-lg search-icon me-3"></i>
+                </a>
+
+                <!-- Chat Icon -->
+                <a href="#" class="nav-link" id="chatIcon">
+                    <i class="fas fa-comments fa-lg me-3"></i>
+                </a>
+
+                <!-- Notification Icon -->
+                <a href="#" id="bellIcon" class="nav-link">
+                    <i class="fas fa-bell fa-lg me-3"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="chatDropdown">
+        <h4>Chats</h4>
+        <hr>
+        <div class="chat-message" data-user="John Doe" data-text="Hey! How are you doing today? I wanted to ask about...">
+            <img class="profile-img" src="media/images/profiles/213.jpg" alt="Profile Picture">
+            <div class="message-details">
+                <p class="name">John Doe</p>
+                <p class="message">Hey! How are you doing today? I wanted to ask about...</p>
+                <span class="time">10:30 AM</span>
+            </div>
+        </div>
+        <div class="chat-message" data-user="Jane Smith" data-text="I'm good! Let's catch up soon.">
+            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
+            <div class="message-details">
+                <p class="name">Jane Smith</p>
+                <p class="message">I'm good! Let's catch up soon.</p>
+                <span class="time">10:32 AM</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="conversationModal" tabindex="-1" aria-labelledby="conversationModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="conversationModalTitle" class="modal-title">Chat with <span id="userName"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="conversationContent">
+                    <!-- Chat content will be dynamically loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <input type="text" id="messageInput" class="form-control me-2" placeholder="Type a message...">
+                    <button type="button" class="btn btn-primary" id="sendButton">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="bellDropdown">
+        <h4>Notifications</h4>
+        <hr>
+        <div class="notification-message">
+            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
+            <div class="notification-details">
+                <p class="name">Jane Smith</p>
+                <p class="notification">Reacted to your post.</p>
+                <span class="time">10:32 AM</span>
+            </div>
+        </div>
+        <div class="notification-message">
+            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
+            <div class="notification-details">
+                <p class="name">Jane Smith</p>
+                <p class="notification">Reacted to your post.</p>
+                <span class="time">10:32 AM</span>
+            </div>
+        </div>
+        <!-- Add more messages as needed -->
+    </div>
+
+
+
+    <!-- Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <!-- Top Links -->
+        <div class="top-links">
+            <a href="ownerHome.html" class="loading-link"><i class="fas fa-home deactive"></i></a>
+            <a href="ownerMarket.html" class="loading-link"><i class="fas fa-store deactive"></i></a>
+            <a href="ownerVet.html" class="loading-link"><i class="fas fa-stethoscope deactive"></i></a>
+            <a href="ownerCommunity.html" class="loading-link"><i class="fas fa-users active"></i></a>
+        </div>
+    
+        <!-- Bottom Icon -->
+        <a href="ownerProfile.html" class="bottom-icon pet-item-profile"><img src="media/images/petPics/retriever.jpg" alt="Pet 1" class="pet-img-profile me-2"></a>
+    </div>
+    
+    
+    
+
+    <div id="main" class="container-fluid">
+        <div class="row mainContent">
+            <!-- Left Content -->
+            <div id="leftContent" class="col-md-1">
+                
+            </div>
+            <div id="middleContent" class="col-md-3">
+                <div id="inviteCard" class="card p-3 shadow">
+                    <div class="d-flex justify-content-center align-items-center position-relative mb-2">
+                        <h5 class="text-center mb-0">Event Invites</h5>
+                        <span class="badge bg-danger rounded-pill position-absolute end-0">3</span>
+                    </div>
+                    <ul id="inviteList" class="list-unstyled mt-3">
+                        <!-- Invite 1 -->
+                        <a class="googleMapInvite" href="https://www.google.com/maps/place/Imus+City+Plaza/@14.4289951,120.9185429,15z/data=!4m10!1m2!2m1!1simus+park!3m6!1s0x3397d2f49ad11aaf:0xf90dd57f9d1bae3a!8m2!3d14.4289951!4d120.9365673!15sCglpbXVzIHBhcmtaCyIJaW11cyBwYXJrkgEJY2l0eV9wYXJrmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU5QTnpsWWRIUm5SUkFC4AEA-gEECAAQRw!16s%2Fg%2F11f2_qy5cb?entry=ttu&g_ep=EgoyMDI1MDEyMi4wIKXMDSoASAFQAw%3D%3D">
+                            <li class="invites d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="media/images/petPics/retriever.jpg" alt="Buddy" class="rounded-circle me-3" width="40" height="40">
+                                    <div class="text-start">
+                                        <strong>Buddy</strong>
+                                        <p class="mb-0">Dog Meetup</p>
+                                        <small>2025-02-10 at 3:00 PM</small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-success btn-sm me-2">✔</button>
+                                    <button class="btn btn-danger btn-sm">✖</button>
+                                </div>
+                            </li>
+                        </a>
+                        <hr>
+                        <!-- Invite 2 -->
+                        <a class="googleMapInvite" href="https://www.google.com/maps/place/Paw+%26+Bean+Cafe/@14.4387909,120.9306644,17z/data=!3m1!4b1!4m6!3m5!1s0x3397d3467bd45d61:0xf030036b5e79914b!8m2!3d14.4387909!4d120.9332447!16s%2Fg%2F11s78905m9?entry=ttu&g_ep=EgoyMDI1MDEyMi4wIKXMDSoASAFQAw%3D%3D">
+                            <li class="invites d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="media/images/petPics/siamese.jpg" alt="Max" class="rounded-circle me-3" width="40" height="40">
+                                    <div class="text-start">
+                                        <strong>Max</strong>
+                                        <p class="mb-0">Paw Party at Pet Café</p>
+                                        <small>2025-02-11 at 5:30 PM</small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-success btn-sm me-2">✔</button>
+                                    <button class="btn btn-danger btn-sm">✖</button>
+                                </div>
+                            </li>
+                        </a>
+                        <hr>
+                        <!-- Invite 3 -->
+                        <li class="invites d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img src="media/images/petPics/pig.jpg" alt="Bella" class="rounded-circle me-3" width="40" height="40">
+                                <div class="text-start">
+                                    <strong>Bella</strong>
+                                    <p class="mb-0">Morning Walk</p>
+                                    <small>2025-02-12 at 8:00 AM</small>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-success btn-sm me-2">✔</button>
+                                <button class="btn btn-danger btn-sm">✖</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+
+                <div id="petMateList" class="card p-3 cardPet">
+                    <div class="petMateH5">
+                        <h5 class="">Furs Around ME</h5>
+                    </div>
+
+                    <div id="map" style="height: 500px; width: 100%; margin-top:10px;"></div>
+
+                    
+                </div>
+
+                
+                
+                
+                
+            </div>
+            <div id="centerContent" class="col-md-5">
+                <div id="personalizedContainer">
+                    <div class="post-list">
+                        <!-- Event Invite Post -->
+                        <div class="post-card card p-3 mb-4">
+                            <div class="post-header d-flex align-items-center mb-3">
+                                <img src="media/images/profiles/group1.jpg" alt="Event Creator Profile" class="profile-img me-3">
+                                <div>
+                                    <div class="fw-bold">Play Park Group</div>
+                                    <div class="text-muted">Invited on: 2025-01-20 10:00</div>
+                                </div>
+                            </div>
+                            <div class="post-content mb-3">
+                                <p class="fw-bold">You're invited to join the <strong>Annual Pet Vaccination Awareness Drive</strong>!</p>
+                                <img src="media/images/posts/vaccineInvite.jpg" alt="Pet Vaccination Drive" class="event-img mb-3">
+                                <p>Details:</p>
+                                <ul>
+                                    <li><strong>Event Name:</strong> Pet Vaccination Drive</li>
+                                    <li><strong>Date:</strong> 2025-02-05</li>
+                                    <li><strong>Time:</strong> 10:00 AM - 4:00 PM</li>
+                                    <li><strong>Location:</strong> Green Valley Park</li>
+                                </ul>
+                                <p>Join us for a day dedicated to pet health and vaccination awareness. Bring your pets and get free consultations from certified vets!</p>
+                            </div>
+                
+                            <div class="post-actions d-flex justify-content-start mt-3">
+                                <button class="btn btn-light btn-sm me-2">
+                                    <i class="fas fa-calendar-check"></i> Accept Invite
+                                </button>
+                                <button class="btn btn-light btn-sm me-2">
+                                    <i class="fas fa-calendar-times"></i> Decline Invite
+                                </button>
+                                <button class="btn btn-light btn-sm">
+                                    <i class="fas fa-share"></i> Share Event
+                                </button>
+                            </div>
+                        </div>
+                
+                        <!-- Post with Like and Comment Actions -->
+                        <div class="post-card card p-3 mb-4">
+                            <div class="post-header d-flex align-items-center mb-3">
+                                <img src="media/images/profiles/prof3.jpg" alt="User Profile" class="profile-img me-3">
+                                <div>
+                                    <div class="fw-bold">John Smith</div>
+                                    <div class="text-muted">Posted on: 2025-01-25 14:30</div>
+                                    <div class="text-muted">Shared in: <strong>Riverside Walks</strong></div>
+                                </div>
+                            </div>
+                            <div class="post-content mb-3">
+                                <p class="fw-bold">"Had a great time at the dog park today! Max met so many new friends."</p>
+                                <img src="media/images/posts/dogpark.jpg" alt="Dog Park" class="event-img mb-3">
+                            </div>
+                
+                            <div class="post-actions d-flex justify-content-start mt-3">
+                                <button class="btn btn-light btn-sm me-2">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                </button>
+                                <button class="btn btn-light btn-sm">
+                                    <i class="fas fa-comment"></i> Comment
+                                </button>
+                            </div>
+                        </div>
+                
+                        <!-- Another Event Invite Post -->
+                        <div class="post-card card p-3 mb-4">
+                            <div class="post-header d-flex align-items-center mb-3">
+                                <img src="media/images/profiles/group3.webp" alt="Pet Club Profile" class="profile-img me-3">
+                                <div>
+                                    <div class="fw-bold">Cuddle Club</div>
+                                    <div class="text-muted">Invited on: 2025-01-22 16:00</div>
+                                </div>
+                            </div>
+                            <div class="post-content mb-3">
+                                <p class="fw-bold">Join our upcoming <strong>Dog Socialization Meetup</strong>!</p>
+                                <img src="media/images/posts/social.jpg" alt="Dog Socialization Meetup" class="event-img mb-3">
+                                <p>Details:</p>
+                                <ul>
+                                    <li><strong>Event Name:</strong> Dog Socialization Meetup</li>
+                                    <li><strong>Date:</strong> 2025-03-10</li>
+                                    <li><strong>Time:</strong> 2:00 PM - 5:00 PM</li>
+                                    <li><strong>Location:</strong> Sunset Dog Park</li>
+                                </ul>
+                                <p>This is a fantastic opportunity to let your dogs socialize with other pets and their owners. We’ll have fun activities, treats, and more!</p>
+                            </div>
+                
+                            <div class="post-actions d-flex justify-content-start mt-3">
+                                <button class="btn btn-light btn-sm me-2">
+                                    <i class="fas fa-calendar-check"></i> Accept Invite
+                                </button>
+                                <button class="btn btn-light btn-sm me-2">
+                                    <i class="fas fa-calendar-times"></i> Decline Invite
+                                </button>
+                                <button class="btn btn-light btn-sm">
+                                    <i class="fas fa-share"></i> Share Event
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    .profile-img {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                
+                    .event-img {
+                        width: 100%;
+                        height: auto;
+                        border-radius: 8px;
+                    }
+                
+                    .post-card {
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        border-radius: 10px;
+                    }
+                
+                    .post-actions button {
+                        border-radius: 6px;
+                    }
+                </style>
+                
+                
+    
+            </div>
+    
+            <!-- Right Content -->
+            <div id="rightContent" class="col-md-3">
+                
+                    <div id="postComposer" class="card p-3">
+                        <h5>Send an Invite</h5>
+                        <br>
+                        <div class="mb-3">
+                            <select class="form-select" id="vetSelect" required>
+                                <option value="" disabled selected>Select a Group</option>
+                                <option value="Dr. Sarah Vet">Park Playgroup</option>
+                                <option value="Dr. Alex Vet">Riverside Walks</option>
+                                <option value="Dr. Alex Vet">Cuddle Club</option>
+                            </select>
+                        </div>
+                        <textarea id="postText" class="form-control mb-2" rows="3" placeholder="What's your invite?"></textarea>
+                        <input type="file" id="postImage" class="form-control mb-2">
+                        <button id="postButton" class="btn btn-warning w-100">Post</button>
+                    </div>
+                    <!-- Comment Modal -->
+                    <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center position-relative">
+                                    <h5 class="modal-title text-center" id="commentModalLabel">Comments</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Post Author Details -->
+                                    <div class="post-header d-flex align-items-center mb-3">
+                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                        <div>
+                                            <div class="d-flex">
+                                                <div class="fw-bold">John Doe</div>
+                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                            </div>
+                                            <div class="text-muted">Pet: Buddy</div>
+                                        </div>
+                                    </div>
+                                    <!-- Post Content with Pictures -->
+                                    <div class="post-content mb-3">
+                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                        <div class="row g-2">
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Comments Section -->
+                                    <div id="commentsSection">
+                                        <div class="comment mb-3">
+                                            <div class="d-flex align-items-start">
+                                                <img src="media/images/profiles/456.jpg" alt="User" class="profile-img me-2">
+                                                <div>
+                                                    <span class="fw-bold">Alex Johnson</span>
+                                                    <p class="mb-1">Buddy looks so happy! What a lovely day!</p>
+                                                    <div class="text-muted small">Posted 2 hours ago</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Additional comments can go here -->
+                                    </div>
+                                    <!-- Add Comment Section -->
+                                    <div class="mt-3">
+                                        <div class="d-flex align-items-center">
+                                            <textarea class="form-control" rows="1" placeholder="Write a comment..."></textarea>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm mt-2">Post Comment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Share Modal -->
+                    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center position-relative">
+                                    <h5 class="modal-title text-center" id="shareModalLabel">Share Post</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Post Author Details -->
+                                    <div class="post-header d-flex align-items-center mb-3">
+                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                        <div>
+                                            <div class="d-flex">
+                                                <div class="fw-bold">John Doe</div>
+                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                            </div>
+                                            <div class="text-muted">Pet: Buddy</div>
+                                        </div>
+                                    </div>
+                                    <!-- Post Content with Pictures -->
+                                    <div class="post-content mb-3">
+                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                        <div class="row g-2">
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                            <div class="col-4">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Share Options -->
+                                    <div class="share-options">
+                                        <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
+                                            <i class="fa-solid fa-share me-2"></i>
+                                            Share Now (Friends)
+                                        </button>
+                                        <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
+                                            <i class="fa-solid fa-message me-2"></i>
+                                            Share in a Message
+                                        </button>
+                                        <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
+                                            <i class="fa-solid fa-users me-2"></i>
+                                            Share to a Group
+                                        </button>
+                                        <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
+                                            <i class="fa-solid fa-link me-2"></i>
+                                            Copy Link
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="groupInfoModal" tabindex="-1" aria-labelledby="groupInfoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content shadow-lg rounded-3">
+                                <!-- Modal Header (Cover Photo) -->
+                                <div class="modal-header position-relative">
+                                    <img src="media/images/profiles/cover1.jpg" class="img-fluid rounded-top" alt="Vet Banner" style="height: 200px; object-fit: cover; width: 100%; border-radius: 0.375rem 0.375rem 0 0;">
+                                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                    
+                                <!-- Modal Body -->
+                                <div class="modal-body text-center">
+                                    <!-- Vet Info Container -->
+                                    <div class="d-flex flex-column align-items-center position-relative">
+                                        <!-- Profile Picture Overlapping the Cover -->
+                                        <img src="media/images/profiles/vet1.jpg" alt="Dr. Sarah Vet" class="img-fluid rounded-circle mb-3 position-absolute" style="top: -90px; width: 180px; height: 180px; object-fit: cover; border: 4px solid #f8f9fa;">
+                                        
+                                        <!-- Vet Info -->
+                                        <br><br><br><br>
+                                        <h3 class="mb-2"><strong>Park Play Group</strong></h3>
+                                        <p class="text-muted mb-1">Meet for playdates at the park!</p>
+                                     </div>
+                                     <div id="centerContent" class="col-md-12">
+                                        <div id="personalizedContainer">
+                                            <div class="post-list">
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                                            </div>
+                                                            <div class="text-muted">Pet: Buddy</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                                            </div>
+                                                            <div class="text-muted">Pet: Buddy</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                        <div id="publicContainer" class=" hidden">
+                                            <div class="post-list">
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
+                                                            </div>
+                                                            
+                                                            <div class="text-muted">Pet: Buddy</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
+                                                            </div>
+                                                            <div class="text-muted">Pet: Buddy</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-card card p-3 mb-4">
+                                                    <div class="post-header d-flex align-items-center mb-3">
+                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                                        <div>
+                                                            <div class="d-flex">
+                                                                <div class="fw-bold">John Doe</div>
+                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
+                                                            </div>
+                                                            <div class="text-muted">Pet: Buddy</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-content mb-3">
+                                                        <!-- Sample caption -->
+                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                                        
+                                                        <!-- Photo Grid with Modal Trigger -->
+                                                        <div class="row g-2">
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-footer d-flex justify-content-between align-items-center">
+                                                        <div class="tagged-users">
+                                                            <span class="text-muted">Tagged: </span>
+                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
+                                                        </div>
+                                                        <div class="post-time text-muted">
+                                                            <span>Posted on: 2025-01-11 14:30</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="post-actions d-flex justify-content-start mt-3">
+                                                        <button class="btn btn-light btn-sm me-2">
+                                                            <i class="fas postFas fa-thumbs-up"></i> Like
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                                            <i class="fas postFas fa-comment"></i> Comment
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                            <i class="fas postFas fa-share"></i> Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="groupList" class="card p-3 shadow">
+                        <div class="groupHeader text-center">
+                            <h5 class="fw-bold mb-0">Groups</h5>
+                        </div>
+                        <div class="groupCollection mt-3">
+                            <!-- Group 1 -->
+                            <div class="group-item d-flex align-items-center justify-content-between mb-3"  data-bs-toggle="modal" data-bs-target="#groupInfoModal">
+                                <div class="d-flex align-items-center">
+                                    <img src="media/images/profiles/group1.jpg" alt="Park Playgroup" class="group-img me-3">
+                                    <div>
+                                        <div class="fw-bold">Park Playgroup</div>
+                                        <div class="text-muted">Meet for playdates at the park!</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">12 Members</span>
+                            </div>
+                            <hr>
+                            <!-- Group 2 -->
+                            <!-- Group 3 -->
+                            <div class="group-item d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="media/images/profiles/group2.jpg" alt="Riverside Walks" class="group-img me-3">
+                                    <div>
+                                        <div class="fw-bold">Riverside Walks</div>
+                                        <div class="text-muted">Join us for morning strolls!</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">5 Members</span>
+                            </div>
+                            <hr>
+                            <!-- Group 4 -->
+                            <div class="group-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <img src="media/images/profiles/group3.webp" alt="Cuddle Club" class="group-img me-3">
+                                    <div>
+                                        <div class="fw-bold">Cuddle Club</div>
+                                        <div class="text-muted">For pets who love cuddles!</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">20 Members</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                
+                
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+  
+    <!-- AJAX link -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+    // JS for the loading page
+    function showLoadingScreen() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }
+
+        window.addEventListener('load', hideLoadingScreen);
+
+        window.addEventListener('beforeunload', showLoadingScreen);
+
+        $(document).ready(function() {
+            $('#personalizedButton').click(function() {
+                $('#personalizedContainer').removeClass('hidden');
+                $('#publicContainer').addClass('hidden');
+                $(this).addClass('contentTypeButtonActive').removeClass('contentTypeButtonDeactive');
+                $('#publicButton').addClass('contentTypeButtonDeactive').removeClass('contentTypeButtonActive');
+            });
+
+            $('#publicButton').click(function() {
+                $('#publicContainer').removeClass('hidden');
+                $('#personalizedContainer').addClass('hidden');
+                $(this).addClass('contentTypeButtonActive').removeClass('contentTypeButtonDeactive');
+                $('#personalizedButton').addClass('contentTypeButtonDeactive').removeClass('contentTypeButtonActive');
+            });
+        });
+
+        $('#chatIcon').click(function() {
+            $('#chatDropdown').toggle();
+        });
+
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#chatIcon, #chatDropdown').length) {
+                $('#chatDropdown').hide();
+            }
+        });
+
+        $('#bellIcon').click(function() {
+            $('#bellDropdown').toggle();
+        });
+
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#bellIcon, #bellDropdown').length) {
+                $('#bellDropdown').hide();
+            }
+        });
+
+        // $(document).ajaxStart(function() {
+        //     showLoadingScreen();
+        // });
+
+        // $(document).ajaxComplete(function() {
+        //     hideLoadingScreen();
+        // });
+
+        // $('form').on('submit', function() {
+        //     showLoadingScreen();
+        // });
+
+        document.querySelectorAll('.chat-message').forEach(message => {
+            message.addEventListener('click', function () {
+                const userName = this.getAttribute('data-user');
+                const userMessage = this.getAttribute('data-text');
+        
+                // Update modal content
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('conversationContent').innerHTML = `
+                    <div class="d-flex align-items-start mb-3">
+                        <img src="media/images/default-profile.png" class="rounded-circle me-2" width="40" height="40" alt="${userName}">
+                        <div class="bg-light p-2 rounded">
+                            <strong>${userName}:</strong> ${userMessage}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start justify-content-end mb-3">
+                        <div class="bg-primary text-white p-2 rounded">
+                            <strong>You:</strong> Sure! Let me check.
+                        </div>
+                    </div>
+                `;
+        
+                // Show modal
+                const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+                conversationModal.show();
+            });
+        });
+
+        // Apply the loading screen to links with the loading-link class
+        document.querySelectorAll('a.loading-link').forEach(function(anchor) {
+            anchor.addEventListener('click', function() {
+                showLoadingScreen();
+            });
+        });
+
+        const map = L.map('map').setView([14.413375394939443, 120.93700475590103], 12); // Set to your preferred center
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Example vet locations (replace with your data)
+        const vetLocations = [
+            { name: "Oikos Animal Clinic", lat: 14.390443338924861, lng: 120.9398079280628 },
+            { name: "Imus Pet Crossing Animal Clinic", lat: 14.410874369728225, lng: 120.93923625547363 },
+            { name: "EMC Veterinary Clinic - Bucandala III", lat: 14.40859940418372, lng: 120.92799425271097 },
+            { name: "BF Paw and Claw Imus Veterinary Clinic", lat: 14.41325468884495, lng: 120.95271349056279 },
+            { name: "Paw's street veterinary clinic", lat: 14.422232463553444, lng: 120.94069719393363 },
+        ];
+
+        // Add markers for vet locations
+        vetLocations.forEach(vet => {
+            const googleMapsLink = `https://www.google.com/maps?q=${vet.lat},${vet.lng}`;
+            const popupContent = `
+                <strong>${vet.name}</strong><br>
+                <a href="${googleMapsLink}" target="_blank">Open in Google Maps</a>
+            `;
+
+            L.marker([vet.lat, vet.lng])
+                .addTo(map)
+                .bindPopup(popupContent);
+        });
+
+
+
+    // JS for the Side Bar ------------------------------------------------------
+    </script>
+</body>
+</html>

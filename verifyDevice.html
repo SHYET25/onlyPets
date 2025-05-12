@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Device</title>
+</head>
+<body>
+    <h2>Enter OTP sent to your email</h2>
+    <p id="emailDisplay">Loading email...</p>
+    <div id="deviceDisplay"></div>
+    <input type="text" id="otpInput" placeholder="Enter OTP">
+    <button id="verifyBtn">Verify</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        // Show session email
+        $.ajax({
+            url: 'phpFile/globalSide/getSessionEmail.php',  // Make sure the URL is correct
+            method: 'GET',
+            dataType: 'json',
+            success: function(res) {
+                if (res.email) {
+                    $('#emailDisplay').text('Email: ' + res.email);
+                } else {
+                    $('#emailDisplay').text('No active session.');
+                }
+
+                // Optionally, you can also handle the device data here
+                if (res.device) {
+                    console.log("Device: " + res.device);  // Log device to console
+                }
+            },
+            error: function() {
+                $('#emailDisplay').text('Error fetching session email.');
+            }
+        });
+
+
+
+        // Verify OTP
+        $('#verifyBtn').click(function () {
+            const otp = $('#otpInput').val();
+
+            $.ajax({
+                url: 'phpFile/globalSide/verifyDevice.php',
+                type: 'POST',
+                data: { otp: otp },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        window.location.href = res.role === 'veterinarian' ? 'vetHome.html' : 'ownerHome.html';
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function () {
+                    alert("Server error.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

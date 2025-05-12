@@ -1,0 +1,701 @@
+body {
+    overflow: hidden;
+    background-color: #f2f2f2;
+    overflow: hidden;
+    background-color: #38b6ff;
+    background-image: url(../../media/images/utilities/bg2.png);
+    /* Make the background fixed */
+    background-attachment: fixed;
+
+    /* Make the background cover the entire screen */
+    background-size: cover;
+    background-position: center;
+    
+    /* Add a semi-transparent overlay to reduce opacity */
+    position: relative;
+    z-index: 1;
+}
+.navbar-nav .nav-item .nav-link i {
+    font-size: 100px; /* Makes the icon bigger */
+    width: 100px; /* Optional, ensures a fixed width */
+    height: 100px; /* Optional, ensures a fixed height */
+    text-align: center; /* Aligns the icon in the center if needed */
+    line-height: 100px; /* Vertically centers the font-awesome icon */
+    padding-top: 50px;
+}
+#postComposer {
+    width: 100%; /* Default width in "public" */
+    height: 50px; /* Collapsed height */
+    overflow: hidden; /* Hide content when collapsed */
+    transition: height 0.6s ease; /* Smooth transition for height */
+}
+
+#postComposer:hover {
+    height: 200px; /* Expand to a fixed height on hover */
+}
+
+/* Add this fallback to ensure consistent behavior */
+#postComposer:focus,
+#postComposer:active {
+    width: 100%; /* Maintain 100% width if focused or active */
+    height: 200px; /* Set height to same as hover to maintain consistency */
+}
+
+
+
+
+/* Optional: Hover effect for interactivity */
+.navbar-nav .nav-item .nav-link i:hover {
+    transform: scale(1.1); /* Slightly enlarges on hover */
+    transition: transform 0.3s ease; /* Smooth animation */
+}
+
+.navbar-brand img {
+    width: 50px;
+    height: 40px;
+}
+
+.navbar-brand {
+    margin-right: 170px;
+   
+}
+
+.friend-item:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.friend-item img {
+    border: 2px solid #007bff;
+}
+
+.pet-item:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.pet-item img {
+    border: 2px solid #007bff;
+}
+
+.iconUnderline {
+    text-decoration: underline;
+    text-underline-offset: 13px; /* Adjust the gap */
+  }
+
+/* Enlarged Search Bar */
+#searchInput {
+    width: 100% !important;  /* Forces full width */
+    border-radius: 25px;
+    padding: 20px 30px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#searchModal .modal-dialog {
+    max-width: 900px; /* Custom width between large and fullscreen */
+    height: 85vh;     /* Custom height */
+}
+
+.modal-content {
+    height: 90%;
+}
+
+
+
+/* Profile Images in Recent Searches */
+#recentSearches img {
+    border: 2px solid #007bff;
+}
+
+/* Hover Effect for Search Items */
+#recentSearches .d-flex {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#recentSearches .d-flex:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+
+.navbar-nav .nav-link {
+    color: #333;
+    font-weight: 500;
+    margin: 0 50px;
+}
+
+.navbar-nav .nav-link i {
+    font-size: 25px;
+}
+
+#loadingScreen img {
+    width: 200px; /* Adjust size as needed */
+    height: 250px; /* Adjust size as needed */
+}
+
+#loadingScreen {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 10000; /* Ensure it's above other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #38BCFF;
+}
+
+#profileIcon {
+    object-fit: cover;
+    cursor: pointer;
+   
+    width: 40px;
+    height: 40px;
+    margin-left: 30px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+#profileIcon:hover {
+    border-color: #007bff; /* Blue border on hover */
+}
+
+.nav-icons i {
+    font-size: 30px;
+    color: #333;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.nav-icons i:hover {
+    color: #38BCFF;
+}
+
+/* Tabs Styling */
+.tabs-container {
+    background-color: transparent;
+    padding: 10px;
+    text-align: center;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-button.active {
+    background-color: #ffd259;
+    color: #000;
+}
+
+/*  */
+#bellDropdown {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 400px; /* Adjusted width for better visibility */
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.notification-message {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    padding: 5px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.notification-message:last-child {
+    border-bottom: none;
+}
+
+.profile-img {
+    width: 45px; /* Adjusted size for better proportion */
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.notification-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.notification {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.time {
+    font-size: 11px;
+    color: #aaa;
+    align-self: flex-end;
+}
+
+.notification-message:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+#bellDropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+#bellDropdown::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 3px;
+}
+
+#bellDropdown::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/*  */
+
+#chatDropdown {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 130px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 400px; /* Adjusted width for better visibility */
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.chat-message {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    padding: 5px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.chat-message:last-child {
+    border-bottom: none;
+}
+
+.profile-img {
+    width: 45px; /* Adjusted size for better proportion */
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.message-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.message {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.time {
+    font-size: 11px;
+    color: #aaa;
+    align-self: flex-end;
+}
+
+/* Hover effect for messages */
+.chat-message:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+#chatDropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatDropdown::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 3px;
+}
+
+#chatDropdown::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+
+#profileDropdown {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 300px; /* Adjusted width for better visibility */
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+#searchInput {
+    border-radius: 25px;
+    width: 10%;
+}
+
+#leftSide {
+    padding: 10px;
+    overflow-y: auto;
+    height: 84vh;
+}
+
+#leftSide::-webkit-scrollbar {
+    width: 8px;
+}
+#leftSide::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+#leftSide::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+#centerPart {
+    padding: 10px;
+    height: 84vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+#centerPart:hover::-webkit-scrollbar-thumb {
+    background-color: #cccccc; /* Visible color when hovered */
+}
+
+#centerPart:hover::-webkit-scrollbar {
+    background-color: #eeecec; /* Visible color when hovered */
+}
+
+#centerPart::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+}
+#centerPart::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+#centerPart::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+#postScope {
+    opacity: 0.5;
+    font-size: 12px;
+    padding: 5px;
+}
+
+
+#rightSide {
+    
+    overflow-y: auto;
+    height: 84vh;
+}
+
+#postComposer {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+#postText {
+    resize: none;
+}
+
+#postComposer, #petList, #onlineFriends {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+#postText {
+    resize: none;
+}
+.pet-img, .friend-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+#rightSide::-webkit-scrollbar {
+    width: 8px;
+}
+#rightSide::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+#rightSide::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+.small-carousel {
+    padding-top: 10px;
+    max-width: 100%;
+    width: 100%;
+    height: auto;  /* Adjust height */
+    margin: 0 auto;  /* Center the carousel */
+}
+
+.small-carousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the container */
+    border-radius: 10px; /* Optional: Rounded corners */
+}
+
+/* Optional: Make controls smaller */
+.small-carousel .carousel-control-prev-icon,
+.small-carousel .carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+}
+
+#onlineFriends {
+    margin-top: 10px;
+    height: 50vh;
+    overflow-y: auto;
+}
+
+
+#onlineFriends:hover::-webkit-scrollbar-thumb {
+    background-color: #cccccc; /* Visible color when hovered */
+}
+
+#onlineFriends:hover::-webkit-scrollbar {
+    background-color: #eeecec; /* Visible color when hovered */
+}
+
+#onlineFriends::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+}
+#onlineFriends::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+#onlineFriends::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+#postText {
+    resize: none;
+}
+.pet-img, .friend-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#petList{
+    margin-top: 10px;
+}
+
+#postText {
+    resize: none;
+}
+.pet-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+
+
+
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-header .fw-bold {
+    font-size: 16px;
+}
+
+.post-header .text-muted {
+    font-size: 14px;
+}
+
+.post-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-content {
+    font-size: 16px;
+    color: #333;
+}
+
+.post-footer {
+    font-size: 14px;
+}
+
+.tagged-users .tagged-user {
+    color: #38BCFF;
+}
+
+.post-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.post-actions button {
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    color: #333;
+    font-size: 14px;
+}
+
+.post-actions button:hover {
+    background-color: #e1e1e1;
+}
+
+.post-actions i {
+    margin-right: 5px;
+}
+
+.post-actions button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.post-actions .btn-light {
+    border-radius: 25px;
+}
+
+.fas {
+    font-size: 18px;
+}
+
+.post-content img {
+    object-fit: cover;  /* Ensures images fill the container without distortion */
+    border-radius: 8px; /* Adds rounded corners to images */
+    max-width: 100%; /* Ensures image doesn't exceed container width */
+    height: auto; /* Maintains aspect ratio */
+}
+
+.post-actions .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .mobile-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background-color: #ffd259;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-icons i {
+        font-size: 24px;
+        margin-left: 15px;
+        cursor: pointer;
+    }
+
+    .mobile-nav {
+        display: flex;
+        justify-content: space-around;
+        background-color: #ffd259;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-nav a {
+        color: #333;
+        font-size: 24px;
+        text-decoration: none;
+    }
+
+    .mobile-nav a:hover {
+        color: #38BCFF;
+    }
+
+    .tabs-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .tab-button {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-top, .mobile-nav {
+        display: none !important;
+    }
+}
