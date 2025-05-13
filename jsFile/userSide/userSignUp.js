@@ -2,13 +2,15 @@ $(document).ready(function () {
     $('#userEmail').on('input', function () {
         const email = $(this).val().trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
         if (email === '') {
+            $(this).addClass('is-invalid');
             $('#emailError').text("Email is required.");
         } else if (!emailRegex.test(email)) {
+            $(this).addClass('is-invalid');
             $('#emailError').text("Please enter a valid email.");
         } else {
-            $('#emailError').text(""); // Clear error if valid
+            $(this).removeClass('is-invalid');
+            $('#emailError').text("");
         }
     });
 

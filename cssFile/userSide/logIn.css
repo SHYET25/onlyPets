@@ -138,6 +138,16 @@ h1 {
     cursor: pointer;
 }
 
+#toggleConfirmPassword {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
 .input-group {
     position: relative;
 }

@@ -32,8 +32,10 @@
                     <div class="w-75">
                         <input type="text" id="userFname" class="form-control mb-3" placeholder="Enter your first name" required>     
                         <input type="email" id="userLname" class="form-control mb-3" placeholder="Enter your last name" required>
-                        <input type="email" id="userEmail" class="form-control mb-3" placeholder="Enter your email" required>
-                        <small class="text-danger" id="emailError"></small>
+                        <div class=" mb-3">
+                            <input type="email" class="form-control" id="userEmail" placeholder="Enter your email" required>
+                            <div class="invalid-feedback" id="emailError"></div>
+                        </div>
     
                         
                             <!-- Country Code and Contact Number -->
@@ -49,16 +51,17 @@
                                 <input type="tel" id="contNumber" class="form-control" placeholder="Enter your number" required>
                             </div>
 
-                        <div class="input-group mb-3">
+                        <div class="input-group">
                             <input type="password" class="form-control" id="userPass" placeholder="Enter your password" required>
-                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword" data-target="userPass">
                                 <i class="fas fa-eye"></i> <!-- Eye Icon -->
                             </button>
                         </div>
                         <small class="text-danger" id="passError"></small>
-                        <div class="input-group mb-3">
+
+                        <div class="input-group mt-1">
                             <input type="password" class="form-control" id="userConfirmPass" placeholder="Confirm your password" required>
-                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword" data-target="userConfirmPass">
                                 <i class="fas fa-eye"></i> <!-- Eye Icon -->
                             </button>
                         </div>
@@ -66,8 +69,6 @@
                         <div id="responseMessage"></div> <!-- For displaying response messages -->
                         <br>
                         <button class="btn btn-primary mb-3" id="btnSign">Sign Up</button>
-                        <div id="responseMessage"></div> <!-- For displaying response messages -->
-
                     </div>
                     <!-- Forgot Password & Don't have an account Links -->
                     <div class="w-75">
@@ -84,14 +85,24 @@
     <script src="jsFile/userSide/userSignUp.js"></script>
     <script>
         // JavaScript to toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function () {
-            const passwordField = document.getElementById('password');
-            const icon = this.querySelector('i');
-            passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-        });
-
+        function setupTogglePassword(buttonId) {
+            document.getElementById(buttonId).addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const passwordField = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        }
+        setupTogglePassword('togglePassword');
+        setupTogglePassword('toggleConfirmPassword');
         const countryCodeSelect = document.getElementById('countryCode');
         const contactNumberInput = document.getElementById('contNumber');
 
