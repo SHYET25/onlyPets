@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <!-- Page CSS and JS -->
-    <link rel="stylesheet" href="../../cssFile/coachingCSS.css">
+    <link rel="stylesheet" href="cssFile/userSide/ownerProfile.css">
 
     <style>
    
@@ -1274,101 +1274,121 @@
         </style>
         
         <div id="rightSide" class="col-md-3">
+            <div id="rightSideContent">
             <!-- Profile Container -->
-            <div class="profile-container text-center">
-                <!-- Profile Picture -->
-                <img src="" id="profile" alt="Pet Profile Picture">
-                
-                <!-- Profile Details -->
-                <div class="profile-details mt-3">
-                    <h1 id="fullName">fname + lname</h1> 
-                    <p>User Email:</p> 
-                    <h3 id="email">email</h3> 
-                    <p>Contact Number:</p>
-                    <h3 id="contact">user contact</h3> 
+                <div class="profile-container text-center">
+                    <!-- Profile Picture -->
+                    <img src="" id="profile" alt="Pet Profile Picture">
+                    
+                    <!-- Profile Details -->
+                    <div class="profile-details mt-3">
+                        <h1 id="fullName">fname + lname</h1> 
+                        <p>User Email:</p> 
+                        <h3 id="email">email</h3> 
+                        <p>Contact Number:</p>
+                        <h3 id="contact">user contact</h3> 
+                    </div>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPetModal">add pet</button>
+                    <!-- Settings -->
+                    <a class="dropdown-item mt-5" href="#">
+                        <i class="fas fa-cog me-2"></i> Settings
+                    </a>
+
+                    <!-- Logout -->
+                    <a class="dropdown-item text-danger" id="logOutBtn">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+
+                    
                 </div>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPetModal">add pet</button>
-                <!-- Settings -->
-                <a class="dropdown-item mt-5" href="#">
-                    <i class="fas fa-cog me-2"></i> Settings
-                </a>
+                <div class="pet-profile-container text-center">
+                     <h4>Your Pets</h4>
+                    <ul class="list-group" id="petList"></ul>
+                </div>
 
-                <!-- Logout -->
-                <a class="dropdown-item text-danger" href="index.html">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                </a>
-
-                
+                <div class="modal fade" id="petDetailsModal" tabindex="-1" aria-labelledby="petDetailsLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="petDetailsLabel">Pet Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="petDetailsBody">
+                            <!-- Pet details will be inserted here -->
+                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-center position-relative">
-                        <h5 class="modal-title text-center" id="commentModalLabel">Add a Pet</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="pet_name" class="form-label">Pet Name</label>
-                            <input type="text" class="form-control" id="pet_name">
+            <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-center position-relative">
+                            <h5 class="modal-title text-center" id="commentModalLabel">Add a Pet</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
                         </div>
-                        <div class="mb-3">
-                            <label for="pet_type" class="form-label">Pet Type</label>
-                            <input type="text" class="form-control" id="pet_type">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="pet_name" class="form-label">Pet Name</label>
+                                <input type="text" class="form-control" id="pet_name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_type" class="form-label">Pet Type</label>
+                                <input type="text" class="form-control" id="pet_type">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_breed" class="form-label">Breed</label>
+                                <input type="text" class="form-control" id="pet_breed">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_birthdate" class="form-label">Birthdate</label>
+                                <input type="date" class="form-control" id="pet_birthdate">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_gender" class="form-label">Gender</label>
+                                <select class="form-select" id="pet_gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_color" class="form-label">Color</label>
+                                <input type="text" class="form-control" id="pet_color">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_eye_color" class="form-label">Eye Color</label>
+                                <input type="text" class="form-control" id="pet_eye_color">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_allergies" class="form-label">Allergies</label>
+                                <textarea class="form-control" id="pet_allergies" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_medical_conditions" class="form-label">Medical Conditions</label>
+                                <textarea class="form-control" id="pet_medical_conditions" rows="2"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_weight" class="form-label">Weight (kg)</label>
+                                <input type="number" class="form-control" id="pet_weight" step="0.01">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_size" class="form-label">Size</label>
+                                <input type="text" class="form-control" id="pet_size">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_img" class="form-label">Pet Profile Image</label>
+                                <input type="file" class="form-control" id="pet_img" accept="image/*">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pet_vaccine_img" class="form-label">Vaccination Image</label>
+                                <input type="file" class="form-control" id="pet_vaccine_img" accept="image/*">
+                            </div>
+                            
                         </div>
-                        <div class="mb-3">
-                            <label for="pet_breed" class="form-label">Breed</label>
-                            <input type="text" class="form-control" id="pet_breed">
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-primary" id="savePetBtn">Save Pet</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="pet_birthdate" class="form-label">Birthdate</label>
-                            <input type="date" class="form-control" id="pet_birthdate">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_gender" class="form-label">Gender</label>
-                            <select class="form-select" id="pet_gender">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_color" class="form-label">Color</label>
-                            <input type="text" class="form-control" id="pet_color">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_eye_color" class="form-label">Eye Color</label>
-                            <input type="text" class="form-control" id="pet_eye_color">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_allergies" class="form-label">Allergies</label>
-                            <textarea class="form-control" id="pet_allergies" rows="2"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_medical_conditions" class="form-label">Medical Conditions</label>
-                            <textarea class="form-control" id="pet_medical_conditions" rows="2"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_weight" class="form-label">Weight (kg)</label>
-                            <input type="number" class="form-control" id="pet_weight" step="0.01">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_size" class="form-label">Size</label>
-                            <input type="text" class="form-control" id="pet_size">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_img" class="form-label">Pet Profile Image</label>
-                            <input type="file" class="form-control" id="pet_img" accept="image/*">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pet_vaccine_img" class="form-label">Vaccination Image</label>
-                            <input type="file" class="form-control" id="pet_vaccine_img" accept="image/*">
-                        </div>
-                        
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-primary" id="savePetBtn">Save Pet</button>
                     </div>
                 </div>
             </div>

@@ -765,6 +765,27 @@
             border-radius: 50%; /* Makes it circular */
         }
 
+        .media-preview-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .remove-media-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            border-radius: 50%;
+            padding: 0 6px;
+            font-size: 16px;
+            line-height: 1;
+            display: none;
+            z-index: 2;
+        }
+
+        .media-preview-wrapper:hover .remove-media-btn {
+            display: block;
+        }
+
         
     </style>
 
@@ -1589,7 +1610,39 @@
                     </div>
                 </div>
             </div>
-    
+            
+            <!-- Post Preview Modal -->
+            <div class="modal fade" id="postPreviewModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content p-3">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Post Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p id="previewCaption" class="mb-3"></p>
+
+                        <div id="previewMedia" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+                        <select id="postScopeMain" class="form-select mb-2">
+                        <option value="public">Public</option>
+                        <option value="friends">Friends</option>
+                        <option value="private">Private</option>
+                        </select>
+
+                        <input type="text" id="taggedUsers" class="form-control mb-2" placeholder="Tag people (comma-separated emails)">
+                        <input type="text" id="taggedPets" class="form-control mb-2" placeholder="Tag pets (comma-separated pet names)">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="submitPost" class="btn btn-warning">Confirm Post</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Right Content -->
             <div id="rightContent" class="col-md-3">
                 
@@ -1597,9 +1650,16 @@
                         <h5>Compose a Post</h5>
                         <br>
                         <textarea id="postText" class="form-control mb-2" rows="3" placeholder="What's on your mind?"></textarea>
-                        <input type="file" id="postImage" class="form-control mb-2">
+                        
+                        <!-- Allow multiple images/videos -->
+                        <input type="file" id="postMedia" class="form-control mb-2" multiple accept="image/*,video/*">
+                        
+                        <!-- Preview container -->
+                        <div id="mediaPreview" class="mb-2 d-flex flex-wrap gap-2"></div>
+                        
                         <button id="postButton" class="btn btn-warning w-100">Post</button>
                     </div>
+
                     <div id="petMateList" class="card p-3 cardPet">
                         <div class="petMateH5">
                             <h5 class="">Pet Mates</h5>
@@ -1878,6 +1938,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="jsFile/globalSide/getSessionInfo.js"></script>
+    <script src="jsFile/userSide/ownerHome.js"></script>
     <script>
     // JS for the loading page
 

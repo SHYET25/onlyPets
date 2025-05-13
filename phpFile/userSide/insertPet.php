@@ -2,6 +2,8 @@
 session_start();
 include '../connection/connection.php';
 
+date_default_timezone_set('Asia/Manila');
+
 function generateRandomName($length = 7) {
     return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
 }

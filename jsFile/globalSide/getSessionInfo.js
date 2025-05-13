@@ -41,32 +41,38 @@ $(document).ready(function() {
             if (response.status === 'success') {
                 const data = response.data;
                 const role = response.role;
-    
+
                 if (role === 'user') {
-                    $('#fullName').text(data.user_fname + " " + data.user_lname);
+                    $('#fullName').text(`${data.user_fname} ${data.user_lname}`);
                     $('#email').text(data.user_email);
                     $('#contact').text(data.user_contact);
-                    $('#petProfile').attr('src', 'media/images/profiles/' + data.user_img);
+
+                    const profileImg = data.user_img ? `media/images/profiles/${data.user_img}` : 'media/images/default.jpg';
+                    $('#profile').attr('src', profileImg);
+                    $('#sideProfile').attr('src', profileImg);
                 } else if (role === 'veterinarian') {
-                    $('#fullName').text(data.vet_fname + " " + data.vet_lname);
+                    $('#fullName').text(`${data.vet_fname} ${data.vet_lname}`);
                     $('#email').text(data.vet_email);
                     $('#contact').text(data.vet_contact);
-                    $('#petProfile').attr('src', 'media/images/profiles/' + data.vet_img);
+
+                    const profileImg = data.vet_img ? `media/images/profiles/${data.vet_img}` : 'media/images/default.jpg';
+                    $('#profile').attr('src', profileImg);
+                    $('#sideProfile').attr('src', profileImg);
+                } else {
+                    // Unexpected role
+                    window.location.href = 'index.html';
                 }
             } else {
-                $('#fullName').text('Unknown User');
-                $('#email').text('No session');
-                $('#contact').text('-');
-                $('#petProfile').attr('src', 'media/images/default.jpg'); // fallback image
+                // Session error, redirect
+                window.location.href = 'index.html';
             }
         },
         error: function() {
-            $('#fullName').text('Error');
-            $('#email').text('Could not fetch data');
-            $('#contact').text('Error');
-            $('#petProfile').attr('src', 'media/images/default.jpg'); // fallback on error
+            // AJAX error, redirect
+            window.location.href = 'index.html';
         }
     });
+
 
     $.ajax({
         url: 'phpFile/globalSide/getSessionInfo.php',

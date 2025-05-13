@@ -1,0 +1,34 @@
+*::-webkit-scrollbar {
+    width: 8px;
+}
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+*::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+#rightSide {
+       
+    height: 100%; /* Match height with the main section */
+    padding: 0%;
+    scrollbar-gutter: stable; /* Prevent scrollbar shift */
+    overflow: hidden;
+    padding: 10px;
+}
+
+#rightSideContent {
+       
+    height: 100%;
+    overflow: hidden;
+    scrollbar-gutter: stable; /* Prevent scrollbar shift */
+    padding: 10px;
+    
+}
+
+#rightSideContent:hover {
+    overflow-y: auto; /* Add scroll if content overflows */
+    scrollbar-gutter: stable; /* Prevent scrollbar shift */
+    
+}
