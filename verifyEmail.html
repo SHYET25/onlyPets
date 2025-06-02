@@ -3,95 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../images/homepage/running1.png" type="image/png">
-
-
     <title>Verify Email Page</title>
-
-    <!-- BS LINKS -->
-    <!-- <link rel="stylesheet" href="../../bsCSS/bootstrap.css">
-    <link rel="stylesheet" href="../../bsCSS/bootstrap.min.css"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
-
-    <!-- Font Awesome Link -->
+    <link rel="icon" href="media/images/utilities/paw.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
     <style>
-        .starfield { height:100%; left:0; position:absolute; top:0; width:100%; z-index:-1;}
-
-        .card {
-            height: 65vh;
-            width: 70vh;
-            background-color: rgba(236, 236, 236, 1);
-           
+        body {
+            background: #38b6ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .key {
-            font-size: 10vh;
+        .verify-card {
+            background: #85d2ff;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 2.5rem 2rem;
+            max-width: 420px;
+            width: 100%;
         }
-
-        .int {
-            height: 7vh;
+        .verify-title {
+            font-weight: 900;
+            background: #38b6ff;
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 0;
+            margin-bottom: 1.5rem;
         }
-
-        .otp {
-            font-size: 20px;
-            padding-bottom: 15%;
+        .otp-input {
+            width: 48px;
+            height: 56px;
+            font-size: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            border: 1px solid #b0c4de;
         }
-
-      
-        
+        .otp-input:last-child {
+            margin-right: 0;
+        }
+        #verifyButton, #resendOtpButton {
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .otp-warning {
+            font-size: 1rem;
+            color: #b22222;
+        }
+         /* Remove number input arrows for all browsers */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
     </style>
-
 </head>
-
-
-    <body class="starfield">
-    <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="row justify-content-center">
-            <div class="col-md-12 d-flex justify-content-center">
-                <div class="card p-4 text-center justify-content-center">
-                    <div class="mb-3 text-center">
-                        <i class="fa-solid fa-unlock-keyhole key"></i>
-                    </div>
-                    <div class="mb-3 text-center">
-                        
-                        <p><b>One Time Password (OTP)</b> <br>has been sent to your email.</p>
-                    </div>
-                    
-                    <div class="mb-3 d-flex justify-content-center gap-2">
-                        <input type="number" id="otpCode" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode1')">
-                        <input type="number" id="otpCode1" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode2')">
-                        <input type="number" id="otpCode2" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode3')">
-                        <input type="number" id="otpCode3" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode4')">
-                        <input type="number" id="otpCode4" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode5')">
-                        <input type="number" id="otpCode5" class="form-control text-center int" maxlength="1" style="width: 50px;" oninput="moveToNext(this, null)">
-                    </div>
-                    <div class="mb-3 text-center otp">
-                        
-                        <p><b>DO NOT SHARE</b> <br>your OTP to others.</p>
-                    </div>
-                    <button type="button" id="verifyButton" class="btn btn-success w-100">Verify</button>
-                    <button id="resendOtpButton">Resend OTP</button>
-                    <p id="emailDisplay">Loading email...</p>
-
-                </div>
-            </div>
+<body>
+    <div class="verify-card mx-auto">
+        <div class="verify-title text-center mb-4">
+            <i class="fa-solid fa-unlock-keyhole" style="margin-right: 10px;"></i>
+            Email Verification
         </div>
+        <div class="mb-3 text-center">
+            <p><b>One Time Password (OTP)</b> <br>has been sent to your email.</p>
+        </div>
+        <div class="mb-3 d-flex justify-content-center gap-2">
+            <input type="number" id="otpCode" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode1')">
+            <input type="number" id="otpCode1" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode2')">
+            <input type="number" id="otpCode2" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode3')">
+            <input type="number" id="otpCode3" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode4')">
+            <input type="number" id="otpCode4" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, 'otpCode5')">
+            <input type="number" id="otpCode5" class="form-control text-center int otp-input" maxlength="1" style="width: 50px;" oninput="moveToNext(this, null)">
+        </div>
+        <div class="mb-3 text-center otp-warning">
+            <p>Do not share your OTP with others.</p>
+        </div>
+        <button type="button" id="verifyButton" class="btn btn-success">Verify</button>
+        <button type="button" id="resendOtpButton" class="btn btn-link">Resend OTP</button>
+        <p id="emailDisplay" class="text-center text-dark mb-2">Loading email...</p>
+        <div id="otpError" class="text-danger text-center" style="display:none;"></div>
     </div>
-</body>
 
-
-    <!-- AJAX link -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="jsFile/userSide/userSignUp.js"></script>
-    <script src="https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
-
     <script>
-            // Konstantin Endreev from tilda//
-            $.ajax({
+        $.ajax({
             url: 'phpFile/globalSide/getSessionEmail.php',
             method: 'GET',
             dataType: 'json',
@@ -106,16 +104,46 @@
                 $('#emailDisplay').text('Error fetching session email.');
             }
         });
-            function moveToNext(currentInput, nextInputId) {
+
+        function moveToNext(currentInput, nextInputId) {
             if (currentInput.value.length === 1) {
                 if (nextInputId) {
                     document.getElementById(nextInputId).focus();
                 }
             }
         }
-    ;
+        // Allow pressing Enter to submit from any OTP input
+        $('.otp-input').on('keypress', function(e) {
+            if (e.which === 13) {
+                $('#verifyBtn').click();
+            }
+        });
+        function moveToNext(currentInput, nextInputId) {
+            // Only keep the first character (digit)
+            if (currentInput.value.length > 1) {
+                currentInput.value = currentInput.value.slice(0, 1);
+            }
+            if (currentInput.value.length === 1 && nextInputId) {
+                document.getElementById(nextInputId).focus();
+            }
+        }
 
-    // заменить  $('поставить айди блока').starfield(); //
+        // Move to previous input on backspace if empty
+        $('.otp-input').on('keydown', function(e) {
+            if (e.key === "Backspace" && this.value === "") {
+                const prev = $(this).prev('.otp-input');
+                if (prev.length) {
+                    prev.focus();
+                }
+            }
+        });
+
+        // Allow pressing Enter to submit from any OTP input
+        $('.otp-input').on('keypress', function(e) {
+            if (e.which === 13) {
+                $('#verifyBtn').click();
+            }
+        });
     </script>
-
+</body>
 </html>

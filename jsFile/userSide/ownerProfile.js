@@ -30,15 +30,15 @@ $.ajax({
             // Show name + breed in the list
             Object.entries(petsGrouped).forEach(([id, { info, vaccinations }]) => {
                 const listItem = $(`
-                     <li class="list-group-item pet-item d-flex align-items-center" style=" background-color: #85d2ff; border-radius: 15px; margin-bottom: 10px; padding: 10px; border:none">
-                        <img src="media/images/petPics/${info.pet_img}" alt="${info.pet_name}" class="pet-img me-3" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">
-                        <div>
-                            <div class="pet-name fw-bold" style="font-size: 1rem; color: #333;">${info.pet_name}</div>
-                            <div class="pet-breed text-muted" style="font-size: 0.9rem; color: #555;">${info.pet_breed}</div>
-                        </div>
-                    </li>
-                    
-                `);
+                <li class="list-group-item pet-item d-flex align-items-center" style=" background-color: #85d2ff; border-radius: 15px; margin-bottom: 10px; padding: 10px; border:none">
+                    <img src="media/images/petPics/${info.pet_img}" alt="${info.pet_name}" class="pet-img me-3" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">
+                    <div>
+                        <div class="pet-name fw-bold" style="font-size: 1rem; color: #333;">${info.pet_name}</div>
+                        <div class="pet-breed text-muted" style="font-size: 0.9rem; color: #555;">${info.pet_breed}</div>
+                    </div>
+                </li>
+                <hr>
+            `);
 
                 listItem.on("click", function () {
                     const detailsHtml = `
