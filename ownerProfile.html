@@ -307,7 +307,20 @@
             display: block;
             transition: 0.3s;
         }
+        .petList5 {
+            font-weight: 900;
+            background-color: #38b6ff;
+            padding: 10px;
+            width: 100%;
+            border-radius: 10px;
+           
+        }
 
+        .petList5 h5{
+            font-weight: 900;
+            background-color: #38b6ff;
+           
+        }
         
         .sidebar a:hover {
             color: #ffff;
@@ -557,7 +570,7 @@
             border-color: #85d2ff;
         }
 
-        .petMateH5 {
+        .petListH5 {
             font-weight: 900;
             background-color: #38b6ff;
             padding: 10px;
@@ -566,7 +579,7 @@
            
         }
 
-        .petMateH5 h5{
+        .petListH5 h5{
             font-weight: 900;
             background-color: #38b6ff;
            
@@ -580,9 +593,15 @@
 
         .petCollection {
             height: 100%;
-            margin-top: 20px;
-     
+           
+            scrollbar-gutter: stable; 
             overflow: hidden;
+        }
+
+        .petCollection:hover {
+            overflow: auto;
+            scrollbar-gutter: stable; /* Prevent scrollbar shift */
+            height: 100%;
         }
 
 
@@ -1249,7 +1268,6 @@
                 background-color: #ffffff;
                 border: 1px solid #e0e0e0;
                 border-radius: 15px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 padding: 20px;
                 margin-top: 20px;
             }
@@ -1276,34 +1294,63 @@
         <div id="rightSide" class="col-md-3">
             <div id="rightSideContent">
             <!-- Profile Container -->
-                <div class="profile-container text-center">
-                    <!-- Profile Picture -->
-                    <img src="" id="profile" alt="Pet Profile Picture">
-                    
-                    <!-- Profile Details -->
-                    <div class="profile-details mt-3">
-                        <h1 id="fullName">fname + lname</h1> 
-                        <p>User Email:</p> 
-                        <h3 id="email">email</h3> 
-                        <p>Contact Number:</p>
-                        <h3 id="contact">user contact</h3> 
+                <div class="card p-3 profile-container" id="profileContainer" style="border-radius: 15px; background-color: #85d2ff;">
+                    <h5 class="text-center">Profile Details</h5>
+                    <div id="profileDetails" class="profile-details-container">
+                        <!-- Profile Picture -->
+                        <div class="text-center">
+                            <img src="" id="profile" alt="Pet Profile Picture" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        
+                        <!-- Profile Details -->
+                        <div class="profile-details mt-3 text-center">
+                            <h1 id="fullName">fname + lname</h1> 
+                            <p>User Email:</p> 
+                            <h3 id="email">email</h3> 
+                            <p>Contact Number:</p>
+                            <h3 id="contact">user contact</h3> 
+                        </div>
+                        
+                        <!-- Add Pet Button -->
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPetModal">Add Pet</button>
+                        </div>
+                        
+                        <!-- Settings and Logout -->
+                        <div class="text-center mt-4">
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </a>
+                            <a class="dropdown-item text-danger" id="logOutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPetModal">add pet</button>
-                    <!-- Settings -->
-                    <a class="dropdown-item mt-5" href="#">
-                        <i class="fas fa-cog me-2"></i> Settings
-                    </a>
-
-                    <!-- Logout -->
-                    <a class="dropdown-item text-danger" id="logOutBtn">
-                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </a>
-
-                    
                 </div>
-                <div class="pet-profile-container text-center">
-                     <h4>Your Pets</h4>
-                    <ul class="list-group" id="petList"></ul>
+                <style>
+                    .profile-container {
+                        height: 60px; /* Collapsed height */
+                        overflow: hidden; /* Hide content when collapsed */
+                        transition: height 0.6s ease; /* Smooth transition for height */
+                        border: none;
+                    }
+
+                    .profile-container:hover {
+                        height: 70%; /* Expanded height on hover */
+                    }
+
+                    .profile-details-container {
+                        padding: 10px;
+                    }
+                </style>
+                
+                <div class="pet-profile-container text-center mt-5 card p-3" id="petMateList">
+                     <div class="petListH5 mb-2">
+                            <h5 class="">Your Pets</h5>
+                    </div>
+                    <div class="petCollection">
+                        <ul class="list-group" id="petList"></ul>
+                    </div>
                 </div>
 
                 <div class="modal fade" id="petDetailsModal" tabindex="-1" aria-labelledby="petDetailsLabel" aria-hidden="true">
