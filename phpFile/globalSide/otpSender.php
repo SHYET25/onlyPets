@@ -11,7 +11,7 @@ function otpSender($email, $otp, $fname, $lname) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'josephmirasol25@gmail.com';
-        $mail->Password = 'afvl lgqm cqxb afqs';
+        $mail->Password = 'mmgt emyv rgtm fcbr';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
