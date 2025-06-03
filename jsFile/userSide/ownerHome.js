@@ -189,6 +189,103 @@ $.ajax({
     }
 });
 
+$(document).ready(function() {
+    // --- RECENT SEARCHES (PHP) ---
+    function renderRecentSearches(recent) {
+        let html = '';
+        if (!recent || recent.length === 0) {
+            html = '<div class="text-muted text-center">No recent searches.</div>';
+        } else {
+            recent.forEach(s => {
+                html += `<div class="col-md-6 col-lg-4 mb-3">
+                    <div class="d-flex align-items-center border rounded p-2 recent-search-item" style="cursor:pointer;" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}">
+                        <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                        <div>
+                            <strong>${s.name}</strong><br>
+                            <small class="text-muted">${s.location}</small>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+        $('#recentSearches').html(html);
+    }
+    function fetchRecentSearches() {
+        $.get('phpFile/globalSide/fetchRecentSearches.php', function(res) {
+            if (res.status === 'success') {
+                renderRecentSearches(res.recent);
+            } else {
+                $('#recentSearches').html('<div class="text-muted text-center">No recent searches.</div>');
+            }
+        }, 'json');
+    }
+    fetchRecentSearches();
+
+    $('#searchInput').on('input', function() {
+        const query = $(this).val().trim();
+        if (query.length === 0) {
+            $('#searchSuggestions').hide().empty();
+            return;
+        }
+        $.ajax({
+            url: 'phpFile/globalSide/searchSuggestions.php',
+            method: 'POST',
+            data: { query },
+            dataType: 'json',
+            success: function(suggestions) {
+                if (suggestions.length > 0) {
+                    let html = '';
+                    suggestions.forEach(function(s) {
+                        html += `<a href="#" class="list-group-item list-group-item-action search-suggestion-item" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}">
+                            <div class="d-flex align-items-center">
+                                <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="40" height="40">
+                                <div>
+                                    <strong>${s.name}</strong><br>
+                                    <small class="text-muted">${s.location}</small>
+                                </div>
+                            </div>
+                        </a>`;
+                    });
+                    $('#searchSuggestions').html(html).show();
+                } else {
+                    $('#searchSuggestions').html('<div class="list-group-item">No results found.</div>').show();
+                }
+            },
+            error: function() {
+                $('#searchSuggestions').html('<div class="list-group-item text-danger">Error fetching suggestions.</div>').show();
+            }
+        });
+    });
+    // Handle click on suggestion
+    $(document).on('click', '.search-suggestion-item', function(e) {
+        e.preventDefault();
+        const name = $(this).data('name');
+        const img = $(this).data('img');
+        const location = $(this).data('location');
+        // Add to recent searches in DB
+        $.post('phpFile/globalSide/updateRecentSearches.php', {
+            searched_user: JSON.stringify({ name: decodeURIComponent(name), img: decodeURIComponent(img), location: decodeURIComponent(location) })
+        }, function(res) {
+            if (res.status === 'success') {
+                renderRecentSearches(res.recent);
+            }
+            window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}`;
+        }, 'json');
+    });
+    // Handle click on recent search
+    $(document).on('click', '.recent-search-item', function() {
+        const name = $(this).data('name');
+        const img = $(this).data('img');
+        const location = $(this).data('location');
+        window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}`;
+    });
+    // Hide suggestions when modal closes
+    $('#searchModal').on('hidden.bs.modal', function() {
+        $('#searchSuggestions').hide().empty();
+        $('#searchInput').val('');
+    });
+});
+
 
 
 
