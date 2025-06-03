@@ -61,6 +61,47 @@
             transform: translateY(-50%) scale(0.95);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+        /* Add to your <style> section */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+        }
+        .spinner-border {
+            width: 1.2em;
+            height: 1.2em;
+            border-width: 0.18em;
+        }
+        .fa-check {
+            color: #28a745;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.5);}
+            80% { transform: scale(1.2);}
+            100% { transform: scale(1);}
+        }
+        #btnLog {
+            position: relative;
+        }
+        #btnLog .spinner-border {
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        #btnLog .checkmark {
+            margin-left: 8px;
+            color: #fff;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        #btnLog .error-x {
+            margin-left: 8px;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -88,7 +129,12 @@
                             <div class="g-recaptcha mb-2" data-sitekey="6LcC0DErAAAAAGxUEaAAUr9zB3He4w_5AbuubCbR"></div>
                         </div>
                         <br>
-                        <button class="btn btn-primary mb-3" id="btnLog">Log in</button>
+                        <button class="btn btn-primary mb-3" id="btnLog">
+                            <span class="btn-text">Log in</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span class="checkmark d-none"><i class="fas fa-check"></i></span>
+                            <span class="error-x d-none"><i class="fas fa-times text-danger"></i></span>
+                        </button>
                     </div>                 
                     <!-- Forgot Password & Don't have an account Links -->
                     <div class="w-75">
@@ -97,7 +143,9 @@
                             <div class="input-with-icon">
                                 <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
                                 <button type="button" id="submitForgotPassword">
-                                    <i class="fas fa-paper-plane"></i>
+                                    <span class="btn-icon">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -114,6 +162,24 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="jsFile/globalSide/signIn.js"></script>
     <script>
+        $('#submitForgotPassword').click(function () {
+            var $btn = $(this);
+            var $icon = $btn.find('.btn-icon');
+            // Show spinner
+            $icon.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $btn.prop('disabled', true);
+
+            // Simulate async (replace with your AJAX)
+            setTimeout(function () {
+                // Show check
+                $icon.html('<i class="fas fa-check" style="color:white"></i>');
+                setTimeout(function () {
+                    // Restore paper plane after 1s and enable button
+                    $icon.html('<i class="fas fa-paper-plane"></i>');
+                    $btn.prop('disabled', false);
+                }, 2500);
+            }, 1500); // Simulate 1.5s loading
+        });
         // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordField = document.getElementById('indexPass');
@@ -130,6 +196,41 @@
             e.preventDefault();
             document.getElementById('forgotPasswordCollapse').classList.toggle('active');
         });
+        
+        $('#btnLog').click(function () {
+        var $btn = $(this);
+        $btn.prop('disabled', true);
+        $btn.find('.btn-text').text('Logging in...');
+        $btn.find('.spinner-border').removeClass('d-none');
+        $btn.find('.checkmark').addClass('d-none');
+        $btn.find('.error-x').addClass('d-none');
+
+        // Simulate AJAX (replace with your real AJAX)
+        setTimeout(function () {
+            // Simulate login result
+            var isSuccess = false; // Change to true to simulate success
+
+            $btn.find('.spinner-border').addClass('d-none');
+            if (isSuccess) {
+                $btn.find('.checkmark').removeClass('d-none');
+                $btn.find('.btn-text').text('Success!');
+                setTimeout(function () {
+                    $btn.find('.checkmark').addClass('d-none');
+                    $btn.find('.btn-text').text('Log in');
+                    $btn.prop('disabled', false);
+                    // window.location.href = 'yourHomePage.html'; // Uncomment for redirect
+                }, 1200);
+            } else {
+                $btn.find('.error-x').removeClass('d-none');
+                $btn.find('.btn-text').text('Error!');
+                setTimeout(function () {
+                    $btn.find('.error-x').addClass('d-none');
+                    $btn.find('.btn-text').text('Log in');
+                    $btn.prop('disabled', false);
+                }, 1200);
+            }
+        }, 1200);
+    });
     </script>
 </body>
 </html>

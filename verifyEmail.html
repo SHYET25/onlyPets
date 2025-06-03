@@ -57,6 +57,30 @@
             -webkit-appearance: none; 
             margin: 0; 
         }
+
+        #verifyButton {
+            position: relative;
+        }
+        #verifyButton .spinner-border {
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        #verifyButton .checkmark {
+            margin-left: 8px;
+            color: #fff;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        #verifyButton .error-x {
+            margin-left: 8px;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.5);}
+            80% { transform: scale(1.2);}
+            100% { transform: scale(1);}
+        }
     </style>
 </head>
 <body>
@@ -79,7 +103,12 @@
         <div class="mb-3 text-center otp-warning">
             <p>Do not share your OTP with others.</p>
         </div>
-        <button type="button" id="verifyButton" class="btn btn-success">Verify</button>
+        <button type="button" id="verifyButton" class="btn btn-success w-100 fw-bold mb-2">
+            <span class="btn-text">Verify</span>
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <span class="checkmark d-none"><i class="fas fa-check"></i></span>
+            <span class="error-x d-none"><i class="fas fa-times text-danger"></i></span>
+        </button>
         <button type="button" id="resendOtpButton" class="btn btn-link">Resend OTP</button>
         <p id="emailDisplay" class="text-center text-dark mb-2">Loading email...</p>
         <div id="otpError" class="text-danger text-center" style="display:none;"></div>
@@ -143,6 +172,38 @@
             if (e.which === 13) {
                 $('#verifyBtn').click();
             }
+        });
+        $('#verifyButton').click(function () {
+            var $btn = $(this);
+            $btn.prop('disabled', true);
+            $btn.find('.btn-text').text('Verifying...');
+            $btn.find('.spinner-border').removeClass('d-none');
+            $btn.find('.checkmark').addClass('d-none');
+            $btn.find('.error-x').addClass('d-none');
+
+            // Simulate AJAX (replace with your real AJAX)
+            setTimeout(function () {
+                var isSuccess = false; // Change to true to simulate success
+
+                $btn.find('.spinner-border').addClass('d-none');
+                if (isSuccess) {
+                    $btn.find('.checkmark').removeClass('d-none');
+                    $btn.find('.btn-text').text('Verified!');
+                    setTimeout(function () {
+                        $btn.find('.checkmark').addClass('d-none');
+                        $btn.find('.btn-text').text('Verify');
+                        $btn.prop('disabled', false);
+                    }, 1200);
+                } else {
+                    $btn.find('.error-x').removeClass('d-none');
+                    $btn.find('.btn-text').text('Error');
+                    setTimeout(function () {
+                        $btn.find('.error-x').addClass('d-none');
+                        $btn.find('.btn-text').text('Verify');
+                        $btn.prop('disabled', false);
+                    }, 1200);
+                }
+            }, 1500);
         });
     </script>
 </body>
