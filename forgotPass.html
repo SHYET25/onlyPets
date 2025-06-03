@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OnlyPets | Reset Password</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Your CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Reset Your Password</h2>
+        <div class="form-group">
+            <label for="newPass">New Password</label>
+            <input type="password" id="newPass" class="form-control" placeholder="Enter new password">
+        </div>
+        <div class="form-group">
+            <label for="confirmPass">Confirm Password</label>
+            <input type="password" id="confirmPass" class="form-control" placeholder="Confirm new password">
+        </div>
+        <button type="button" id="submitNewPassword" class="btn">Submit</button>
+    </div>
+
+    <script>
+        // Extract email and token from URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const email = getQueryParam('email');
+        const token = getQueryParam('token');
+
+        $('#submitNewPassword').click(function () {
+            const newPass = $('#newPass').val();
+            const confirmPass = $('#confirmPass').val();
+
+            if (!newPass || !confirmPass) {
+                alert("Please fill out both fields.");
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert("Passwords do not match.");
+                return;
+            }
+
+            $.ajax({
+                url: 'phpFile/globalSide/resetPassword.php',
+                type: 'POST',
+                data: {
+                    email: email,
+                    token: token,
+                    newPassword: newPass
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        window.location.href = 'index.html'; // redirect to login
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function () {
+                    alert("Server error.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
