@@ -58,3 +58,32 @@ $('#btnLog').click(function(e) {
         }
     });
 });
+
+$('#submitForgotPassword').click(function(e) {
+    e.preventDefault();
+
+    let email = $('#emailInput').val();
+
+    if (!email) {
+        alert("Please enter your email address.");
+        return;
+    }
+
+    $.ajax({
+        url: 'phpFile/globalSide/sendForgotPassword.php',
+        type: 'POST',
+        data: { userEmail: email },
+        dataType: 'json',
+        success: function(res) {
+            if (res.status === 'success') {
+                alert(res.message);
+            } else {
+                alert(res.message);
+            }
+        },
+        error: function() {
+            alert("Server error. Please try again later.");
+        }
+    });
+});
+
