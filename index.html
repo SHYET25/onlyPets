@@ -208,7 +208,7 @@
         // Simulate AJAX (replace with your real AJAX)
         setTimeout(function () {
             // Simulate login result
-            var isSuccess = false; // Change to true to simulate success
+            var isSuccess = true; // Change to true to simulate success
 
             $btn.find('.spinner-border').addClass('d-none');
             if (isSuccess) {
@@ -219,7 +219,7 @@
                     $btn.find('.btn-text').text('Log in');
                     $btn.prop('disabled', false);
                     // window.location.href = 'yourHomePage.html'; // Uncomment for redirect
-                }, 1200);
+                }, 2000);
             } else {
                 $btn.find('.error-x').removeClass('d-none');
                 $btn.find('.btn-text').text('Error!');

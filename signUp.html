@@ -14,6 +14,30 @@
             margin: 0;
             padding: 0;
         }
+        /* Add to your <style> section */
+        #btnSign {
+            position: relative;
+        }
+        #btnSign .spinner-border {
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        #btnSign .checkmark {
+            margin-left: 8px;
+            color: #fff;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        #btnSign .error-x {
+            margin-left: 8px;
+            font-size: 1.2em;
+            animation: pop 0.3s;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.5);}
+            80% { transform: scale(1.2);}
+            100% { transform: scale(1);}
+        }
     </style>
 </head>
 <body>
@@ -68,7 +92,12 @@
                         <small class="text-danger" id="confirmError"></small>
                         <div id="responseMessage"></div> <!-- For displaying response messages -->
                         <br>
-                        <button class="btn btn-primary mb-3" id="btnSign">Sign Up</button>
+                        <button class="btn btn-primary mb-3" id="btnSign">
+                            <span class="btn-text">Sign Up</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span class="checkmark d-none"><i class="fas fa-check"></i></span>
+                            <span class="error-x d-none"><i class="fas fa-times text-danger"></i></span>
+                        </button>
                     </div>
                     <!-- Forgot Password & Don't have an account Links -->
                     <div class="w-75">
@@ -125,7 +154,39 @@
         // Initialize on page load
         window.addEventListener('load', updateMaxLength);
 
+        $('#btnSign').click(function () {
+        var $btn = $(this);
+        $btn.prop('disabled', true);
+        $btn.find('.btn-text').text('Signing up...');
+        $btn.find('.spinner-border').removeClass('d-none');
+        $btn.find('.checkmark').addClass('d-none');
+        $btn.find('.error-x').addClass('d-none');
 
+        // Simulate AJAX (replace with your real AJAX)
+        setTimeout(function () {
+            var isSuccess = true; // Change to false to simulate error
+
+            $btn.find('.spinner-border').addClass('d-none');
+            if (isSuccess) {
+                $btn.find('.checkmark').removeClass('d-none');
+                $btn.find('.btn-text').text('Success!');
+                setTimeout(function () {
+                    $btn.find('.checkmark').addClass('d-none');
+                    $btn.find('.btn-text').text('Sign Up');
+                    $btn.prop('disabled', false);
+                    // window.location.href = 'verifyEmail.html'; // Uncomment for redirect
+                }, 1200);
+            } else {
+                $btn.find('.error-x').removeClass('d-none');
+                $btn.find('.btn-text').text('Error!');
+                setTimeout(function () {
+                    $btn.find('.error-x').addClass('d-none');
+                    $btn.find('.btn-text').text('Sign Up');
+                    $btn.prop('disabled', false);
+                }, 1200);
+            }
+        }, 1200);
+    });
     </script>
 </body>
 </html>
