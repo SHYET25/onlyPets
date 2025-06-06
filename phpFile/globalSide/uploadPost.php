@@ -31,6 +31,18 @@ if (!isset($_SESSION['userEmail'])) {
 
 $poster_email = $_SESSION['userEmail'];
 
+// Check if user is banned
+$stateStmt = $conn->prepare("SELECT state FROM user WHERE user_email = ?");
+$stateStmt->bind_param("s", $poster_email);
+$stateStmt->execute();
+$stateResult = $stateStmt->get_result();
+$userState = $stateResult->fetch_assoc();
+
+if ($userState && $userState['state'] === 'banned') {
+    echo json_encode(['status' => 'error', 'message' => 'Your account is banned. You cannot post.']);
+    exit;
+}
+
 $caption = $_POST['caption'] ?? '';
 $scope = $_POST['scope'] ?? 'public';
 $tagged = $_POST['tagged'] ?? '';

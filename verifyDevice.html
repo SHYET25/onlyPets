@@ -123,14 +123,32 @@
             }
         });
 
-        // Move to next input on input
         function moveToNext(currentInput, nextInputId) {
-            if (currentInput.value.length === 1) {
-                if (nextInputId) {
-                    document.getElementById(nextInputId).focus();
-                }
+            // Only keep the first character (digit)
+            if (currentInput.value.length > 1) {
+                currentInput.value = currentInput.value.slice(0, 1);
+            }
+            if (currentInput.value.length === 1 && nextInputId) {
+                document.getElementById(nextInputId).focus();
             }
         }
+
+        // Move to previous input on backspace if empty
+        $('.otp-input').on('keydown', function(e) {
+            if (e.key === "Backspace" && this.value === "") {
+                const prev = $(this).prev('.otp-input');
+                if (prev.length) {
+                    prev.focus();
+                }
+            }
+        });
+
+         // Allow pressing Enter to submit from any OTP input
+        $('.otp-input').on('keypress', function(e) {
+            if (e.which === 13) {
+                $('#verifyBtn').click();
+            }
+        });
 
         // Collect OTP and verify
         $('#verifyBtn').click(function () {

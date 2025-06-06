@@ -35,6 +35,10 @@ $user = null;
 if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
     $role = 'user';
+        if (isset($user['state']) && $user['state'] === 'suspended') {
+        echo json_encode(["status" => "error", "message" => "Your account has been suspended."]);
+        exit;
+    }
 } else {
     // Step 3: Check veterinarian table
     $stmt = $conn->prepare("SELECT * FROM veterinarian WHERE vet_email = ?");
