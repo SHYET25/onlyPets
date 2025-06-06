@@ -7,7 +7,7 @@ $search = isset($_POST['query']) ? $_POST['query'] : '';
 $suggestions = [];
 
 if ($search !== '') {
-    $stmt = $conn->prepare("SELECT user_fname, user_lname, user_img, user_country, user_province, user_city, user_baranggay FROM user WHERE CONCAT(user_fname, ' ', user_lname) LIKE ? LIMIT 5");
+    $stmt = $conn->prepare("SELECT user_email, user_fname, user_lname, user_img, user_country, user_province, user_city, user_baranggay FROM user WHERE CONCAT(user_fname, ' ', user_lname) LIKE ? LIMIT 5");
     $like = "%$search%";
     $stmt->bind_param("s", $like);
     $stmt->execute();
@@ -21,7 +21,14 @@ if ($search !== '') {
         $suggestions[] = [
             'name' => $row['user_fname'] . ' ' . $row['user_lname'],
             'img' => $row['user_img'],
-            'location' => implode(', ', $location)
+            'location' => implode(', ', $location),
+            'email' => $row['user_email'],
+            'fname' => $row['user_fname'],
+            'lname' => $row['user_lname'],
+            'country' => $row['user_country'],
+            'province' => $row['user_province'],
+            'city' => $row['user_city'],
+            'baranggay' => $row['user_baranggay']
         ];
     }
     $stmt->close();

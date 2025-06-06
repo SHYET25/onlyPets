@@ -37,7 +37,7 @@ if (!is_array($recent)) $recent = [];
 
 // Remove duplicate if exists
 $recent = array_filter($recent, function($item) use ($searched_user) {
-    return $item['name'] !== $searched_user['name'] || $item['img'] !== $searched_user['img'];
+    return $item['email'] !== $searched_user['email'];
 });
 // Add to front
 array_unshift($recent, $searched_user);

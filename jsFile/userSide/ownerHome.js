@@ -198,7 +198,7 @@ $(document).ready(function() {
         } else {
             recent.forEach(s => {
                 html += `<div class="col-md-6 col-lg-4 mb-3">
-                    <div class="d-flex align-items-center border rounded p-2 recent-search-item" style="cursor:pointer;" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}">
+                    <div class="d-flex align-items-center border rounded p-2 recent-search-item" style="cursor:pointer;" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}" data-email="${encodeURIComponent(s.email || '')}">
                         <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="50" height="50">
                         <div>
                             <strong>${s.name}</strong><br>
@@ -236,7 +236,7 @@ $(document).ready(function() {
                 if (suggestions.length > 0) {
                     let html = '';
                     suggestions.forEach(function(s) {
-                        html += `<a href="#" class="list-group-item list-group-item-action search-suggestion-item" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}">
+                        html += `<a href="#" class="list-group-item list-group-item-action search-suggestion-item" data-email="${encodeURIComponent(s.email)}" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}"> 
                             <div class="d-flex align-items-center">
                                 <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="40" height="40">
                                 <div>
@@ -262,14 +262,16 @@ $(document).ready(function() {
         const name = $(this).data('name');
         const img = $(this).data('img');
         const location = $(this).data('location');
+        const email = $(this).data('email');
+        
         // Add to recent searches in DB
         $.post('phpFile/globalSide/updateRecentSearches.php', {
-            searched_user: JSON.stringify({ name: decodeURIComponent(name), img: decodeURIComponent(img), location: decodeURIComponent(location) })
+            searched_user: JSON.stringify({ name: decodeURIComponent(name), img: decodeURIComponent(img), location: decodeURIComponent(location), email: decodeURIComponent(email) })
         }, function(res) {
             if (res.status === 'success') {
                 renderRecentSearches(res.recent);
             }
-            window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}`;
+            window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}&email=${email}`;
         }, 'json');
     });
     // Handle click on recent search
@@ -277,7 +279,9 @@ $(document).ready(function() {
         const name = $(this).data('name');
         const img = $(this).data('img');
         const location = $(this).data('location');
-        window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}`;
+        const email = $(this).data('email');
+        
+        window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}&email=${email}`;
     });
     // Hide suggestions when modal closes
     $('#searchModal').on('hidden.bs.modal', function() {
