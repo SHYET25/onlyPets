@@ -283,6 +283,84 @@ $(document).ready(function() {
                     }
                 });
                 // --- END FRIEND REQUEST BUTTON LOGIC ---
+
+                // --- FETCH AND DISPLAY OTHER USER'S POSTS ---
+    function fetchOtherUserPosts() {
+        if (!email) return;
+        $.ajax({
+            url: 'phpFile/globalSide/fetchOtherUserPosts.php',
+            method: 'GET',
+            data: { email },
+            dataType: 'json',
+            success: function(response) {
+                const $container = $('#otherUserPostsContainer');
+                $container.empty();
+                if (response.status === 'success' && response.posts.length > 0) {
+                    response.posts.forEach((post, postIdx) => {
+                        const mediaFiles = post.post_images ? JSON.parse(post.post_images) : [];
+                        let mediaHtml = '';
+                        if (mediaFiles.length > 0) {
+                            mediaHtml = '<div class="row g-2">';
+                            mediaFiles.forEach((file, idx) => {
+                                const fileExtension = file.split('.').pop().toLowerCase();
+                                const fileUrl = `media/images/posts/${file.trim()}`;
+                                if (["jpg","jpeg","png","gif","webp"].includes(fileExtension)) {
+                                    mediaHtml += `<div class=\"col-4\"><img src=\"${fileUrl}\" alt=\"Post Image\" class=\"img-fluid rounded img-thumbnail post-media-thumb\" style=\"cursor:pointer;max-height:180px;object-fit:cover;\" data-post-idx=\"${postIdx}\" data-media-idx=\"${idx}\"></div>`;
+                                } else if (["mp4","avi","mkv","webm"].includes(fileExtension)) {
+                                    mediaHtml += `<div class=\"col-4\"><video class=\"img-fluid rounded img-thumbnail post-media-thumb\" style=\"cursor:pointer;max-height:180px;object-fit:cover;\" data-post-idx=\"${postIdx}\" data-media-idx=\"${idx}\" muted><source src=\"${fileUrl}\" type=\"video/${fileExtension}\"></video></div>`;
+                                }
+                            });
+                            mediaHtml += '</div>';
+                        }
+                        const postScopeIcon = post.post_scope === "public"
+                            ? `<span id="postScopeContainer" style="margin-left:10px;color:#888;font-size:0.95rem;"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>`
+                            : `<span id="postScopeContainer" style="margin-left:10px;color:#888;font-size:0.95rem;"><i id="postScope" class="fa-solid fa-user-group"></i></span>`;
+                        const postCard = $(`
+                            <div class="post-card card p-3 mb-4">
+                                <div class="post-header d-flex align-items-center mb-3">
+                                    <img src="media/images/profiles/${post.user_img || 'default-profile.png'}" alt="User Profile" class="profile-img me-3">
+                                    <div>
+                                        <div class="d-flex">
+                                            <div class="fw-bold">${post.user_fname} ${post.user_lname}</div>
+                                            ${postScopeIcon}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="post-content mb-3">
+                                    <p>${post.post_caption}</p>
+                                    <div class="row g-2">${mediaHtml}</div>
+                                </div>
+                                <div class="post-footer d-flex justify-content-between align-items-center">
+                                    <div class="tagged-users">
+                                        <span class="text-muted">Tagged: </span>
+                                        <span class="tagged-user">${post.post_tagged || "None"}</span>
+                                    </div>
+                                    <div class="post-time text-muted">
+                                        <span>Posted on: ${post.date_posted}</span>
+                                    </div>
+                                </div>
+                                <div class="post-actions d-flex justify-content-start mt-3">
+                                    <button class="btn btn-light btn-sm me-2"><i class="fas postFas fa-thumbs-up"></i> Like</button>
+                                    <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal"><i class="fas postFas fa-comment"></i> Comment</button>
+                                    <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#shareModal"><i class="fas postFas fa-share"></i> Share</button>
+                                </div>
+                            </div>
+                        `);
+                        $container.append(postCard);
+                    });
+                    // Store posts and media for modal navigation
+                    window._otherProfilePostsMedia = response.posts.map(p => p.post_images ? JSON.parse(p.post_images) : []);
+                } else {
+                    $container.html('<div class="text-danger text-center">No posts found for this user.</div>');
+                }
+            },
+            error: function() {
+                $('#otherUserPostsContainer').html('<div class="text-danger text-center">Failed to fetch posts.</div>');
+            }
+        });
+    }
+    // Call after profile loads
+    fetchOtherUserPosts();
             },
             error: function() {
                 $('#fullName').text('User not found');
@@ -363,3 +441,144 @@ $(document).on('click', '.reject-friend-btn', function() {
         fetchFriendRequests();
     }, 'json');
 });
+
+// Modal logic for viewing and sliding media
+$(document).on('click', '.post-media-thumb', function() {
+    const postIdx = parseInt($(this).data('post-idx'));
+    let mediaIdx = parseInt($(this).data('media-idx'));
+    const mediaArr = window._otherProfilePostsMedia[postIdx];
+    function renderMedia(idx) {
+        const file = mediaArr[idx];
+        const ext = file.split('.').pop().toLowerCase();
+        const src = `media/images/posts/${file.trim()}`;
+        if (["jpg","jpeg","png","gif","webp"].includes(ext)) {
+            $('#mediaModalBody').html(`<img src="${src}" class="img-fluid w-100" style="max-height:70vh;object-fit:contain;">`);
+        } else if (["mp4","avi","mkv","webm"].includes(ext)) {
+            $('#mediaModalBody').html(`<video src="${src}" class="w-100" style="max-height:70vh;object-fit:contain;" controls autoplay></video>`);
+        }
+        $('#mediaModalNext').off('click').on('click', function() {
+            if (mediaIdx < mediaArr.length - 1) {
+                mediaIdx++;
+                renderMedia(mediaIdx);
+            }
+        });
+        $('#mediaModalPrev').off('click').on('click', function() {
+            if (mediaIdx > 0) {
+                mediaIdx--;
+                renderMedia(mediaIdx);
+            }
+        });
+    }
+    renderMedia(mediaIdx);
+    $('#mediaModal').modal('show');
+});
+
+// --- SEARCH MODAL LOGIC (matches ownerHome) ---
+function renderRecentSearches(recent) {
+    let html = '';
+    if (!recent || recent.length === 0) {
+        html = '<div class="text-muted text-center">No recent searches.</div>';
+    } else {
+        recent.forEach(s => {
+            html += `<div class="col-md-6 col-lg-4 mb-3">
+                <div class="d-flex align-items-center border rounded p-2 recent-search-item" style="cursor:pointer;" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}" data-email="${encodeURIComponent(s.email || '')}">
+                    <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                    <div>
+                        <strong>${s.name}</strong><br>
+                        <small class="text-muted">${s.location}</small>
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+    $('#recentSearches').html(html);
+}
+function fetchRecentSearches() {
+    $.get('phpFile/globalSide/fetchRecentSearches.php', function(res) {
+        if (res.status === 'success') {
+            renderRecentSearches(res.recent);
+        } else {
+            $('#recentSearches').html('<div class="text-muted text-center">No recent searches.</div>');
+        }
+    }, 'json');
+}
+
+// Show modal and fetch recent searches
+$(document).on('click', '#searchIcon', function() {
+    const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+    searchModal.show();
+    fetchRecentSearches();
+    setTimeout(function() {
+        $('#searchInput').val('').focus();
+        $('#searchSuggestions').hide().empty();
+    }, 350);
+});
+
+// Suggestions as user types
+$(document).on('input', '#searchInput', function() {
+    const query = $(this).val().trim();
+    if (query.length === 0) {
+        $('#searchSuggestions').hide().empty();
+        return;
+    }
+    $.ajax({
+        url: 'phpFile/globalSide/searchSuggestions.php',
+        method: 'POST',
+        data: { query },
+        dataType: 'json',
+        success: function(suggestions) {
+            if (suggestions.length > 0) {
+                let html = '';
+                suggestions.forEach(function(s) {
+                    html += `<a href="#" class="list-group-item list-group-item-action search-suggestion-item" data-email="${encodeURIComponent(s.email)}" data-name="${encodeURIComponent(s.name)}" data-img="${encodeURIComponent(s.img)}" data-location="${encodeURIComponent(s.location)}">
+                        <div class="d-flex align-items-center">
+                            <img src="media/images/profiles/${s.img}" alt="Profile" class="rounded-circle me-3" width="40" height="40">
+                            <div>
+                                <strong>${s.name}</strong><br>
+                                <small class="text-muted">${s.location}</small>
+                            </div>
+                        </div>
+                    </a>`;
+                });
+                $('#searchSuggestions').html(html).show();
+            } else {
+                $('#searchSuggestions').html('<div class="list-group-item">No results found.</div>').show();
+            }
+        },
+        error: function() {
+            $('#searchSuggestions').html('<div class="list-group-item text-danger">Error fetching suggestions.</div>').show();
+        }
+    });
+});
+// Handle click on suggestion
+$(document).on('click', '.search-suggestion-item', function(e) {
+    e.preventDefault();
+    const name = $(this).data('name');
+    const img = $(this).data('img');
+    const location = $(this).data('location');
+    const email = $(this).data('email');
+    // Add to recent searches in DB
+    $.post('phpFile/globalSide/updateRecentSearches.php', {
+        searched_user: JSON.stringify({ name: decodeURIComponent(name), img: decodeURIComponent(img), location: decodeURIComponent(location), email: decodeURIComponent(email) })
+    }, function(res) {
+        if (res.status === 'success') {
+            renderRecentSearches(res.recent);
+        }
+        window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}&email=${email}`;
+    }, 'json');
+});
+// Handle click on recent search
+$(document).on('click', '.recent-search-item', function() {
+    const name = $(this).data('name');
+    const img = $(this).data('img');
+    const location = $(this).data('location');
+    const email = $(this).data('email');
+    window.location.href = `otherProfile.html?name=${name}&img=${img}&location=${location}&email=${email}`;
+});
+// Hide suggestions when modal closes
+$('#searchModal').on('hidden.bs.modal', function() {
+    $('#searchSuggestions').hide().empty();
+    $('#searchInput').val('');
+});
+
+
