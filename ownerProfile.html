@@ -971,8 +971,8 @@
             <div class="d-flex">
                 <!-- Search Bar Icon -->
 
-                <a href="#" class="nav-link">
-                    <i class="fas fa-search fa-lg search-icon me-3"></i>
+                <a href="#" class="nav-link" id="searchIcon">
+                    <i class="fas fa-search fa-lg search-icon me-3" ></i>
                 </a>
 
                 <!-- Chat Icon -->
@@ -1018,28 +1018,104 @@
     
 
     <div id="bellDropdown">
-        <h4>Notifications</h4>
-        <hr>
-        <div class="notification-message">
-            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
-            <div class="notification-details">
-                <p class="name">Jane Smith</p>
-                <p class="notification">Reacted to your post.</p>
-                <span class="time">10:32 AM</span>
-            </div>
-        </div>
-        <div class="notification-message">
-            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
-            <div class="notification-details">
-                <p class="name">Jane Smith</p>
-                <p class="notification">Reacted to your post.</p>
-                <span class="time">10:32 AM</span>
-            </div>
-        </div>
+        
         <!-- Add more messages as needed -->
     </div>
 
-
+    <div class="modal fade " id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">  <!-- Changed to extra-large modal -->
+            <div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    
+                    <!-- Enlarged Search Bar -->
+                    <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search for users, pets, or topics...">
+                    <div id="searchSuggestions" class="list-group mb-3" style="display:none;"></div>
+                    
+                    <!-- Recent Searches Title -->
+                    <h6 class="mb-3">Recent Searches</h6>
+                    
+                    <!-- Recent Searches in Two Rows -->
+                    <div id="recentSearches" class="row">
+                        
+                        <!-- Search Item 1 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/123.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>John Doe</strong><br>
+                                    <small class="text-muted">New York, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Search Item 2 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/456.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>Emma Smith</strong><br>
+                                    <small class="text-muted">Los Angeles, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Search Item 3 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/789.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>Oliver Brown</strong><br>
+                                    <small class="text-muted">Chicago, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Search Item 4 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/321.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>Sophia Lee</strong><br>
+                                    <small class="text-muted">San Francisco, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Search Item 5 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/654.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>Michael Green</strong><br>
+                                    <small class="text-muted">Houston, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Search Item 6 -->
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                <img src="media/images/profiles/987.jpg" alt="Profile" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong>Emily Davis</strong><br>
+                                    <small class="text-muted">Miami, USA</small>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Sidebar -->
     <div id="mySidebar" class="sidebar">
@@ -1063,384 +1139,32 @@
             <div id="centerContent" class="col-md-7">
                 <div id="personalizedContainer">
                     <div class="post-list">
-                        <div class="post-card card p-3 mb-4">
-                            <div class="post-header d-flex align-items-center mb-3">
-                                <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                <div>
-                                    <div class="d-flex">
-                                        <div class="fw-bold">John Doe</div>
-                                        <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-content mb-3">
-                                <!-- Sample caption -->
-                                <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
                                 
-                                <!-- Photo Grid with Modal Trigger -->
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-footer d-flex justify-content-between align-items-center">
-                                <div class="tagged-users">
-                                    <span class="text-muted">Tagged: </span>
-                                    <span class="tagged-user">Alex Johnson, Samantha Lee</span>
-                                </div>
-                                <div class="post-time text-muted">
-                                    <span>Posted on: 2025-01-11 14:30</span>
-                                </div>
-                            </div>
-                            <div class="post-actions d-flex justify-content-start mt-3">
-                                <button class="btn btn-light btn-sm me-2">
-                                    <i class="fas postFas fa-thumbs-up"></i> Like
-                                </button>
-                                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                    <i class="fas postFas fa-comment"></i> Comment
-                                </button>
-                                <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
-                                    <i class="fas postFas fa-share"></i> Share
-                                </button>
-                            </div>
-                        </div>
 
                         <!-- Comment Modal -->
-                        <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center position-relative">
-                                        <h5 class="modal-title text-center" id="commentModalLabel">Comments</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Post Author Details -->
-                                        <div class="post-header d-flex align-items-center mb-3">
-                                            <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                            <div>
-                                                <div class="d-flex">
-                                                    <div class="fw-bold">John Doe</div>
-                                                    <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                                </div>
-                                                <div class="text-muted">Pet: Buddy</div>
-                                            </div>
-                                        </div>
-                                        <!-- Post Content with Pictures -->
-                                        <div class="post-content mb-3">
-                                            <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                            <div class="row g-2">
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Comments Section -->
-                                        <div id="commentsSection">
-                                            <div class="comment mb-3">
-                                                <div class="d-flex align-items-start">
-                                                    <img src="media/images/profiles/456.jpg" alt="User" class="profile-img me-2">
-                                                    <div>
-                                                        <span class="fw-bold">Alex Johnson</span>
-                                                        <p class="mb-1">Buddy looks so happy! What a lovely day!</p>
-                                                        <div class="text-muted small">Posted 2 hours ago</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Additional comments can go here -->
-                                        </div>
-                                        <!-- Add Comment Section -->
-                                        <div class="mt-3">
-                                            <div class="d-flex align-items-center">
-                                                <textarea class="form-control" rows="1" placeholder="Write a comment..."></textarea>
-                                            </div>
-                                            <button class="btn btn-primary btn-sm mt-2">Post Comment</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Share Modal -->
-                        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center position-relative">
-                                        <h5 class="modal-title text-center" id="shareModalLabel">Share Post</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 0; right: 15px; position: absolute;"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Post Author Details -->
-                                        <div class="post-header d-flex align-items-center mb-3">
-                                            <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                            <div>
-                                                <div class="d-flex">
-                                                    <div class="fw-bold">John Doe</div>
-                                                    <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                                </div>
-                                                <div class="text-muted">Pet: Buddy</div>
-                                            </div>
-                                        </div>
-                                        <!-- Post Content with Pictures -->
-                                        <div class="post-content mb-3">
-                                            <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                            <div class="row g-2">
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Share Options -->
-                                        <div class="share-options">
-                                            <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
-                                                <i class="fa-solid fa-share me-2"></i>
-                                                Share Now (Friends)
-                                            </button>
-                                            <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
-                                                <i class="fa-solid fa-message me-2"></i>
-                                                Share in a Message
-                                            </button>
-                                            <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
-                                                <i class="fa-solid fa-users me-2"></i>
-                                                Share to a Group
-                                            </button>
-                                            <button class="btn btn-light btn-block mb-2 d-flex align-items-center">
-                                                <i class="fa-solid fa-link me-2"></i>
-                                                Copy Link
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="post-card card p-3 mb-4">
-                            <div class="post-header d-flex align-items-center mb-3">
-                                <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                <div>
-                                    <div class="d-flex">
-                                        <div class="fw-bold">John Doe</div>
-                                        <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-content mb-3">
-                                <!-- Sample caption -->
-                                <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                
-                                <!-- Photo Grid with Modal Trigger -->
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-footer d-flex justify-content-between align-items-center">
-                                <div class="tagged-users">
-                                    <span class="text-muted">Tagged: </span>
-                                    <span class="tagged-user">Alex Johnson, Samantha Lee</span>
-                                </div>
-                                <div class="post-time text-muted">
-                                    <span>Posted on: 2025-01-11 14:30</span>
-                                </div>
-                            </div>
-                            <div class="post-actions d-flex justify-content-start mt-3">
-                                <button class="btn btn-light btn-sm me-2">
-                                    <i class="fas postFas fa-thumbs-up"></i> Like
-                                </button>
-                                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                    <i class="fas postFas fa-comment"></i> Comment
-                                </button>
-                                <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
-                                    <i class="fas postFas fa-share"></i> Share
-                                </button>
-                            </div>
-                        </div>
-                        <div class="post-card card p-3 mb-4">
-                            <div class="post-header d-flex align-items-center mb-3">
-                                <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                <div>
-                                    <div class="d-flex">
-                                        <div class="fw-bold">John Doe</div>
-                                        <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                    </div>
-                                    <div class="text-muted">Pet: Buddy</div>
-                                </div>
-                            </div>
-                            <div class="post-content mb-3">
-                                <!-- Sample caption -->
-                                <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                
-                                <!-- Photo Grid with Modal Trigger -->
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-footer d-flex justify-content-between align-items-center">
-                                <div class="tagged-users">
-                                    <span class="text-muted">Tagged: </span>
-                                    <span class="tagged-user">Alex Johnson, Samantha Lee</span>
-                                </div>
-                                <div class="post-time text-muted">
-                                    <span>Posted on: 2025-01-11 14:30</span>
-                                </div>
-                            </div>
-                            <div class="post-actions d-flex justify-content-start mt-3">
-                                <button class="btn btn-light btn-sm me-2">
-                                    <i class="fas postFas fa-thumbs-up"></i> Like
-                                </button>
-                                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                    <i class="fas postFas fa-comment"></i> Comment
-                                </button>
-                                <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
-                                    <i class="fas postFas fa-share"></i> Share
-                                </button>
-                            </div>
-                        </div>
-                        <div class="post-card card p-3 mb-4">
-                            <div class="post-header d-flex align-items-center mb-3">
-                                <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                <div>
-                                    <div class="d-flex">
-                                        <div class="fw-bold">John Doe</div>
-                                        <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                    </div>
-                                    <div class="text-muted">Pet: Buddy</div>
-                                </div>
-                            </div>
-                            <div class="post-content mb-3">
-                                <!-- Sample caption -->
-                                <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                
-                                <!-- Photo Grid with Modal Trigger -->
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                    <div class="col-4">
-                                        <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-footer d-flex justify-content-between align-items-center">
-                                <div class="tagged-users">
-                                    <span class="text-muted">Tagged: </span>
-                                    <span class="tagged-user">Alex Johnson, Samantha Lee</span>
-                                </div>
-                                <div class="post-time text-muted">
-                                    <span>Posted on: 2025-01-11 14:30</span>
-                                </div>
-                            </div>
-                            <div class="post-actions d-flex justify-content-start mt-3">
-                                <button class="btn btn-light btn-sm me-2">
-                                    <i class="fas postFas fa-thumbs-up"></i> Like
-                                </button>
-                                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                    <i class="fas postFas fa-comment"></i> Comment
-                                </button>
-                                <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
-                                    <i class="fas postFas fa-share"></i> Share
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-        </div>
-
+            </div>
+               
+        
         <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center position-relative">
-                                        <h5 class="modal-title text-center" id="commentModalLabel">Comments</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Post Author Details -->
-                                        <div class="post-header d-flex align-items-center mb-3">
-                                            <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                            <div>
-                                                <div class="d-flex">
-                                                    <div class="fw-bold">John Doe</div>
-                                                    <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                                </div>
-                                                <div class="text-muted">Pet: Buddy</div>
-                                            </div>
-                                        </div>
-                                        <!-- Post Content with Pictures -->
-                                        <div class="post-content mb-3">
-                                            <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                            <div class="row g-2">
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Comments Section -->
-                                        <div id="commentsSection">
-                                            <div class="comment mb-3">
-                                                <div class="d-flex align-items-start">
-                                                    <img src="media/images/profiles/456.jpg" alt="User" class="profile-img me-2">
-                                                    <div>
-                                                        <span class="fw-bold">Alex Johnson</span>
-                                                        <p class="mb-1">Buddy looks so happy! What a lovely day!</p>
-                                                        <div class="text-muted small">Posted 2 hours ago</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Additional comments can go here -->
-                                        </div>
-                                        <!-- Add Comment Section -->
-                                        <div class="mt-3">
-                                            <div class="d-flex align-items-center">
-                                                <textarea class="form-control" rows="1" placeholder="Write a comment..."></textarea>
-                                            </div>
-                                            <button class="btn btn-primary btn-sm mt-2">Post Comment</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLabel">Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="commentModalBody">
+                    <!-- Post details and comments will be injected here by JS -->
+                </div>
+                <div class="modal-footer">
+                    <input type="text" class="form-control" id="newCommentInput" placeholder="Write a comment...">
+                    <button type="button" class="btn btn-primary" id="submitCommentBtn">Post</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        
                         
 
         <style>
@@ -2052,6 +1776,11 @@
         $(document).ready(function() {
             loadChats();
             startChatListPolling();
+        });
+
+        document.getElementById('searchIcon').addEventListener('click', function () {
+            const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+            searchModal.show();
         });
 
 
