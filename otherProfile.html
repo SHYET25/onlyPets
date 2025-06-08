@@ -121,17 +121,16 @@
         #chatDropdown {
             display: none;
             position: absolute;
-            top: 80px;
-            right: 100px;
+            top: 60px; /* Adjust as needed */
+            right: 30px; /* Adjust as needed to align with your icon */
             background-color: #fff;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
-            width: 400px; /* Adjusted width for better visibility */
+            width: 400px;
             max-height: 400px;
             overflow-y: auto;
             padding: 15px;
-            z-index: 1000;
-            transition: opacity 0.3s ease;
+            z-index: 2000; /* Make sure it's above navbar and other elements */
         }
 
         .chat-message {
@@ -744,17 +743,77 @@
         
         /* Add any additional styling for the posts container if needed */
         
+        /* Conversation modal improvements */
+        #conversationModal .modal-content {
+            border-radius: 18px;
+            background: linear-gradient(135deg, #e3f6ff 60%, #fff 100%);
+            box-shadow: 0 8px 32px rgba(56,182,255,0.15);
+            border: none;
+            padding: 0;
+        }
+
+        #conversationModal .modal-header {
+            border-bottom: none;
+            background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+            color: #fff;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            padding-top: 1.2rem;
+            padding-bottom: 1.2rem;
+        }
+
+        #conversationModal .modal-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        #conversationModal .modal-body {
+            background: #fafdff;
+            padding: 1.5rem 1.2rem 1rem 1.2rem;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #conversationModal .modal-footer {
+            border-top: none;
+            background: #fafdff;
+            padding: 1rem 1.2rem;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+        }
+
+        #conversationModal #messageInput {
+            border-radius: 20px;
+            border: 1.5px solid #b6e0fa;
+            background: #fff;
+            font-size: 1rem;
+            margin-right: 8px;
+            box-shadow: none;
+            transition: border-color 0.2s;
+        }
+
+        #conversationModal #sendButton {
+            border-radius: 20px;
+            background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            transition: background 0.3s;
+        }
+
+        #conversationModal #sendButton:hover {
+            background: linear-gradient(90deg, #1e90ff 0%, #38b6ff 100%);
+        }
+
     </style>
-
-    
-
 </head>
 <body>
-<div id="loadingScreen" style="display: none;">
-        <img src="media/images/utilities/loading.gif" alt="Loading...">
+    <div id="loadingScreen" style="display: none;">
+            <img src="media/images/utilities/loading.gif" alt="Loading...">
     </div>
-    
-
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <!-- Brand/Logo -->
@@ -776,8 +835,11 @@
                 </a>
 
                 <!-- Chat Icon -->
-                <a href="#" class="nav-link" id="chatIcon">
+                <a href="#" class="nav-link position-relative" id="chatIcon">
                     <i class="fas fa-comments fa-lg me-3"></i>
+                    <span id="chatBadge" style="display:none; position:absolute; top:2px; right:2px; background:red; color:white; border-radius:50%; width:18px; height:18px; font-size:12px; text-align:center; line-height:18px;">
+
+                    </span>
                 </a>
 
                 <!-- Notification Icon -->
@@ -788,27 +850,9 @@
         </div>
     </nav>
 
-    <div id="chatDropdown">
-        <h4>Chats</h4>
-        <hr>
-        <div class="chat-message" data-user="John Doe" data-text="Hey! How are you doing today? I wanted to ask about...">
-            <img class="profile-img" src="media/images/profiles/213.jpg" alt="Profile Picture">
-            <div class="message-details">
-                <p class="name">John Doe</p>
-                <p class="message">Hey! How are you doing today? I wanted to ask about...</p>
-                <span class="time">10:30 AM</span>
-            </div>
-        </div>
-        <div class="chat-message" data-user="Jane Smith" data-text="I'm good! Let's catch up soon.">
-            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
-            <div class="message-details">
-                <p class="name">Jane Smith</p>
-                <p class="message">I'm good! Let's catch up soon.</p>
-                <span class="time">10:32 AM</span>
-            </div>
-        </div>
-    </div>
+    <div id="chatDropdown"></div>
     
+    <!-- Conversation Modal -->
     <div class="modal fade" id="conversationModal" tabindex="-1" aria-labelledby="conversationModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -820,13 +864,16 @@
                     <!-- Chat content will be dynamically loaded here -->
                 </div>
                 <div class="modal-footer">
-                    <input type="text" id="messageInput" class="form-control me-2" placeholder="Type a message...">
-                    <button type="button" class="btn btn-primary" id="sendButton">Send</button>
+                    <div class="input-group">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Type a message...">
+                        <button type="button" class="btn btn-primary" id="sendButton">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
 
     <div id="bellDropdown">
         <h4>Notifications</h4>
@@ -851,7 +898,6 @@
     </div>
 
 
-
     <!-- Sidebar -->
     <div id="mySidebar" class="sidebar">
         <!-- Top Links -->
@@ -865,6 +911,7 @@
         <!-- Bottom Icon -->
         <a href="ownerProfile.html" class="bottom-icon pet-item-profile"><img src="" alt="Pet 1" id="sideProfile" class="pet-img-profile me-2"></a>
     </div>
+
     <div id="main" class="container-fluid">
         <div class="row mainContent">
             <!-- Left Content -->
@@ -876,103 +923,64 @@
             </div>
 
             <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header justify-content-center position-relative">
-                                        <h5 class="modal-title text-center" id="commentModalLabel">Comments</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center position-relative">
+                                <h5 class="modal-title text-center" id="commentModalLabel">Comments</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 20px; right: 15px; position: absolute;"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Post Author Details -->
+                                <div class="post-header d-flex align-items-center mb-3">
+                                    <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
+                                    <div>
+                                        <div class="d-flex">
+                                            <div class="fw-bold">John Doe</div>
+                                            <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
+                                        </div>
+                                        <div class="text-muted">Pet: Buddy</div>
                                     </div>
-                                    <div class="modal-body">
-                                        <!-- Post Author Details -->
-                                        <div class="post-header d-flex align-items-center mb-3">
-                                            <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                            <div>
-                                                <div class="d-flex">
-                                                    <div class="fw-bold">John Doe</div>
-                                                    <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>
-                                                </div>
-                                                <div class="text-muted">Pet: Buddy</div>
-                                            </div>
+                                </div>
+                                <!-- Post Content with Pictures -->
+                                <div class="post-content mb-3">
+                                    <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
                                         </div>
-                                        <!-- Post Content with Pictures -->
-                                        <div class="post-content mb-3">
-                                            <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                            <div class="row g-2">
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
-                                                </div>
-                                            </div>
+                                        <div class="col-4">
+                                            <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
                                         </div>
-                                        <!-- Comments Section -->
-                                        <div id="commentsSection">
-                                            <div class="comment mb-3">
-                                                <div class="d-flex align-items-start">
-                                                    <img src="media/images/profiles/456.jpg" alt="User" class="profile-img me-2">
-                                                    <div>
-                                                        <span class="fw-bold">Alex Johnson</span>
-                                                        <p class="mb-1">Buddy looks so happy! What a lovely day!</p>
-                                                        <div class="text-muted small">Posted 2 hours ago</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Additional comments can go here -->
-                                        </div>
-                                        <!-- Add Comment Section -->
-                                        <div class="mt-3">
-                                            <div class="d-flex align-items-center">
-                                                <textarea class="form-control" rows="1" placeholder="Write a comment..."></textarea>
-                                            </div>
-                                            <button class="btn btn-primary btn-sm mt-2">Post Comment</button>
+                                        <div class="col-4">
+                                            <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Comments Section -->
+                                <div id="commentsSection">
+                                    <div class="comment mb-3">
+                                        <div class="d-flex align-items-start">
+                                            <img src="media/images/profiles/456.jpg" alt="User" class="profile-img me-2">
+                                            <div>
+                                                <span class="fw-bold">Alex Johnson</span>
+                                                <p class="mb-1">Buddy looks so happy! What a lovely day!</p>
+                                                <div class="text-muted small">Posted 2 hours ago</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Additional comments can go here -->
+                                </div>
+                                <!-- Add Comment Section -->
+                                <div class="mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <textarea class="form-control" rows="1" placeholder="Write a comment..."></textarea>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm mt-2">Post Comment</button>
+                                </div>
                             </div>
                         </div>
-                        
-
-        <style>
-            #profile {
-                height: 180px; /* Fixed size for a consistent layout */
-                width: 180px;
-                border-radius: 50%;
-                border: 5px solid #f2f2f2;
-                margin-top: 20px;
-                object-fit: cover; /* Ensures the image scales properly */
-            }
-        
-            .profile-container {
-                background-color: #ffffff;
-                border: 1px solid #e0e0e0;
-                border-radius: 15px;
-                padding: 20px;
-                margin-top: 20px;
-            }
-        
-            .profile-container h1 {
-                font-size: 1.5rem;
-                font-weight: bold;
-                margin-top: 10px;
-            }
-        
-            .profile-container h3 {
-                font-size: 1.2rem;
-                margin-bottom: 5px;
-                color: #555;
-            }
-        
-            .profile-container p {
-                margin: 0;
-                font-size: 0.9rem;
-                color: #888;
-            }
-        </style>
-        
+                    </div>
+            </div>     
         <div id="rightSide" class="col-md-3">
             <div id="rightSideContent">
             <!-- Profile Container -->
@@ -980,13 +988,13 @@
                     <h5 class="petListH5 text-center">Profile Details</h5>
                     <div id="profileDetails" class="profile-details-container">
                         <!-- Profile Picture -->
-                        <div class="text-center mb-3">
+                        <div class="text-center mt-2 mb-3">
                             <img src="" id="profile" alt="Profile Picture"
                                 class="profile-img-modern shadow"
                                 style="width: 110px; height: 110px;">
                         </div>
                         <!-- Profile Details -->
-                        <div class="profile-details text-center mb-3">
+                        <div class="profile-details text-center mb-2">
                             <h2 id="fullName" class="fw-bold mb-1" style="font-size: 1.6rem;">fname + lname</h2>
                             <div class="mb-2">
                                 <span class="text-muted small">Email:</span>
@@ -997,7 +1005,15 @@
                                 <div id="contact" class="fw-semibold" style="font-size: 1.1rem;">user contact</div>
                             </div>
                             <div class="mt-3">
-                                <button id="addFriendBtn" class="btn btn-success w-100"><i class="fas fa-user-plus me-2"></i>Add Friend</button>
+                                <button id="addFriendBtn" class="btn btn-success btn-sm w-100">
+                                    <i class="fas fa-user-plus me-2"></i>Add Friend
+                                </button>
+                                <button id="messageBtn" class="btn btn-primary btn-sm w-100 mt-2" >
+                                    <i class="fas fa-paper-plane me-2"></i>Message
+                                </button>
+                                <button id="reportBtn" class="btn btn-danger btn-sm w-100 mt-2">
+                                    <i class="fas fa-flag me-2"></i>Report
+                                </button>
                             </div>
                         </div>
                         <!-- Add Pet Button -->
@@ -1005,6 +1021,7 @@
                             <button type="button" class="btn add-pet-btn px-4 py-2" data-bs-toggle="modal" data-bs-target="#addPetModal">
                                 <i class="fa fa-paw me-2"></i>Add Pet
                             </button>
+                            
                         </div>
                         <!-- Settings and Logout -->
                         <div class="d-flex justify-content-center gap-3 mt-3">
@@ -1217,24 +1234,54 @@
                 </div>
             </div>
         </div>
-        
-    </div>
+    </div>    
 
     <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="mediaModalLabel">Media Viewer</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="mediaModalBody" style="text-align:center;"></div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-outline-primary" id="mediaModalPrev">Prev</button>
-        <button type="button" class="btn btn-outline-primary" id="mediaModalNext">Next</button>
-      </div>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="mediaModalLabel">Media Viewer</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="mediaModalBody" style="text-align:center;"></div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-primary" id="mediaModalPrev">Prev</button>
+            <button type="button" class="btn btn-outline-primary" id="mediaModalNext">Next</button>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
+    </div>
+    <div class="modal fade" id="reportUserModal" tabindex="-1" aria-labelledby="reportUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="reportUserModalLabel"><i class="fas fa-flag me-2"></i>Report User</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="reportUserForm">
+            <div class="mb-3">
+                <label for="reportReason" class="form-label">Reason for reporting:</label>
+                <select class="form-select" id="reportReason" required>
+                <option value="" disabled selected>Select a reason</option>
+                <option value="Spam">Spam</option>
+                <option value="Harassment">Harassment</option>
+                <option value="Inappropriate Content">Inappropriate Content</option>
+                <option value="Fake Account">Fake Account</option>
+                <option value="Scam or Fraud">Scam or Fraud</option>
+                <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="mb-3" id="otherReasonDiv" style="display:none;">
+                <label for="otherReason" class="form-label">Please specify:</label>
+                <input type="text" class="form-control" id="otherReason" maxlength="255">
+            </div>
+            <button type="submit" class="btn btn-danger w-100 fw-bold">Submit Report</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
     
 
   
@@ -1272,23 +1319,22 @@
             });
         });
 
-        $('#chatIcon').click(function() {
+        $('#chatIcon').click(function(e) {
+            e.stopPropagation();
             $('#chatDropdown').toggle();
+            $('#bellDropdown').hide();
         });
 
-        // Close the dropdown if clicked outside
+        $('#bellIcon').click(function(e) {
+            e.stopPropagation();
+            $('#bellDropdown').toggle();
+            $('#chatDropdown').hide();
+        });
+
         $(document).click(function(event) {
             if (!$(event.target).closest('#chatIcon, #chatDropdown').length) {
                 $('#chatDropdown').hide();
             }
-        });
-
-        $('#bellIcon').click(function() {
-            $('#bellDropdown').toggle();
-        });
-
-        // Close the dropdown if clicked outside
-        $(document).click(function(event) {
             if (!$(event.target).closest('#bellIcon, #bellDropdown').length) {
                 $('#bellDropdown').hide();
             }
@@ -1413,8 +1459,288 @@
       </div>
     </div>
   </div>
-</div>
+    // JS for the Side Bar ------------------------------------------------------
+    </script>
+</html>
+    <!-- SEARCH MODAL -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">  <div class="modal-dialog modal-lg">    <div class="modal-content">      <div class="modal-header">        <h5 class="modal-title" id="searchModalLabel">Search Users</h5>        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>      </div>      <div class="modal-body">        <input type="text" class="form-control mb-3" id="searchInput" placeholder="Search for users, pets, etc...">        <div id="searchSuggestions" class="list-group mb-3" style="display:none;"></div>        <h6 class="mb-2">Recent Searches</h6>        <div class="row" id="recentSearches"></div>      </div>    </div>  </div></div><script>let currentChatUserId = null;let sessionUserId = null;let chatListInterval = null;
+let conversationInterval = null;
+let isConversationOpen = false;
 
+// Get session user ID and load chats
+$.getJSON('phpFile/globalSide/getSessionInfo.php', function(response) {
+    if (response.status === "success" && response.data.user_id) {
+        sessionUserId = response.data.user_id;
+        loadChats();
+        startChatListPolling();
+    } else {
+        alert("Not logged in or session error.");
+    }
+});
+
+function loadChats() {
+    $.get('phpFile/globalSide/getChats.php', function(data) {
+        let users = data;
+        if (typeof data === "string") {
+            try { users = JSON.parse(data); } catch (e) { users = []; }
+        }
+        let html = `
+            <div class="px-3 pt-3 pb-2">
+                <h5 class="fw-bold mb-0" style="color:#1976d2;">Chats</h5>
+            </div>
+            <hr class="my-0">
+        `;
+        let hasUnread = false;
+        let unreadTotal = 0;
+        users.forEach(user => {
+            if (user.unread_count && user.unread_count > 0) {
+                hasUnread = true;
+                unreadTotal += user.unread_count;
+            }
+            html += `
+                <div class="chat-message" data-user-id="${user.id}" data-user-name="${user.name}">
+                    <img class="profile-img" src="${user.profile_img || 'media/images/profiles/default.jpg'}" alt="Profile Picture">
+                    <div class="message-details">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="name">${user.name}</span>
+                            <span class="time">${user.sent_at || ''}</span>
+                        </div>
+                        <span class="message">${user.last_message || ''}</span>
+                    </div>
+                </div>
+            `;
+        });
+        $('#chatDropdown').html(html);
+
+        // Show or hide the badge
+        if (hasUnread) {
+            $('#chatBadge').text(unreadTotal).show();
+        } else {
+            $('#chatBadge').hide();
+        }
+
+        // Add click event to open chat modal
+        $('.chat-message').click(function() {
+            currentChatUserId = $(this).data('user-id');
+            $('#userName').text($(this).data('user-name'));
+            loadMessages(currentChatUserId);
+
+            // Mark messages as read for this conversation
+            $.post('phpFile/globalSide/markMessageRead.php', { other_user_id: currentChatUserId }, function(res) {
+                loadChats(); // Refresh badge after marking as read
+            });
+
+            // Stop chat list polling when modal is open
+            if (chatListInterval) clearInterval(chatListInterval);
+
+            // Start conversation polling
+            if (conversationInterval) clearInterval(conversationInterval);
+            conversationInterval = setInterval(function() {
+                loadMessages(currentChatUserId);
+            }, 2000);
+
+            isConversationOpen = true;
+            const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+            conversationModal.show();
+        });
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        $('#chatDropdown').html('<div class="text-danger text-center py-4">Failed to load chats.</div>');
+    });
+}
+
+// Start polling chat list every 5 seconds (when modal is closed)
+function startChatListPolling() {
+    if (chatListInterval) clearInterval(chatListInterval);
+    chatListInterval = setInterval(function() {
+        if (!isConversationOpen) loadChats();
+    }, 5000);
+}
+
+// Stop conversation polling and resume chat list polling when modal closes
+$('#conversationModal').on('hidden.bs.modal', function () {
+    if (conversationInterval) clearInterval(conversationInterval);
+    isConversationOpen = false;
+    startChatListPolling();
+});
+
+// Load messages for a given user
+function loadMessages(userId) {
+    $.get('phpFile/globalSide/getConversation.php', { user_id: userId }, function(data) {
+        let messages = data;
+        if (typeof data === "string") {
+            try { messages = JSON.parse(data); } catch (e) { messages = []; }
+        }
+        let html = '';
+        messages.forEach(msg => {
+            const isMe = msg.sender_id == sessionUserId;
+            html += `
+                <div class="d-flex ${isMe ? 'justify-content-end' : 'justify-content-start'} mb-2">
+                    <div class="${isMe ? 'bg-primary text-white' : 'bg-light'} p-2 rounded shadow-sm" style="max-width:70%;">
+                        <strong>${isMe ? 'You' : msg.user_fname + ' ' + msg.user_lname}:</strong>
+                        ${msg.message}
+                        <div class="small text-muted text-end">${msg.sent_at}</div>
+                    </div>
+                </div>
+            `;
+        });
+        const $conversation = $('#conversationContent');
+        $conversation.html(html || '<div class="text-center text-muted">No messages yet.</div>');
+        // Scroll to bottom after loading
+        $conversation.scrollTop($conversation[0].scrollHeight);
+    });
+}
+
+// Send message on button click
+$('#sendButton').click(function() {
+    const message = $('#messageInput').val().trim();
+    if (!message || !currentChatUserId) return;
+    $.post('phpFile/globalSide/sendMessage.php', {
+        receiver_id: currentChatUserId,
+        message: message
+    }, function(response) {
+        $('#messageInput').val('');
+        loadMessages(currentChatUserId); // Refresh conversation
+        loadChats(); // Optional: refresh sidebar/chat list
+    }, 'json');
+});
+
+// Optional: Send on Enter key
+$('#messageInput').keypress(function(e) {
+    if (e.which === 13) {
+        $('#sendButton').click();
+        return false;
+    }
+});
+
+// Chat icon toggle
+$('#chatIcon').click(function() {
+    $('#chatDropdown').toggle();
+    $('#chatDropdown').toggle();
+});
+
+// Close the dropdown if clicked outside// Close the dropdown if clicked outside
+$(document).click(function(event) {
+    if (!$(event.target).closest('#chatIcon, #chatDropdown').length) {
+        $('#chatDropdown').hide();
+    }
+});
+
+
+$('#messageBtn').click(function() {
+    const otherUserId = $('#profileContainer').data('user-id');
+    const otherUserName = $('#fullName').text();
+
+    if (!otherUserId) {
+        alert('User ID not found.');
+        return;
+    }
+
+    currentChatUserId = otherUserId;
+    $('#userName').text(otherUserName);
+
+    const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+    conversationModal.show();
+
+    // Load messages and scroll to bottom after loading
+    loadMessages(currentChatUserId, function() {
+        const $conversation = $('#conversationContent');
+        $conversation.scrollTop($conversation[0].scrollHeight);
+    });
+
+    $.post('phpFile/globalSide/markMessageRead.php', { other_user_id: currentChatUserId }, function(res) {
+        loadChats();
+    });
+});
+
+// Modify loadMessages to accept a callback
+function loadMessages(userId, callback) {
+    $.get('phpFile/globalSide/getConversation.php', { user_id: userId }, function(data) {
+        let messages = data;
+        if (typeof data === "string") {
+            try { messages = JSON.parse(data); } catch (e) { messages = []; }
+        }
+        let html = '';
+        messages.forEach(msg => {
+            const isMe = msg.sender_id == sessionUserId;
+            html += `
+                <div class="d-flex ${isMe ? 'justify-content-end' : 'justify-content-start'} mb-2">
+                    <div class="${isMe ? 'bg-primary text-white' : 'bg-light'} p-2 rounded shadow-sm" style="max-width:70%;">
+                        <strong>${isMe ? 'You' : msg.user_fname + ' ' + msg.user_lname}:</strong>
+                        ${msg.message}
+                        <div class="small text-muted text-end">${msg.sent_at}</div>
+                    </div>
+                </div>
+            `;
+        });
+        const $conversation = $('#conversationContent');
+        $conversation.html(html || '<div class="text-center text-muted">No messages yet.</div>');
+        // Scroll to bottom after loading
+        $conversation.scrollTop($conversation[0].scrollHeight);
+        if (typeof callback === "function") callback();
+    });
+}
+
+// Also scroll to bottom when modal is shown (for extra safety)
+$('#conversationModal').on('shown.bs.modal', function () {
+    const $conversation = $('#conversationContent');
+    $conversation.scrollTop($conversation[0].scrollHeight);
+});
+
+// Get email from URL
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+const email = getQueryParam('email');
+
+if (email) {
+    $.get('phpFile/globalSide/getUserIdByEmail.php', { email: email }, function(response) {
+        if (typeof response === "string") response = JSON.parse(response);
+        if (response.status === "success") {
+            // Set the user ID as a data attribute for later use
+            $('#profileContainer').attr('data-user-id', response.user_id);
+        } else {
+            alert('User not found');
+        }
+    });
+}
+$('#reportBtn').click(function() {
+    $('#reportUserModal').modal('show');
+});
+$('#reportReason').on('change', function() {
+    if ($(this).val() === 'Other') {
+        $('#otherReasonDiv').show();
+        $('#otherReason').prop('required', true);
+    } else {
+        $('#otherReasonDiv').hide();
+        $('#otherReason').prop('required', false);
+    }
+});
+
+$('#reportUserForm').submit(function(e) {
+    e.preventDefault();
+    const reportedUserId = $('#profileContainer').data('user-id');
+    const reason = $('#reportReason').val() === 'Other' ? $('#otherReason').val() : $('#reportReason').val();
+
+    if (!reportedUserId || !reason) {
+        alert('Please select a reason.');
+        return;
+    }
+
+    $.post('phpFile/globalSide/reportUser.php', {
+        reported_user_id: reportedUserId,
+        reason: reason
+    }, function(response) {
+        if (typeof response === "string") response = JSON.parse(response);
+        if (response.status === "success") {
+            $('#reportUserModal').modal('hide');
+            alert('Report submitted. Thank you!');
+        } else {
+            alert('Failed to submit report.');
+        }
+    });
+});
+</script>
 </body>
 </html>
 
