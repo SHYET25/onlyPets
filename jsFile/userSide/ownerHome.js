@@ -54,7 +54,8 @@ $('#submitPost').on('click', async function () {
     const caption = $('#postText').val();
     const scope = $('#postScopeMain').val();
     const tagged = JSON.stringify(taggedUsersArr); // Send as JSON array
-    const taggedPets = $('#taggedPets').val();
+    // Instead of just names, send pet IDs for taggedPets
+    const taggedPetIds = taggedPetsArr.map(p => p.id).filter(Boolean); // Array of pet IDs
 
     // Validation: prevent submit if both caption and media are empty
     if (!caption.trim() && selectedFiles.length === 0) {
@@ -77,7 +78,7 @@ $('#submitPost').on('click', async function () {
             caption,
             scope,
             tagged,
-            taggedPets,
+            taggedPets: JSON.stringify(taggedPetIds), // Send as JSON array of IDs
             media: JSON.stringify(mediaBase64Array)
         },
         success: function (res) {
@@ -124,10 +125,106 @@ $(document).on('click', '.post-media-thumb', function() {
     $('#mediaModal').modal('show');
 });
 
-function renderPostCard(post, user, postIdx) {
+// --- FETCH PET DETAILS FOR TAGGED PETS ---
+function fetchTaggedPetsDetailsForPosts(posts, callback) {
+    // Collect all unique pet IDs from all posts
+    let allPetIds = [];
+    posts.forEach(post => {
+        if (post.tagged_pets) {
+            try {
+                const ids = JSON.parse(post.tagged_pets);
+                if (Array.isArray(ids)) {
+                    allPetIds = allPetIds.concat(ids.map(id => parseInt(id)));
+                }
+            } catch (e) {}
+        }
+    });
+    allPetIds = Array.from(new Set(allPetIds.filter(id => !!id)));
+    if (allPetIds.length === 0) {
+        callback({});
+        return;
+    }
+    $.ajax({
+        url: 'phpFile/globalSide/fetchPetsByIds.php',
+        method: 'POST',
+        data: { pet_ids: allPetIds },
+        dataType: 'json',
+        success: function(res) {
+            if (res.status === 'success' && Array.isArray(res.pets)) {
+                // Map pet_id to pet info
+                const petMap = {};
+                res.pets.forEach(pet => { petMap[pet.pet_id] = pet; });
+                callback(petMap);
+            } else {
+                callback({});
+            }
+        },
+        error: function() { callback({}); }
+    });
+}
+
+// --- PET DETAILS MODAL ---
+if ($('#petDetailsModal').length === 0) {
+    $('body').append(`
+        <div class="modal fade" id="petDetailsModal" tabindex="-1" aria-labelledby="petDetailsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="petDetailsLabel">Pet Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="petDetailsBody"></div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+// --- CLICK HANDLER FOR TAGGED PETS ---
+$(document).on('click', '.tagged-pets span', function() {
+    const petId = $(this).data('pet-id');
+    if (!petId) return;
+    // Find pet info from the last loaded petMap (store globally)
+    const pet = window._lastTaggedPetMap && window._lastTaggedPetMap[petId];
+    if (!pet) return;
+    const img = pet.pet_img ? `media/images/petPics/${pet.pet_img}` : 'media/images/default-profile.png';
+    const vacImg = pet.pet_vaccine_img ? `<img src="media/images/vacPics/${pet.pet_vaccine_img}" class="img-fluid rounded mb-2" alt="Vaccine" style="max-width:120px;max-height:120px;object-fit:cover;">` : '';
+    const html = `
+        <div class="row">
+            <div class="col-md-4 text-center mb-3">
+                <img src="${img}" class="img-fluid rounded mb-3" alt="${pet.pet_name}" style="max-width:160px;max-height:160px;object-fit:cover;">
+                ${vacImg}
+            </div>
+            <div class="col-md-8">
+                <h5 class="mb-2">${pet.pet_name}</h5>
+                <p><strong>Custom ID:</strong> ${pet.pet_custom_id || ''}</p>
+                <p><strong>Type:</strong> ${pet.pet_type || ''}</p>
+                <p><strong>Breed:</strong> ${pet.pet_breed || ''}</p>
+                <p><strong>Birthdate:</strong> ${pet.pet_birthdate || ''}</p>
+                <p><strong>Gender:</strong> ${pet.pet_gender || ''}</p>
+                <p><strong>Color:</strong> ${pet.pet_color || ''}</p>
+                <p><strong>Eye Color:</strong> ${pet.pet_eye_color || ''}</p>
+                <p><strong>Weight:</strong> ${pet.pet_weight || ''} kg</p>
+                <p><strong>Size:</strong> ${pet.pet_size || ''}</p>
+                <p><strong>Allergies:</strong> ${pet.pet_allergies || 'None'}</p>
+                <p><strong>Medical Conditions:</strong> ${pet.pet_medical_conditions || 'None'}</p>
+                <p><strong>Owner:</strong> ${pet.pet_owner_email || ''}</p>
+                <p><strong>Created At:</strong> ${pet.pet_created_at || ''}</p>
+            </div>
+        </div>
+    `;
+    $('#petDetailsBody').html(html);
+    const modal = new bootstrap.Modal(document.getElementById('petDetailsModal'));
+    modal.show();
+});
+
+// --- ENHANCED renderPostCard TO SHOW TAGGED PETS (with clickable) ---
+function renderPostCard(post, user, postIdx, petMap) {
     // user: {user_fname, user_lname, user_img, user_email}
     const profileImg = user && user.user_img ? `media/images/profiles/${user.user_img}` : 'media/images/default-profile.png';
-    const profileName = user && user.user_fname && user.user_lname ? `${user.user_fname} ${user.user_lname}` : (user && user.user_email ? user.user_email : 'Unknown');
+    const profileName = user && user.user_fname && user.user_lname
+        ? `<a href="#" class="profile-name-link text-decoration-none text-dark fw-bold" data-email="${encodeURIComponent(user.user_email)}" style="cursor:pointer;">${user.user_fname} ${user.user_lname}</a>`
+        : (user && user.user_email ? `<a href="#" class="profile-name-link text-decoration-none text-dark fw-bold" data-email="${encodeURIComponent(user.user_email)}" style="cursor:pointer;">${user.user_email}</a>` : 'Unknown');
     const mediaFiles = post.post_images ? JSON.parse(post.post_images) : [];
     const mediaHtml = mediaFiles.map((file, idx) => {
         const fileExtension = file.split('.').pop().toLowerCase();
@@ -157,6 +254,28 @@ function renderPostCard(post, user, postIdx) {
         } catch (e) {
             taggedHtml = post.post_tagged;
         }
+    }
+
+    // --- TAGGED PETS LOGIC ---
+    let taggedPetsHtml = '';
+    if (post.tagged_pets) {
+        try {
+            const petIds = JSON.parse(post.tagged_pets);
+            if (Array.isArray(petIds) && petIds.length > 0 && petMap) {
+                // Store globally for modal use
+                window._lastTaggedPetMap = petMap;
+                taggedPetsHtml = petIds.map(pid => {
+                    const pet = petMap[pid];
+                    if (!pet) return '';
+                    const img = pet.pet_img ? `media/images/petPics/${pet.pet_img}` : 'media/images/default-profile.png';
+                    return `<span class="d-inline-flex align-items-center me-2 mb-1 p-1 px-2 rounded bg-light border tagged-pet-badge" style="gap:6px;min-width:0;cursor:pointer;" data-pet-id="${pet.pet_id}">
+                        <img src="${img}" alt="${pet.pet_name}" class="rounded-circle border" style="width:28px;height:28px;object-fit:cover;">
+                        <span class="fw-semibold text-dark" style="font-size:1rem;">${pet.pet_name}</span>
+                        <span class="text-muted" style="font-size:0.92rem;">${pet.pet_breed}</span>
+                    </span>`;
+                }).join(' ');
+            }
+        } catch (e) {}
     }
 
     // --- LIKES LOGIC ---
@@ -203,18 +322,23 @@ function renderPostCard(post, user, postIdx) {
     const likeBtnText = likedBySession ? 'Liked' : 'Like';
     const likeCount = likesArr.length;
 
+    // --- COMMENT COUNT LOGIC ---
+    let commentCount = 0;
+    if (post.comment_count !== undefined) {
+        commentCount = post.comment_count;
+    } else if (Array.isArray(post.comments)) {
+        commentCount = post.comments.length;
+    }
+
     // --- REPORT BUTTON HTML ---
     const reportBtnHtml = `<button class="btn btn-light btn-sm me-2 report-btn" data-post-id="${post.post_id}" title="Report this post"><i class="fas fa-flag"></i> Report</button>`;
 
-    return $(`
+    return `
         <div class="post-card card p-3 mb-4">
             <div class="post-header d-flex align-items-center mb-3">
-                <img src="${profileImg}" alt="User Profile" class="profile-img me-3">
+                <img src="${profileImg}" alt="User Profile" class="profile-img me-3" style="width:48px;height:48px;object-fit:cover;">
                 <div>
-                    <div class="d-flex">
-                        <div class="fw-bold">${profileName}</div>
-                        ${postScopeIcon}
-                    </div>
+                    <div class="fw-bold">${profileName}</div>
                     <div class="text-muted" style="font-size:0.9rem;">${user && user.user_email ? user.user_email : ''}</div>
                 </div>
             </div>
@@ -226,6 +350,7 @@ function renderPostCard(post, user, postIdx) {
                 <div class="tagged-users">
                     <span class="text-muted">Tagged: </span>
                     <span class="tagged-user">${taggedHtml}</span>
+                    <div class="tagged-pets mt-1">${taggedPetsHtml}</div>
                 </div>
                 <div class="post-time text-muted">
                     <span>Posted on: ${post.date_posted}</span>
@@ -233,13 +358,15 @@ function renderPostCard(post, user, postIdx) {
             </div>
             <div class="post-actions d-flex justify-content-start align-items-center mt-3">
                 <button class="btn btn-light btn-sm me-2 like-btn ${likeBtnClass}" data-post-id="${post.post_id}" data-liked="${likedBySession}" data-post-idx="${postIdx}">
-                    <i class="fas postFas ${likeIconClass}"></i> ${likeBtnText} <span class="like-count ms-1">${likeCount}</span>
+                    <i class="fas postFas ${likeIconClass}"></i> <span class="like-btn-text">${likeBtnText}</span> <span class="like-count ms-1">${likeCount}</span>
                 </button>
-                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal"><i class="fas postFas fa-comment"></i> Comment</button>
+                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                    <i class="fas postFas fa-comment"></i> Comment <span class="comment-count ms-1">${commentCount}</span>
+                </button>
                 ${reportBtnHtml}
             </div>
         </div>
-    `);
+    `;
 }
 
 // --- LIKE BUTTON HANDLER ---
@@ -272,26 +399,20 @@ $(document).on('click', '.like-btn', function() {
         data: { post_id: postId },
         dataType: 'json',
         success: function(res) {
-            // Optionally update UI with actual like count from server
-            if (res.status === 'success' && typeof res.like_count === 'number') {
+            if (res && typeof res.like_count !== 'undefined') {
                 $btn.find('.like-count').text(res.like_count);
             }
-            // Log activity if liked
-            if ($btn.data('liked')) {
-                // Get session email from cache (set in renderPostCard)
-                var sessionEmail = window._sessionEmailFromInfo || '';
-                $.ajax({
-                    url: 'phpFile/globalSide/logSessionActivity.php',
-                    method: 'POST',
-                    data: {
-                        user_email: sessionEmail,
-                        activity_type: 'like',
-                        activity: 'post_like',
-                        activity_description: 'Liked a post',
-                        act_id: 0, // Always 0 for like
-                        post_id: postId // Use the real post_id
-                    }
-                });
+            if (res && typeof res.liked !== 'undefined') {
+                if (res.liked) {
+                    $btn.addClass('liked');
+                    $btn.find('i').removeClass('fa-regular').addClass('fa-solid text-primary');
+                    $btn.find('.like-btn-text').text('Liked');
+                } else {
+                    $btn.removeClass('liked');
+                    $btn.find('i').removeClass('fa-solid text-primary').addClass('fa-regular');
+                    $btn.find('.like-btn-text').text('Like');
+                }
+                $btn.data('liked', res.liked);
             }
         }
     });
@@ -332,16 +453,19 @@ function loadPersonalizedPosts() {
                                     friendMap[friend.user_email] = friend;
                                 });
                             }
-                            response.posts.forEach((post, idx) => {
-                                post._idx = idx;
-                                const friend = friendMap[post.poster_email];
-                                personalizedMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
-                                $personalized.append(renderPostCard(post, friend, idx));
+                            // Fetch pet details for all posts before rendering
+                            fetchTaggedPetsDetailsForPosts(response.posts, function(petMap) {
+                                response.posts.forEach((post, idx) => {
+                                    post._idx = idx;
+                                    const friend = friendMap[post.poster_email];
+                                    personalizedMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
+                                    $personalized.append(renderPostCard(post, friend, idx, petMap));
+                                });
+                                window._ownerHomePostsMedia = personalizedMediaArr;
                             });
                         } else {
                             $personalized.html('<div class="text-danger text-center">No posts found from your friends.</div>');
                         }
-                        window._ownerHomePostsMedia = personalizedMediaArr;
                         // Show liked posts in console
                         if (window._sessionLikedPosts && window._sessionLikedPosts.length > 0) {
                             console.log('Session liked posts:', window._sessionLikedPosts);
@@ -381,16 +505,19 @@ function loadPublicPosts() {
                         userMap[friend.user_email] = friend;
                     });
                 }
-                response.posts.forEach((post, idx) => {
-                    post._idx = idx;
-                    let user = userMap[post.poster_email] || { user_email: post.poster_email };
-                    publicMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
-                    $public.append(renderPostCard(post, user, idx));
+                // Fetch pet details for all posts before rendering
+                fetchTaggedPetsDetailsForPosts(response.posts, function(petMap) {
+                    response.posts.forEach((post, idx) => {
+                        post._idx = idx;
+                        let user = userMap[post.poster_email] || { user_email: post.poster_email };
+                        publicMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
+                        $public.append(renderPostCard(post, user, idx, petMap));
+                    });
+                    window._ownerHomePostsMedia = publicMediaArr;
                 });
             } else {
                 $public.html('<div class="text-danger text-center">No public posts found.</div>');
             }
-            window._ownerHomePostsMedia = publicMediaArr;
             // Show liked posts in console
             if (window._sessionLikedPosts && window._sessionLikedPosts.length > 0) {
                 console.log('Session liked posts:', window._sessionLikedPosts);
@@ -427,19 +554,31 @@ function renderFriendList(friends) {
             const name = (friend.user_fname && friend.user_lname) ? friend.user_fname + ' ' + friend.user_lname : 'Unknown';
             const location = (friend.user_country || '') + (friend.user_province ? ', ' + friend.user_province : '');
             const contact = friend.user_contact ? `<div class=\"text-muted\" style=\"font-size: 0.85rem;\"><i class=\"fas fa-phone-alt me-1\"></i> ${friend.user_contact}</div>` : '';
+            // Message icon button
+            const messageBtn = `<button class="btn btn-outline-primary btn-sm ms-auto message-friend-btn" data-email="${encodeURIComponent(friend.user_email)}" title="Message" style="border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-envelope"></i></button>`;
             const $li = $(`
-                <li class="list-group-item friend-item d-flex align-items-center" style="background: linear-gradient(135deg, #38b6ff 75%, #85d2ff 100%); border-radius: 18px; margin-bottom: 12px; padding: 14px 18px; border: 2px solid #1976d2; box-shadow: 0 2px 8px #38b6ff22; cursor:pointer; transition: box-shadow 0.2s;">
-                    <img src="${img}" alt="${name}" class="friend-img me-3 shadow" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 3px solid #38b6ff; box-shadow: 0 2px 8px #38b6ff22;">
-                    <div>
-                        <div class="fw-bold" style="font-size: 1.08rem; color: #fff;">${name}</div>
-                        <div class="text-muted" style="font-size: 0.92rem; color: #e0f7fa;"><i class="fas fa-map-marker-alt me-1"></i> ${location}</div>
-                        ${contact}
+                <li class="list-group-item friend-item d-flex align-items-center justify-content-between" style="background: linear-gradient(135deg, #38b6ff 75%, #85d2ff 100%); border-radius: 18px; margin-bottom: 12px; padding: 14px 18px; border: 2px solid #1976d2; box-shadow: 0 2px 8px #38b6ff22; cursor:pointer; transition: box-shadow 0.2s;">
+                    <div class="d-flex align-items-center">
+                        <img src="${img}" alt="${name}" class="friend-img me-3 shadow" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 3px solid #38b6ff; box-shadow: 0 2px 8px #38b6ff22;">
+                        <div>
+                            <div class="fw-bold" style="font-size: 1.08rem; color: #fff;">${name}</div>
+                            <div class="text-muted" style="font-size: 0.92rem; color: #e0f7fa;"><i class="fas fa-map-marker-alt me-1"></i> ${location}</div>
+                            ${contact}
+                        </div>
                     </div>
+                    ${messageBtn}
                 </li>
                 <hr style="margin: 0 0 8px 0; border-color: #b2ebf2;">
             `);
             $li.on('click', function(e) {
+                // Prevent click if message button is clicked
+                if ($(e.target).closest('.message-friend-btn').length) return;
                 window.location.href = `otherProfile.html?email=${encodeURIComponent(friend.user_email)}`;
+            });
+            $li.find('.message-friend-btn').on('click', function(e) {
+                e.stopPropagation();
+                // TODO: Implement message modal or redirect to chat
+                alert('Message feature coming soon!');
             });
             $friendList.append($li);
         });
@@ -570,7 +709,7 @@ function renderFriendRequests(requests) {
         html = '<div class="text-muted text-center">No pending friend requests.</div>';
     } else {
         requests.forEach(function(req) {
-            const imgSrc = req.user_img ? `media/images/profiles/${req.user_img}` : 'media/images/profiles/default.jpg';
+            const imgSrc = req.user_img ? `media/images/profiles/${req.user_img}` : 'media/images/profiles/default.png';
             html += `
             <div class="notification-message friend-request-notif d-flex align-items-center justify-content-between mb-2 p-2 border rounded shadow-sm" style="background: #f8fbff;">
                 <div class="d-flex align-items-center">
@@ -606,31 +745,131 @@ function fetchFriendRequests() {
     }, 'json');
 }
 
-// Fetch friend requests when bell icon is clicked
+// --- NOTIFICATIONS LOGIC FOR BELL DROPDOWN ---
+function renderNotifications(notifications) {
+    let html = '';
+    // Always show the Notifications header at the top
+    html += '<h4>Notifications</h4><hr>';
+    if (!notifications || notifications.length === 0) {
+        html += '<div class="text-muted text-center">No notifications.</div>';
+    } else {
+        notifications.forEach(function(n) {
+            let profileImg = 'media/images/profiles/default.png';
+            let displayName = 'Someone';
+            let commentIdAttr = '';
+            if (n.type === 'comment') {
+                if (n.commenter_img) {
+                    profileImg = 'media/images/profiles/' + n.commenter_img;
+                }
+                displayName = n.commenter_name ? n.commenter_name : 'Someone';
+                if (n.comment_id) {
+                    commentIdAttr = ` data-comment-id="${n.comment_id}"`;
+                }
+            } else if (n.type === 'like') {
+                if (n.liker_img) {
+                    profileImg = 'media/images/profiles/' + n.liker_img;
+                }
+                displayName = n.liker_name ? n.liker_name : 'Someone';
+            }
+            html += `
+            <div class="notification-message" data-notification-id="${n.id}" data-type="${n.type}" data-ref-id="${n.ref_id}"${commentIdAttr} style="cursor:pointer;">
+                <img class="profile-img me-2" src="${profileImg}" alt="Profile Picture">
+                <div class="notification-details">
+                    <p class="name mb-1">${displayName}</p>
+                    <p class="notification mb-1">${n.message}</p>
+                    <span class="time">${formatNotificationTime(n.created_at)}</span>
+                </div>
+            </div>`;
+        });
+    }
+    // Place notifications above friend requests
+    if ($('#bellDropdown .notifications-list').length === 0) {
+        $('#bellDropdown').prepend('<div class="notifications-list mb-2"></div>');
+    }
+    $('#bellDropdown').find('.notifications-list').html(html);
+}
+
+function fetchNotifications() {
+    $.get('phpFile/globalSide/fetchNotifications.php', function(res) {
+        if (res.status === 'success') {
+            renderNotifications(res.notifications);
+        } else {
+            renderNotifications([]);
+        }
+    }, 'json');
+}
+
+function formatNotificationTime(dateString) {
+    // Format as relative time (e.g., '2 hours ago') or fallback to date
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    if (diffSec < 60) return 'Just now';
+    if (diffSec < 3600) return Math.floor(diffSec / 60) + ' min ago';
+    if (diffSec < 86400) return Math.floor(diffSec / 3600) + ' hr ago';
+    if (diffSec < 604800) return Math.floor(diffSec / 86400) + ' day ago';
+    return date.toLocaleString();
+}
+
+// Fetch notifications and friend requests when bell icon is clicked
 $('#bellIcon').on('click', function() {
+    fetchNotifications();
     fetchFriendRequests();
 });
 
-// Accept friend request
-$(document).on('click', '.accept-friend-btn', function() {
-    const sender_email = $(this).data('email');
-    $.post('phpFile/globalSide/handleFriendRequestAction.php', {
-        sender_email: sender_email,
-        action: 'accept'
-    }, function(res) {
-        fetchFriendRequests();
+// --- BADGE COUNT LOGIC FOR BELL ICON ---
+function updateBellBadge(notificationCount, friendReqCount) {
+    const total = notificationCount + friendReqCount;
+    let $badge = $('#bellIcon .bell-badge');
+    if (total > 0) {
+        if ($badge.length === 0) {
+            // Use right instead of left for more reliable positioning
+            $('#bellIcon').css('position', 'relative').append(`
+                <span class="bell-badge badge bg-danger position-absolute top-0 end-0" style="right: -8px; top: -8px; font-size: 0.8rem; min-width: 1.5em; z-index: 10;">${total}</span>
+            `);
+        } else {
+            $badge.text(total);
+        }
+    } else {
+        $badge.remove();
+    }
+}
+
+// --- WRAPPED FETCHES TO UPDATE BADGE ---
+let _lastNotificationCount = 0;
+let _lastFriendReqCount = 0;
+
+function fetchNotificationsWithBadge() {
+    $.get('phpFile/globalSide/fetchNotifications.php', function(res) {
+        if (res.status === 'success') {
+            _lastNotificationCount = Array.isArray(res.notifications) ? res.notifications.length : 0;
+            renderNotifications(res.notifications);
+            updateBellBadge(_lastNotificationCount, _lastFriendReqCount);
+        }
     }, 'json');
+}
+
+function fetchFriendRequestsWithBadge() {
+    $.get('phpFile/globalSide/fetchPendingFriendRequests.php', function(res) {
+        if (res.status === 'success' || res.status === 'none') {
+            _lastFriendReqCount = Array.isArray(res.requests) ? res.requests.length : 0;
+            renderFriendRequests(res.requests);
+            updateBellBadge(_lastNotificationCount, _lastFriendReqCount);
+        }
+    }, 'json');
+}
+
+// Replace original fetches for bell icon
+$('#bellIcon').off('click').on('click', function() {
+    fetchNotificationsWithBadge();
+    fetchFriendRequestsWithBadge();
 });
 
-// Reject friend request
-$(document).on('click', '.reject-friend-btn', function() {
-    const sender_email = $(this).data('email');
-    $.post('phpFile/globalSide/handleFriendRequestAction.php', {
-        sender_email: sender_email,
-        action: 'reject'
-    }, function(res) {
-        fetchFriendRequests();
-    }, 'json');
+// On page load, fetch badge count
+$(document).ready(function() {
+    fetchNotificationsWithBadge();
+    fetchFriendRequestsWithBadge();
 });
 
 // --- AUTOCOMPLETE FOR TAGGING FRIENDS IN POST PREVIEW MODAL ---
@@ -725,6 +964,113 @@ $(document).ready(function() {
     });
 });
 
+// --- AUTOCOMPLETE FOR TAGGING PETS IN POST PREVIEW MODAL ---
+let petSuggestions = [];
+let taggedPetsArr = [];
+
+function fetchUserPets() {
+    return $.ajax({
+        url: 'phpFile/globalSide/fetchUserPets.php',
+        method: 'GET',
+        dataType: 'json',
+    });
+}
+
+function filterPetSuggestions(query) {
+    query = query.trim().toLowerCase();
+    if (!query) return [];
+    return petSuggestions.filter(pet => {
+        const name = (pet.pet_name || '').toLowerCase();
+        const breed = (pet.pet_breed || '').toLowerCase();
+        return name.includes(query) || breed.includes(query);
+    });
+}
+
+function renderTaggedPetsSuggestions(matches) {
+    const $suggestions = $('#taggedPetsSuggestions');
+    $suggestions.empty();
+    if (matches.length === 0) {
+        $suggestions.hide();
+        return;
+    }
+    matches.forEach(pet => {
+        const img = pet.pet_img ? `media/images/petPics/${pet.pet_img}` : 'media/images/default-profile.png';
+        $suggestions.append(`
+            <div class="pet-suggestion-item d-flex align-items-center gap-3 px-3 py-2 mb-2 shadow border-0 bg-white rounded-4 position-relative" style="cursor:pointer; transition:box-shadow 0.2s, background 0.2s; min-height:64px;">
+                <img src="${img}" alt="Pet" class="rounded-circle border border-3 border-primary shadow-sm" style="width:54px;height:54px;object-fit:cover;box-shadow:0 2px 12px #90caf955;">
+                <div class="flex-grow-1">
+                    <div class="fw-bold text-dark" style="font-size:1.18rem; letter-spacing:0.5px;">${pet.pet_name}</div>
+                    <div class="text-secondary" style="font-size:1.01rem;">${pet.pet_breed}</div>
+                </div>
+                <span class="badge bg-info text-dark position-absolute top-0 end-0 mt-2 me-3" style="font-size:0.92rem;">Tag</span>
+            </div>
+        `);
+    });
+    $suggestions.show();
+    $suggestions.find('.pet-suggestion-item').hover(
+        function() { $(this).css({'background':'#e3f2fd','box-shadow':'0 4px 16px #90caf955'}); },
+        function() { $(this).css({'background':'#fff','box-shadow':'0 2px 12px #90caf955'}); }
+    );
+}
+
+$(document).ready(function() {
+    // Insert suggestions dropdown if not present
+    if ($('#taggedPetsSuggestions').length === 0) {
+        $('#taggedPets').after('<div id="taggedPetsSuggestions" class="list-group position-absolute w-100" style="z-index:9999;display:none;"></div>');
+    }
+    // Fetch pet list once
+    fetchUserPets().done(function(res) {
+        if (res.status === 'success' && Array.isArray(res.pets)) {
+            petSuggestions = res.pets;
+        }
+    });
+    // Autocomplete logic
+    $('#taggedPets').on('input focus', function() {
+        const input = $(this).val();
+        // Support comma-separated, suggest for last part
+        const parts = input.split(',');
+        const last = parts[parts.length - 1].trim();
+        if (!last) {
+            $('#taggedPetsSuggestions').hide();
+            return;
+        }
+        const matches = filterPetSuggestions(last);
+        renderTaggedPetsSuggestions(matches);
+    });
+    // Handle suggestion click
+    $(document).on('click', '.pet-suggestion-item', function() {
+        const petName = $(this).find('.fw-bold').text().trim();
+        const petImg = $(this).find('img').attr('src');
+        const petBreed = $(this).find('.text-secondary').text().trim();
+        // Find the pet object in petSuggestions to get the ID
+        const petObj = petSuggestions.find(p => p.pet_name === petName && p.pet_breed === petBreed);
+        const petId = petObj ? petObj.pet_id : null;
+        // Add to taggedPetsArr if not already present
+        if (petId && !taggedPetsArr.some(p => p.id === petId)) {
+            taggedPetsArr.push({ id: petId, name: petName, img: petImg, breed: petBreed });
+        }
+        // Get the current input value and split by comma
+        let inputVal = $('#taggedPets').val();
+        let parts = inputVal.split(',');
+        // Replace the last part with the selected pet name
+        parts[parts.length - 1] = ' ' + petName;
+        // Join and trim to keep the same number of commas (same length as input)
+        let newVal = parts.join(',').replace(/^\s+|\s+$/g, '');
+        $('#taggedPets').val(newVal);
+        $('#taggedPetsSuggestions').hide();
+        $('#taggedPets').focus();
+    });
+    // Remove pet from taggedPetsArr if user edits input
+    $('#taggedPets').on('input', function() {
+        const inputNames = $(this).val().split(',').map(s => s.trim()).filter(Boolean);
+        taggedPetsArr = taggedPetsArr.filter(p => inputNames.includes(p.name));
+    });
+    // Hide suggestions on blur (with delay for click)
+    $('#taggedPets').on('blur', function() {
+        setTimeout(() => $('#taggedPetsSuggestions').hide(), 200);
+    });
+});
+
 // --- COMMENT MODAL LOGIC ---
 let currentCommentPostId = null;
 
@@ -799,6 +1145,18 @@ $('#submitCommentBtn').on('click', function() {
         alert('Session not found. Please log in again.');
         return;
     }
+    // --- Optimistically update comment count in UI ---
+    // Find the post card for the current post and update its comment count
+    const $postCard = $(`.post-card .like-btn[data-post-id='${currentCommentPostId}']`).closest('.post-card');
+    if ($postCard.length) {
+        const $commentBtn = $postCard.find('.post-actions .btn-light:has(.fa-comment)');
+        if ($commentBtn.length) {
+            const $countSpan = $commentBtn.find('.comment-count');
+            let count = parseInt($countSpan.text()) || 0;
+            $countSpan.text(count + 1);
+            $commentBtn.addClass('optimistic-comment'); // mark for possible rollback
+        }
+    }
     $.ajax({
         url: 'phpFile/globalSide/insertComment.php',
         method: 'POST',
@@ -828,6 +1186,23 @@ $('#submitCommentBtn').on('click', function() {
         },
         error: function() {
             alert('Failed to post comment.');
+            // --- Rollback optimistic update if AJAX fails ---
+            if ($postCard.length) {
+                const $commentBtn = $postCard.find('.post-actions .btn-light:has(.fa-comment)');
+                if ($commentBtn.length && $commentBtn.hasClass('optimistic-comment')) {
+                    const $countSpan = $commentBtn.find('.comment-count');
+                    let count = parseInt($countSpan.text()) || 1;
+                    $countSpan.text(Math.max(0, count - 1));
+                    $commentBtn.removeClass('optimistic-comment');
+                }
+            }
+        },
+        complete: function() {
+            // Remove optimistic marker if present
+            if ($postCard.length) {
+                const $commentBtn = $postCard.find('.post-actions .btn-light:has(.fa-comment)');
+                $commentBtn.removeClass('optimistic-comment');
+            }
         }
     });
 });
@@ -856,6 +1231,473 @@ $(document).on('click', '.report-btn', function() {
             alert('Failed to report the post.');
         }
     });
+});
+
+// --- CLICK HANDLER FOR PROFILE NAME LINK ---
+$(document).on('click', '.profile-name-link', function(e) {
+    e.preventDefault();
+    const email = $(this).data('email');
+    if (email) {
+        window.location.href = `otherProfile.html?email=${email}`;
+    }
+});
+
+// Accept friend request from bell dropdown
+$(document).on('click', '.accept-friend-btn', function() {
+    const sender_email = $(this).data('email');
+    const $btn = $(this);
+    $btn.prop('disabled', true);
+    $.post('phpFile/globalSide/handleFriendRequestAction.php', {
+        sender_email: sender_email,
+        action: 'accept'
+    }, function(res) {
+        fetchFriendRequests();
+        // Optionally, show a toast or alert
+        // alert(res.message);
+    }, 'json').always(function() { $btn.prop('disabled', false); });
+});
+
+// Reject friend request from bell dropdown
+$(document).on('click', '.reject-friend-btn', function() {
+    const sender_email = $(this).data('email');
+    const $btn = $(this);
+    $btn.prop('disabled', true);
+    $.post('phpFile/globalSide/handleFriendRequestAction.php', {
+        sender_email: sender_email,
+        action: 'reject'
+    }, function(res) {
+        fetchFriendRequests();
+        // Optionally, show a toast or alert
+        // alert(res.message);
+    }, 'json').always(function() { $btn.prop('disabled', false); });
+});
+
+// --- NOTIFICATION MODAL LOGIC ---
+if ($('#notificationPostModal').length === 0) {
+    $('body').append(`
+        <div class="modal fade" id="notificationPostModal" tabindex="-1" aria-labelledby="notificationPostModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationPostModalLabel">Notification Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="notificationPostModalBody"></div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+// Click handler for notification
+$(document).on('click', '.notification-message', function() {
+    const notificationId = $(this).data('notification-id');
+    const type = $(this).data('type');
+    const refId = $(this).data('ref-id');
+    let commentId = null;
+    if (type === 'comment') {
+        // Try to get comment_id from the notification message (already parsed in fetchNotifications.php)
+        commentId = $(this).data('comment-id');
+        if (!commentId && this.comment_id) commentId = this.comment_id;
+    }
+    // Mark notification as read (is_read = 1)
+    if (notificationId) {
+        $.post('phpFile/globalSide/markNotificationRead.php', { notification_id: notificationId });
+    }
+    if (!refId) return;
+    $('#notificationPostModalBody').html('<div class="text-center py-4"><div class="spinner-border"></div></div>');
+    const showModal = () => {
+        const modal = new bootstrap.Modal(document.getElementById('notificationPostModal'));
+        modal.show();
+    };
+    // Fetch post details
+    $.ajax({
+        url: 'phpFile/globalSide/fetchPostById.php',
+        method: 'POST',
+        data: { post_id: refId },
+        dataType: 'json',
+        success: function(res) {
+            if (res.status === 'success' && res.post) {
+                let postHtml = renderPostCardForModal(res.post, res.user, res.petMap);
+                if (type === 'comment' && commentId) {
+                    // Fetch the specific comment by comment_id
+                    $.ajax({
+                        url: 'phpFile/globalSide/fetchCommentById.php',
+                        method: 'POST',
+                        data: { comment_id: commentId },
+                        dataType: 'json',
+                        success: function(cRes) {
+                            postHtml += '<hr><h6>Comment</h6>';
+                            if (cRes.status === 'success' && cRes.comment) {
+                                postHtml += renderSingleCommentForModal(cRes.comment);
+                            } else {
+                                postHtml += '<div class="text-muted">Comment not found.</div>';
+                            }
+                            $('#notificationPostModalBody').html(postHtml);
+                            showModal();
+                        },
+                        error: function() {
+                            postHtml += '<hr><div class="text-danger">Failed to load comment.</div>';
+                            $('#notificationPostModalBody').html(postHtml);
+                            showModal();
+                        }
+                    });
+                } else if (type === 'comment') {
+                    // Do not fallback, show error if commentId is missing
+                    postHtml += '<hr><div class="text-danger">No comment_id provided in notification.</div>';
+                    $('#notificationPostModalBody').html(postHtml);
+                    showModal();
+                } else {
+                    $('#notificationPostModalBody').html(postHtml);
+                    showModal();
+                }
+            } else {
+                $('#notificationPostModalBody').html('<div class="text-danger">Post not found.</div>');
+                showModal();
+            }
+        },
+        error: function() {
+            $('#notificationPostModalBody').html('<div class="text-danger">Failed to load post details.</div>');
+            showModal();
+        }
+    });
+});
+
+// Helper: Render post card for modal (minimal version)
+function renderPostCardForModal(post, user, petMap) {
+    let profileImg = user && user.user_img ? `media/images/profiles/${user.user_img}` : 'media/images/default-profile.png';
+    let html = `<div class="d-flex align-items-center mb-2">
+        <img src="${profileImg}" class="rounded-circle me-2" style="width:48px;height:48px;object-fit:cover;">
+        <div><strong>${user ? user.user_fname + ' ' + user.user_lname : 'User'}</strong></div>
+    </div>`;
+    html += `<div class="mb-2">${post.post_caption || ''}</div>`;
+    if (post.post_images) {
+        try {
+            const imgs = JSON.parse(post.post_images);
+            if (imgs && imgs.length > 0) {
+                html += '<div class="mb-2">';
+                imgs.forEach(img => {
+                    html += `<img src="media/images/posts/${img}" class="img-fluid rounded mb-1 me-1" style="max-width:120px;max-height:120px;object-fit:cover;">`;
+                });
+                html += '</div>';
+            }
+        } catch(e) {}
+    }
+    // Tagged pets (optional)
+    if (post.tagged_pets && petMap) {
+        try {
+            const petIds = JSON.parse(post.tagged_pets);
+            if (petIds && petIds.length > 0) {
+                html += '<div class="mb-2"><strong>Tagged Pets:</strong> ';
+                petIds.forEach(pid => {
+                    const pet = petMap[pid];
+                    if (pet) {
+                        html += `<span class="badge bg-info text-dark me-1">${pet.pet_name}</span>`;
+                    }
+                });
+                html += '</div>';
+            }
+        } catch(e) {}
+    }
+    // --- COMMENT COUNT (for modal, fallback to comments array if needed) ---
+    let commentCount = 0;
+    if (typeof post.comment_count !== 'undefined') {
+        commentCount = post.comment_count;
+    } else if (Array.isArray(post.comments)) {
+        commentCount = post.comments.length;
+    }
+    html += `<div class=\"mb-2\"><i class='fas fa-comment'></i> <span class='comment-count'>${commentCount}</span> Comment${commentCount === 1 ? '' : 's'}</div>`;
+    return html;
+}
+
+// Helper: Render a single comment for modal
+function renderSingleCommentForModal(comment) {
+    if (!comment) return '';
+    let img = comment.user_img ? `media/images/profiles/${comment.user_img}` : 'media/images/profiles/default.png';
+    let name = (comment.user_fname && comment.user_lname) ? `${comment.user_fname} ${comment.user_lname}` : comment.user_email;
+    return `<div class="d-flex align-items-start gap-2 mb-2">
+        <img src="${img}" alt="Profile" class="rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;">
+        <div>
+            <div><strong>${name}</strong> <span class="text-muted small">${comment.created_at}</span></div>
+            <div>${comment.comment}</div>
+        </div>
+    </div>`;
+}
+
+// --- SEARCH MODAL LOGIC ---
+if ($('#searchModal').length === 0) {
+    $('body').append(`
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchModalLabel">Search Results</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchInputModal" placeholder="Search posts and users..." autofocus>
+                        </div>
+                        <div id="searchSuggestionsModal"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+// --- SEARCH RESULT MODAL LOGIC ---
+if ($('#searchResultModal').length === 0) {
+    $('body').append(`
+        <div class="modal fade" id="searchResultModal" tabindex="-1" aria-labelledby="searchResultModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchResultModalLabel">Search Results</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="searchResultModalBody"></div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+// --- SEARCH RESULT MODAL MEDIA VIEWER LOGIC ---
+function initSearchResultMediaViewer() {
+    // Remove any previous handlers to avoid duplicates
+    $('#searchResultModalBody').off('click', '.search-media-thumb');
+    // Attach click handler for images/videos in search results
+    $('#searchResultModalBody').on('click', '.search-media-thumb', function() {
+        const $thumb = $(this);
+        const mediaSrc = $thumb.data('media-src');
+        const mediaType = $thumb.data('media-type');
+        // Build modal content
+        let content = '';
+        if (mediaType && mediaType.startsWith('video')) {
+            content = `<video controls style="max-width:100%;max-height:70vh;"><source src="${mediaSrc}" type="${mediaType}"></video>`;
+        } else {
+            content = `<img src="${mediaSrc}" class="img-fluid" style="max-width:100%;max-height:70vh;">`;
+        }
+        $('#searchResultMediaModalBody').html(content);
+        const modal = new bootstrap.Modal(document.getElementById('searchResultMediaModal'));
+        modal.show();
+    });
+}
+// Create the modal if it doesn't exist
+if ($('#searchResultMediaModal').length === 0) {
+    $('body').append(`
+        <div class="modal fade" id="searchResultMediaModal" tabindex="-1" aria-labelledby="searchResultMediaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchResultMediaModalLabel">Media Viewer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="searchResultMediaModalBody" style="text-align:center;"></div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+// --- SEARCH RESULT MODAL: INIT MEDIA VIEWER AFTER RENDERING ---
+$(document).on('shown.bs.modal', '#searchResultModal', function() {
+    // Init media viewer for the search result modal
+    initSearchResultMediaViewer();
+});
+
+$('#searchInput').on('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const query = $(this).val().trim();
+        if (!query) return;
+        // Show the search result modal
+        const resultModal = new bootstrap.Modal(document.getElementById('searchResultModal'));
+        resultModal.show();
+        // Fetch related posts and users
+        $.ajax({
+            url: 'phpFile/globalSide/searchPostsAndUsers.php',
+            method: 'POST',
+            data: { query },
+            dataType: 'json',
+            success: function(res) {
+                let html = '';
+                if (res.posts && res.posts.length > 0) {
+                    html += '<h6>Related Posts</h6>';
+                    res.posts.forEach((post, idx) => {
+                        // User info
+                        const userImg = post.user_img ? `media/images/profiles/${post.user_img}` : 'media/images/default-profile.png';
+                        const userName = `${post.user_fname || ''} ${post.user_lname || ''}`.trim();
+                        const userEmail = post.poster_email || '';
+                        // Likes
+                        let likesArr = [];
+                        if (post.likes) {
+                            try { likesArr = JSON.parse(post.likes); } catch(e) { likesArr = []; }
+                        }
+                        const likeCount = likesArr.length;
+                        // Comments
+                        let commentCount = 0;
+                        if (typeof post.comment_count !== 'undefined') commentCount = post.comment_count;
+                        // Media
+                        let mediaHtml = '';
+                        if (post.post_images) {
+                            try {
+                                const imgs = JSON.parse(post.post_images);
+                                if (imgs && imgs.length > 0) {
+                                    mediaHtml += '<div class="d-flex flex-wrap gap-2 mb-2">';
+                                    imgs.forEach(img => {
+                                        const ext = img.split('.').pop().toLowerCase();
+                                        let type = 'image/jpeg';
+                                        if (["mp4","webm","ogg"].includes(ext)) {
+                                            type = 'video/' + ext;
+                                            mediaHtml += `<video class='search-media-thumb' src='media/images/posts/${img}' data-media-src='media/images/posts/${img}' data-media-type='${type}' style='width:100px;max-height:100px;object-fit:cover;cursor:pointer;' muted></video>`;
+                                        } else {
+                                            mediaHtml += `<img class='search-media-thumb' src='media/images/posts/${img}' data-media-src='media/images/posts/${img}' data-media-type='image/jpeg' style='width:100px;max-height:100px;object-fit:cover;cursor:pointer;'>`;
+                                        }
+                                    });
+                                    mediaHtml += '</div>';
+                                }
+                            } catch(e) {}
+                        }
+                        // Like button logic (session email)
+                        let sessionEmail = window._sessionEmailFromInfo || '';
+                        const likedBySession = likesArr.map(e => (e + '').trim().toLowerCase()).includes(sessionEmail.trim().toLowerCase());
+                        const likeBtnClass = likedBySession ? 'liked' : '';
+                        const likeIconClass = likedBySession ? 'fa-solid fa-thumbs-up text-primary' : 'fa-regular fa-thumbs-up';
+                        const likeBtnText = likedBySession ? 'Liked' : 'Like';
+                        // Report button
+                        const reportBtnHtml = `<button class="btn btn-light btn-sm me-2 report-btn" data-post-id="${post.post_id}" title="Report this post"><i class="fas fa-flag"></i> Report</button>`;
+                        // Render card
+                        html += `
+
+                        <div class="post-card card p-3 mb-4">
+                            <div class="post-header d-flex align-items-center mb-3">
+                                <img src="${userImg}" alt="User Profile" class="profile-img me-3" style="width:48px;height:48px;object-fit:cover;">
+                                <div>
+                                    <div class="fw-bold">${userName}</div>
+                                    <div class="text-muted" style="font-size:0.9rem;">${userEmail}</div>
+                                </div>
+                            </div>
+                            <div class="post-content mb-3">
+                                <p>${post.post_caption}</p>
+                                ${mediaHtml}
+                            </div>
+                            <div class="post-footer d-flex justify-content-between align-items-center">
+                                <div class="post-time text-muted">
+                                    <span>Posted on: ${post.date_posted}</span>
+                                </div>
+                            </div>
+                            <div class="post-actions d-flex justify-content-start align-items-center mt-3">
+                                <button class="btn btn-light btn-sm me-2 like-btn ${likeBtnClass}" data-post-id="${post.post_id}" data-liked="${likedBySession}" data-post-idx="${idx}">
+                                    <i class="fas postFas ${likeIconClass}"></i> <span class="like-btn-text">${likeBtnText}</span> <span class="like-count ms-1">${likeCount}</span>
+                                </button>
+                                <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
+                                    <i class="fas postFas fa-comment"></i> Comment <span class="comment-count ms-1">${commentCount}</span>
+                                </button>
+                                ${reportBtnHtml}
+                            </div>
+                        </div>
+                        `;
+                    });
+                } else {
+                    html += '<div class="text-muted">No related posts found.</div>';
+                }
+                if (res.users && res.users.length > 0) {
+                    html += '<h6 class="mt-3">Related Users</h6>';
+                    res.users.forEach(user => {
+                        const img = user.user_img ? `media/images/profiles/${user.user_img}` : 'media/images/default-profile.png';
+                        html += `<div class="d-flex align-items-center border rounded p-2 mb-2">`;
+                        html += `<img src="${img}" alt="Profile" class="rounded-circle me-3" width="50" height="50">`;
+                        html += `<div><strong>${user.user_fname} ${user.user_lname}</strong><br><small class="text-muted">${user.user_email}</small></div>`;
+                        html += `</div>`;
+                    });
+                } else {
+                    html += '<div class="text-muted">No related users found.</div>';
+                }
+                $('#searchResultModalBody').html(html);
+                initSearchResultMediaViewer();
+            },
+            error: function() {
+                $('#searchResultModalBody').html('<div class="text-danger">Error searching posts and users.</div>');
+            }
+        });
+    }
+});
+
+// --- SEARCH RESULT MODAL: UPDATE COMMENT COUNTS ON OPEN ---
+$('#searchResultModal').on('shown.bs.modal', function() {
+    // For each post card in the modal, fetch and update comment and like count, and liked state
+    $('#searchResultModalBody .post-card').each(function() {
+        const $postCard = $(this);
+        // Try to get post ID from like-btn
+        const $likeBtn = $postCard.find('.like-btn');
+        let postId = $likeBtn.data('post-id');
+        if (!postId) return; // skip if not found
+        // --- Fetch latest comments for this post ---
+        const $commentBtn = $postCard.find('.post-actions .btn-light:has(.fa-comment)');
+        const $countSpan = $commentBtn.find('.comment-count');
+        $.get('phpFile/globalSide/fetchComments.php', { post_id: postId }, function(res) {
+            if (res.status === 'success' && Array.isArray(res.comments)) {
+                $countSpan.text(res.comments.length);
+            }
+        }, 'json');
+        // --- Fetch like count and liked state for this post ---
+        // Use a dedicated endpoint for like status/count, not togglePostLike.php
+        $.ajax({
+            url: 'phpFile/globalSide/getPostLikeStatus.php',
+            method: 'POST',
+            data: { post_id: postId },
+            dataType: 'json',
+            success: function(res) {
+                if (res && typeof res.like_count !== 'undefined') {
+                    $likeBtn.find('.like-count').text(res.like_count);
+                }
+                if (res && typeof res.liked !== 'undefined') {
+                    // Update like button UI
+                    if (res.liked) {
+                        $likeBtn.addClass('liked');
+                        $likeBtn.find('i').removeClass('fa-regular').addClass('fa-solid text-primary');
+                        $likeBtn.find('.like-btn-text').text('Liked');
+                    } else {
+                        $likeBtn.removeClass('liked');
+                        $likeBtn.find('i').removeClass('fa-solid text-primary').addClass('fa-regular');
+                        $likeBtn.find('.like-btn-text').text('Like');
+                    }
+                    $likeBtn.data('liked', res.liked);
+                }
+            }
+        });
+    });
+});
+
+// --- ALLOW MULTIPLE MODALS TO STACK (Bootstrap 5 patch) ---
+$(document).on('show.bs.modal', '.modal', function () {
+    var zIndex = 1050 + (10 * $('.modal:visible').length);
+    $(this).css('z-index', zIndex);
+    setTimeout(function() {
+        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+    }, 0);
+});
+$(document).on('hidden.bs.modal', '.modal', function () {
+    if ($('.modal:visible').length > 0) {
+        setTimeout(function() {
+            $(document.body).addClass('modal-open');
+        }, 0);
+    }
+});
+
+// --- GLOBAL AJAX SETUP ---
+$.ajaxSetup({
+    error: function(jqXHR, textStatus, errorThrown) {
+        // Handle session timeout (PHP returns 403 Forbidden)
+        if (jqXHR.status === 403) {
+            alert('Session expired. Please log in again.');
+            window.location.href = 'login.html';
+        } else {
+            console.error('AJAX Error:', textStatus, errorThrown);
+        }
+    }
 });
 
 

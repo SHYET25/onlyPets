@@ -47,6 +47,10 @@ $caption = $_POST['caption'] ?? '';
 $scope = $_POST['scope'] ?? 'public';
 $tagged = $_POST['tagged'] ?? '';
 $taggedPets = $_POST['taggedPets'] ?? '';
+// If taggedPets is a JSON array, store as JSON in DB
+if (is_string($taggedPets) && ($decoded = json_decode($taggedPets, true)) && is_array($decoded)) {
+    $taggedPets = json_encode($decoded);
+}
 $date_posted = date('Y-m-d H:i:s');
 
 $uploadDir = '../../media/images/posts/';

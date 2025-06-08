@@ -43,4 +43,26 @@ while ($row = $result2->fetch_assoc()) {
 }
 $stmt2->close();
 
+// Fetch comment counts for all posts in one query
+$postIds = array_column($posts, 'post_id');
+$commentCounts = [];
+if (count($postIds) > 0) {
+    $placeholders = implode(',', array_fill(0, count($postIds), '?'));
+    $types = str_repeat('i', count($postIds));
+    $sql = "SELECT post_id, COUNT(*) AS comment_count FROM comments WHERE post_id IN ($placeholders) GROUP BY post_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$postIds);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $commentCounts[$row['post_id']] = (int)$row['comment_count'];
+    }
+    $stmt->close();
+}
+// Attach comment_count to each post
+foreach ($posts as &$post) {
+    $pid = $post['post_id'];
+    $post['comment_count'] = isset($commentCounts[$pid]) ? $commentCounts[$pid] : 0;
+}
+
 echo json_encode(['status' => 'success', 'posts' => $posts, 'friends' => $friends]);

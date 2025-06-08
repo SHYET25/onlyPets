@@ -1,5 +1,6 @@
 <?php
 // togglePostLike.php
+date_default_timezone_set('Asia/Manila');
 header('Content-Type: application/json');
 require_once __DIR__ . '/../connection/connection.php';
 session_start();
@@ -53,6 +54,39 @@ $update = $conn->prepare('UPDATE post SET post_likes = ? WHERE post_id = ?');
 $update->bind_param('si', $new_likes_json, $post_id);
 $update->execute();
 $update->close();
+
+// Send notification if liked and not liking own post
+if ($liked) {
+    // Get post owner (correct column: poster_email)
+    $stmt = $conn->prepare('SELECT poster_email FROM post WHERE post_id = ?');
+    $stmt->bind_param('i', $post_id);
+    $stmt->execute();
+    $stmt->bind_result($post_owner_email);
+    $stmt->fetch();
+    $stmt->close();
+    if ($post_owner_email && $post_owner_email !== $user_email) {
+        // Get liker name and image
+        $stmt = $conn->prepare('SELECT user_fname, user_lname, user_img FROM user WHERE user_email = ?');
+        $stmt->bind_param('s', $user_email);
+        $stmt->execute();
+        $stmt->bind_result($liker_fname, $liker_lname, $liker_img);
+        $stmt->fetch();
+        $stmt->close();
+        $liker_name = trim($liker_fname . ' ' . $liker_lname);
+        $messageArr = [
+            'liker_name' => $liker_name,
+            'liker_img' => $liker_img,
+            'message' => 'liked your post.'
+        ];
+        $messageJson = json_encode($messageArr);
+        $now = date('Y-m-d H:i:s');
+        // Insert notification for post owner
+        $stmt = $conn->prepare('INSERT INTO notifications (user_email, type, message, ref_id, created_at) VALUES (?, "like", ?, ?, ?)');
+        $stmt->bind_param('ssis', $post_owner_email, $messageJson, $post_id, $now);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
 
 // Return new like count
 echo json_encode([
