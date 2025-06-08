@@ -20,7 +20,7 @@ $placeholders = implode(',', array_fill(0, count($friend_emails), '?'));
 $types = str_repeat('s', count($friend_emails));
 
 // Fetch posts
-$sql = "SELECT post_id, poster_email, post_caption, post_tagged, post_images, tagged_pets, post_scope, date_posted FROM post WHERE poster_email IN ($placeholders) ORDER BY date_posted DESC";
+$sql = "SELECT post_id, poster_email, post_caption, post_tagged, post_images, tagged_pets, post_scope, post_likes, date_posted FROM post WHERE poster_email IN ($placeholders) ORDER BY date_posted DESC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$friend_emails);
 $stmt->execute();

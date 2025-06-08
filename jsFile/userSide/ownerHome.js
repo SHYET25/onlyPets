@@ -53,8 +53,14 @@ $('#postButton').on('click', function () {
 $('#submitPost').on('click', async function () {
     const caption = $('#postText').val();
     const scope = $('#postScopeMain').val();
-    const tagged = $('#taggedUsers').val();
+    const tagged = JSON.stringify(taggedUsersArr); // Send as JSON array
     const taggedPets = $('#taggedPets').val();
+
+    // Validation: prevent submit if both caption and media are empty
+    if (!caption.trim() && selectedFiles.length === 0) {
+        alert('Please enter a caption or select at least one media file.');
+        return;
+    }
 
     const mediaBase64Array = [];
 
@@ -137,6 +143,69 @@ function renderPostCard(post, user, postIdx) {
     const postScopeIcon = post.post_scope === "public"
         ? `<span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>`
         : `<span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>`;
+
+    // --- TAGGED USERS LOGIC ---
+    let taggedHtml = 'None';
+    if (post.post_tagged) {
+        try {
+            const taggedArr = JSON.parse(post.post_tagged);
+            if (Array.isArray(taggedArr) && taggedArr.length > 0) {
+                taggedHtml = taggedArr.map(u =>
+                    `<a href="#" class="tagged-user-link" data-email="${encodeURIComponent(u.email)}">${u.name}</a>`
+                ).join(', ');
+            }
+        } catch (e) {
+            taggedHtml = post.post_tagged;
+        }
+    }
+
+    // --- LIKES LOGIC ---
+    let likesArr = [];
+    try {
+        if (post.post_likes) likesArr = JSON.parse(post.post_likes);
+    } catch (e) {}
+    if (!Array.isArray(likesArr)) likesArr = [];
+    likesArr = likesArr.filter(email => typeof email === 'string' && email.trim() !== '');
+    likesArr = Array.from(new Set(likesArr));
+    // Normalize emails for comparison
+    const normalizedLikesArr = likesArr.map(e => (e + '').trim().toLowerCase());
+    // Get session email directly from getSessionInfo.php
+    let sessionEmail = '';
+    if (window._sessionEmailFromInfo) {
+        sessionEmail = window._sessionEmailFromInfo;
+    } else {
+        // Synchronously fetch session email from getSessionInfo.php (first post render only)
+        $.ajax({
+            url: 'phpFile/globalSide/getSessionInfo.php',
+            method: 'GET',
+            dataType: 'json',
+            async: false,
+            success: function(response) {
+                if (response.status === 'success' && response.data && response.data.user_email) {
+                    sessionEmail = (response.data.user_email + '').trim().toLowerCase();
+                    window._sessionEmailFromInfo = sessionEmail;
+                } else if (response.status === 'success' && response.data && response.data.vet_email) {
+                    sessionEmail = (response.data.vet_email + '').trim().toLowerCase();
+                    window._sessionEmailFromInfo = sessionEmail;
+                }
+            }
+        });
+    }
+    console.log('Session email:', sessionEmail);
+    const likedBySession = normalizedLikesArr.includes(sessionEmail);
+    // Debug: Show liked post IDs for the session
+    if (!window._sessionLikedPosts) window._sessionLikedPosts = [];
+    if (likedBySession) {
+        window._sessionLikedPosts.push(post.post_id);
+    }
+    const likeBtnClass = likedBySession ? 'liked' : '';
+    const likeIconClass = likedBySession ? 'fa-solid fa-thumbs-up text-primary' : 'fa-regular fa-thumbs-up';
+    const likeBtnText = likedBySession ? 'Liked' : 'Like';
+    const likeCount = likesArr.length;
+
+    // --- REPORT BUTTON HTML ---
+    const reportBtnHtml = `<button class="btn btn-light btn-sm me-2 report-btn" data-post-id="${post.post_id}" title="Report this post"><i class="fas fa-flag"></i> Report</button>`;
+
     return $(`
         <div class="post-card card p-3 mb-4">
             <div class="post-header d-flex align-items-center mb-3">
@@ -156,22 +225,90 @@ function renderPostCard(post, user, postIdx) {
             <div class="post-footer d-flex justify-content-between align-items-center">
                 <div class="tagged-users">
                     <span class="text-muted">Tagged: </span>
-                    <span class="tagged-user">${post.post_tagged || "None"}</span>
+                    <span class="tagged-user">${taggedHtml}</span>
                 </div>
                 <div class="post-time text-muted">
                     <span>Posted on: ${post.date_posted}</span>
                 </div>
             </div>
-            <div class="post-actions d-flex justify-content-start mt-3">
-                <button class="btn btn-light btn-sm me-2"><i class="fas postFas fa-thumbs-up"></i> Like</button>
+            <div class="post-actions d-flex justify-content-start align-items-center mt-3">
+                <button class="btn btn-light btn-sm me-2 like-btn ${likeBtnClass}" data-post-id="${post.post_id}" data-liked="${likedBySession}" data-post-idx="${postIdx}">
+                    <i class="fas postFas ${likeIconClass}"></i> ${likeBtnText} <span class="like-count ms-1">${likeCount}</span>
+                </button>
                 <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal"><i class="fas postFas fa-comment"></i> Comment</button>
-                <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#shareModal"><i class="fas postFas fa-share"></i> Share</button>
+                ${reportBtnHtml}
             </div>
         </div>
     `);
 }
 
-function fetchAndRenderFriendsPosts() {
+// --- LIKE BUTTON HANDLER ---
+$(document).on('click', '.like-btn', function() {
+    const $btn = $(this);
+    const postId = $btn.data('post-id');
+    const liked = $btn.data('liked');
+    // Optimistically update UI
+    let likeCount = parseInt($btn.find('.like-count').text()) || 0;
+    if (liked) {
+        $btn.data('liked', false);
+        $btn.removeClass('liked');
+        $btn.find('i').removeClass('fa-solid fa-thumbs-up text-primary').addClass('fa-regular fa-thumbs-up');
+        $btn.contents().filter(function() { return this.nodeType === 3; }).remove(); // Remove text node
+        $btn.append(' Like ');
+        likeCount = Math.max(0, likeCount - 1);
+    } else {
+        $btn.data('liked', true);
+        $btn.addClass('liked');
+        $btn.find('i').removeClass('fa-regular fa-thumbs-up').addClass('fa-solid fa-thumbs-up text-primary');
+        $btn.contents().filter(function() { return this.nodeType === 3; }).remove(); // Remove text node
+        $btn.append(' Liked ');
+        likeCount = likeCount + 1;
+    }
+    $btn.find('.like-count').text(likeCount);
+    // Send AJAX to backend to update likes
+    $.ajax({
+        url: 'phpFile/globalSide/togglePostLike.php',
+        method: 'POST',
+        data: { post_id: postId },
+        dataType: 'json',
+        success: function(res) {
+            // Optionally update UI with actual like count from server
+            if (res.status === 'success' && typeof res.like_count === 'number') {
+                $btn.find('.like-count').text(res.like_count);
+            }
+            // Log activity if liked
+            if ($btn.data('liked')) {
+                // Get session email from cache (set in renderPostCard)
+                var sessionEmail = window._sessionEmailFromInfo || '';
+                $.ajax({
+                    url: 'phpFile/globalSide/logSessionActivity.php',
+                    method: 'POST',
+                    data: {
+                        user_email: sessionEmail,
+                        activity_type: 'like',
+                        activity: 'post_like',
+                        activity_description: 'Liked a post',
+                        act_id: 0, // Always 0 for like
+                        post_id: postId // Use the real post_id
+                    }
+                });
+            }
+        }
+    });
+});
+
+// --- CLICK HANDLER FOR TAGGED USER LINKS ---
+$(document).on('click', '.tagged-user-link', function(e) {
+    e.preventDefault();
+    const email = $(this).data('email');
+    if (email) {
+        window.location.href = `otherProfile.html?email=${email}`;
+    }
+});
+
+// --- FRIENDS POSTS (PERSONALIZED TAB) ---
+function loadPersonalizedPosts() {
+    window._sessionLikedPosts = [];
     $.ajax({
         url: 'phpFile/globalSide/fetchFriendList.php',
         method: 'GET',
@@ -179,13 +316,13 @@ function fetchAndRenderFriendsPosts() {
         success: function(res) {
             if (res.status === 'success' && Array.isArray(res.friends) && res.friends.length > 0) {
                 const friendEmails = res.friends.map(f => f.user_email);
-                // Fetch friends' posts for personalized tab
                 $.ajax({
                     url: 'phpFile/globalSide/fetchFriendsPosts.php',
                     method: 'POST',
                     data: { emails: JSON.stringify(friendEmails) },
                     dataType: 'json',
                     success: function(response) {
+                        console.log('fetchFriendsPosts response:', response);
                         const $personalized = $("#personalizedContainer .post-list").empty();
                         let personalizedMediaArr = [];
                         if (response.status === 'success' && Array.isArray(response.posts) && response.posts.length > 0) {
@@ -205,166 +342,78 @@ function fetchAndRenderFriendsPosts() {
                             $personalized.html('<div class="text-danger text-center">No posts found from your friends.</div>');
                         }
                         window._ownerHomePostsMedia = personalizedMediaArr;
+                        // Show liked posts in console
+                        if (window._sessionLikedPosts && window._sessionLikedPosts.length > 0) {
+                            console.log('Session liked posts:', window._sessionLikedPosts);
+                        } else {
+                            console.log('No post liked by session');
+                        }
                     },
                     error: function() {
                         $("#personalizedContainer .post-list").html('<div class="text-danger text-center">Failed to fetch friends\' posts.</div>');
                     }
                 });
-                // Fetch all public posts for public tab
-                $.ajax({
-                    url: 'phpFile/globalSide/fetchUserPosts.php',
-                    method: 'POST',
-                    dataType: 'json',
-                    success: function(response) {
-                        const $public = $("#publicContainer .post-list").empty();
-                        let publicMediaArr = [];
-                        if (response.status === 'success' && Array.isArray(response.posts) && response.posts.length > 0) {
-                            response.posts.forEach((post, idx) => {
-                                if (post.post_scope !== 'public') return;
-                                post._idx = idx;
-                                let user = null;
-                                if (post.user_img || (post.user_fname && post.user_lname)) {
-                                    user = {
-                                        user_img: post.user_img,
-                                        user_fname: post.user_fname,
-                                        user_lname: post.user_lname,
-                                        user_email: post.poster_email
-                                    };
-                                } else {
-                                    user = { user_email: post.poster_email };
-                                }
-                                publicMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
-                                $public.append(renderPostCard(post, user, idx));
-                            });
-                        } else {
-                            $public.html('<div class="text-danger text-center">No public posts found.</div>');
-                        }
-                        window._ownerHomePostsMedia = publicMediaArr;
-                    },
-                    error: function() {
-                        $("#publicContainer .post-list").html('<div class="text-danger text-center">Failed to fetch public posts.</div>');
-                    }
-                });
             } else {
                 $("#personalizedContainer .post-list").html('<div class="text-danger text-center">No friends found.</div>');
-                $("#publicContainer .post-list").html('<div class="text-danger text-center">No friends found.</div>');
             }
         },
         error: function() {
             $("#personalizedContainer .post-list").html('<div class="text-danger text-center">Failed to fetch friends.</div>');
-            $("#publicContainer .post-list").html('<div class="text-danger text-center">Failed to fetch friends.</div>');
         }
     });
 }
 
-// Call this on page load and when personalized tab is clicked
-$(document).ready(function() {
-    fetchAndRenderFriendsPosts();
-    $('#personalizedButton').on('click', function() {
-        fetchAndRenderFriendsPosts();
-    });
-});
-
-$.ajax({
-    url: "phpFile/globalSide/fetchUserPosts.php",
-    type: "POST",
-    dataType: "json",
-    success: function (response) {
-        if (response.status === "success") {
-            // Clear both containers first
-            $("#personalizedContainer .post-list").empty();
-            $("#publicContainer .post-list").empty();
-
-            response.posts.forEach(post => {
-                // Check if post_images is a valid JSON string and parse it
-                const mediaFiles = post.post_images ? JSON.parse(post.post_images) : [];
-
-                const mediaHtml = mediaFiles.map(file => {
-                    const fileExtension = file.split('.').pop().toLowerCase();
-                    const fileUrl = `media/images/posts/${file.trim()}`;
-
-                    // If it's an image (jpg, jpeg, png)
-                    if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
-                        return `
-                            <div class="col-4">
-                                <img src="${fileUrl}" alt="Post Image" class="img-fluid rounded img-thumbnail"
-                                     data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                            </div>
-                        `;
-                    }
-
-                    // If it's a video (mp4, avi, mkv, etc.)
-                    if (['mp4', 'avi', 'mkv'].includes(fileExtension)) {
-                        return `
-                            <div class="col-4">
-                                <video controls class="img-fluid rounded img-thumbnail">
-                                    <source src="${fileUrl}" type="video/${fileExtension}">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        `;
-                    }
-
-                    // Return nothing if not an image or video (optional, handle other file types)
-                    return '';
-                }).join("");
-
-                const postScopeIcon = post.post_scope === "public"
-                    ? `<span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>`
-                    : `<span id="postScopeContainer"><i id="postScope" class="fa-solid fa-user-group"></i></span>`;
-
-                const postCard = $(`
-                    <div class="post-card card p-3 mb-4">
-                        <div class="post-header d-flex align-items-center mb-3">
-                            <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                            <div>
-                                <div class="d-flex">
-                                    <div class="fw-bold">${post.poster_email}</div>
-                                    ${postScopeIcon}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-content mb-3">
-                            <p>${post.post_caption}</p>
-                            <div class="row g-2">${mediaHtml}</div>
-                        </div>
-                        <div class="post-footer d-flex justify-content-between align-items-center">
-                            <div class="tagged-users">
-                                <span class="text-muted">Tagged: </span>
-                                <span class="tagged-user">${post.post_tagged || "None"}</span>
-                            </div>
-                            <div class="post-time text-muted">
-                                <span>Posted on: ${post.date_posted}</span>
-                            </div>
-                        </div>
-                        <div class="post-actions d-flex justify-content-start mt-3">
-                            <button class="btn btn-light btn-sm me-2">
-                                <i class="fas postFas fa-thumbs-up"></i> Like
-                            </button>
-                            <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                <i class="fas postFas fa-comment"></i> Comment
-                            </button>
-                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#shareModal">
-                                <i class="fas postFas fa-share"></i> Share
-                            </button>
-                        </div>
-                    </div>
-                `);
-
-                // Check the scope and append the post to the appropriate container
-                if (post.post_scope === "friends") {
-                    $("#personalizedContainer .post-list").append(postCard);
-                } else if (post.post_scope === "public") {
-                    $("#publicContainer .post-list").append(postCard);
+// --- PUBLIC POSTS (PUBLIC TAB) ---
+function loadPublicPosts() {
+    window._sessionLikedPosts = [];
+    $.ajax({
+        url: 'phpFile/globalSide/fetchAllOtherNonFriendPublicPosts.php',
+        method: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            console.log('fetchAllOtherNonFriendPublicPosts response:', response);
+            const $public = $("#publicContainer .post-list").empty();
+            let publicMediaArr = [];
+            if (response.status === 'success' && Array.isArray(response.posts) && response.posts.length > 0) {
+                const userMap = {};
+                if (Array.isArray(response.friends)) {
+                    response.friends.forEach(friend => {
+                        userMap[friend.user_email] = friend;
+                    });
                 }
-            });
-        } else {
-            $("#personalizedContainer .post-list, #publicContainer .post-list").html(`<div class="text-danger text-center">${response.message}</div>`);
+                response.posts.forEach((post, idx) => {
+                    post._idx = idx;
+                    let user = userMap[post.poster_email] || { user_email: post.poster_email };
+                    publicMediaArr.push(post.post_images ? JSON.parse(post.post_images) : []);
+                    $public.append(renderPostCard(post, user, idx));
+                });
+            } else {
+                $public.html('<div class="text-danger text-center">No public posts found.</div>');
+            }
+            window._ownerHomePostsMedia = publicMediaArr;
+            // Show liked posts in console
+            if (window._sessionLikedPosts && window._sessionLikedPosts.length > 0) {
+                console.log('Session liked posts:', window._sessionLikedPosts);
+            } else {
+                console.log('No post liked by session');
+            }
+        },
+        error: function() {
+            $("#publicContainer .post-list").html('<div class="text-danger text-center">Failed to fetch public posts.</div>');
         }
-    },
-    error: function () {
-        $("#personalizedContainer .post-list, #publicContainer .post-list").html(`<div class="text-danger text-center">Failed to fetch posts.</div>`);
-    }
+    });
+}
+
+// --- TAB BUTTON HANDLERS ---
+$(document).ready(function() {
+    // On page load, load personalized tab by default
+    loadPersonalizedPosts();
+    $('#personalizedButton').on('click', function() {
+        loadPersonalizedPosts();
+    });
+    $('#publicButton').on('click', function() {
+        loadPublicPosts();
+    });
 });
 
 // --- FRIEND LIST SIDEBAR LOGIC ---
@@ -586,6 +635,7 @@ $(document).on('click', '.reject-friend-btn', function() {
 
 // --- AUTOCOMPLETE FOR TAGGING FRIENDS IN POST PREVIEW MODAL ---
 let friendSuggestions = [];
+let taggedUsersArr = [];
 
 function fetchFriendSuggestions() {
     return $.ajax({
@@ -654,18 +704,157 @@ $(document).ready(function() {
     $(document).on('click', '.tag-suggestion-item', function() {
         const email = $(this).data('email');
         const name = $(this).data('name');
-        let input = $('#taggedUsers').val();
-        let parts = input.split(',');
-        parts[parts.length - 1] = name;
-        // Remove duplicates
-        parts = parts.map(p => p.trim()).filter((v, i, arr) => v && arr.indexOf(v) === i);
-        $('#taggedUsers').val(parts.join(', ') + ', ');
+        // Add to taggedUsersArr if not already present
+        if (!taggedUsersArr.some(u => u.email === email)) {
+            taggedUsersArr.push({ name, email });
+        }
+        // Update input field to show names only
+        const names = taggedUsersArr.map(u => u.name);
+        $('#taggedUsers').val(names.join(', ') + (names.length ? ', ' : ''));
         $('#taggedUsersSuggestions').hide();
         $('#taggedUsers').focus();
+    });
+    // Remove user from taggedUsersArr if user edits input
+    $('#taggedUsers').on('input', function() {
+        const inputNames = $(this).val().split(',').map(s => s.trim()).filter(Boolean);
+        taggedUsersArr = taggedUsersArr.filter(u => inputNames.includes(u.name));
     });
     // Hide suggestions on blur (with delay for click)
     $('#taggedUsers').on('blur', function() {
         setTimeout(() => $('#taggedUsersSuggestions').hide(), 200);
+    });
+});
+
+// --- COMMENT MODAL LOGIC ---
+let currentCommentPostId = null;
+
+function renderComments(comments) {
+    if (!Array.isArray(comments) || comments.length === 0) {
+        $('#commentModalBody').html('<div class="text-muted text-center">No comments yet.</div>');
+        return;
+    }
+    let html = '<div class="list-group">';
+    comments.forEach(c => {
+        const name = (c.user_fname && c.user_lname) ? `${c.user_fname} ${c.user_lname}` : c.user_email;
+        const img = c.user_img ? `media/images/profiles/${c.user_img}` : 'media/images/default-profile.png';
+        html += `
+            <div class="list-group-item d-flex align-items-start gap-2">
+                <img src="${img}" alt="Profile" class="rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;">
+                <div>
+                    <div><strong>${name}</strong> <span class="text-muted small">${c.created_at}</span></div>
+                    <div>${c.comment}</div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    $('#commentModalBody').html(html);
+}
+
+function fetchAndRenderComments(postId) {
+    $.get('phpFile/globalSide/fetchComments.php', { post_id: postId }, function(res) {
+        if (res.status === 'success') {
+            renderComments(res.comments);
+        } else {
+            $('#commentModalBody').html('<div class="text-danger text-center">Failed to load comments.</div>');
+        }
+    }, 'json');
+}
+
+// Open comment modal when Comment button is clicked
+$(document).on('click', '.post-actions .btn-light:has(.fa-comment)', function() {
+    // Find the post ID from the closest like-btn or data attribute
+    const $postCard = $(this).closest('.post-card');
+    let postId = null;
+    // Try to get from like-btn
+    const $likeBtn = $postCard.find('.like-btn');
+    if ($likeBtn.length) {
+        postId = $likeBtn.data('post-id');
+    }
+    if (!postId) {
+        // fallback: try data-post-id on this button
+        postId = $(this).data('post-id');
+    }
+    currentCommentPostId = postId;
+    // Clear input
+    $('#newCommentInput').val('');
+    fetchAndRenderComments(postId);
+    $('#commentModal').modal('show');
+});
+
+// Submit comment
+$('#submitCommentBtn').on('click', function() {
+    const comment = $('#newCommentInput').val().trim();
+    if (!comment) {
+        alert('Please enter a comment.');
+        return;
+    }
+    if (!currentCommentPostId) {
+        alert('No post selected.');
+        return;
+    }
+    // Get session email from global (set by getSessionInfo.js)
+    const userEmail = window._sessionEmailFromInfo || '';
+    if (!userEmail) {
+        alert('Session not found. Please log in again.');
+        return;
+    }
+    $.ajax({
+        url: 'phpFile/globalSide/insertComment.php',
+        method: 'POST',
+        data: {
+            post_id: currentCommentPostId,
+            user_email: userEmail,
+            comment: comment
+        },
+        success: function(res) {
+            $('#newCommentInput').val('');
+            fetchAndRenderComments(currentCommentPostId);
+            if (res.status === 'success' && res.comment_id) {
+                // Log activity for comment with correct act_id and post_id
+                $.ajax({
+                    url: 'phpFile/globalSide/logSessionActivity.php',
+                    method: 'POST',
+                    data: {
+                        user_email: userEmail,
+                        activity_type: 'comment',
+                        activity: 'post_comment',
+                        activity_description: 'Commented on a post',
+                        act_id: res.comment_id, // The new comment's ID
+                        post_id: currentCommentPostId // The post's ID
+                    }
+                });
+            }
+        },
+        error: function() {
+            alert('Failed to post comment.');
+        }
+    });
+});
+
+// --- REPORT BUTTON HANDLER ---
+$(document).on('click', '.report-btn', function() {
+    const postId = $(this).data('post-id');
+    // Ask for a reason
+    const reason = prompt('Please provide a reason for reporting this post:', 'Inappropriate or offensive content');
+    if (reason === null) return; // Cancelled
+    if (!reason.trim()) {
+        alert('Please provide a valid reason.');
+        return;
+    }
+    // Send report to server
+    $.ajax({
+        url: 'phpFile/globalSide/reportPost.php',
+        method: 'POST',
+        data: { post_id: postId, reason: reason.trim() },
+        dataType: 'json',
+        success: function(res) {
+            alert(res.message);
+            // Optionally, you can hide the post or take other actions
+        },
+        error: function() {
+            alert('Failed to report the post.');
+        }
     });
 });
 
