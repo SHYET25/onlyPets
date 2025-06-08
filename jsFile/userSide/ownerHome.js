@@ -577,8 +577,40 @@ function renderFriendList(friends) {
             });
             $li.find('.message-friend-btn').on('click', function(e) {
                 e.stopPropagation();
-                // TODO: Implement message modal or redirect to chat
-                alert('Message feature coming soon!');
+                const email = decodeURIComponent($(this).data('email'));
+                if (!email) {
+                    alert('User email not found.');
+                    return;
+                }
+                // Get user ID by email
+                $.get('phpFile/globalSide/getUserIdByEmail.php', { email: email }, function(response) {
+                    if (typeof response === "string") response = JSON.parse(response);
+                    if (response.status === "success" && response.user_id) {
+                        const userId = response.user_id;
+                        const userName = name; // 'name' is already defined above for this friend
+
+                        window.currentChatUserId = userId;
+                        $('#userName').text(userName);
+
+                        // Show chat modal
+                        const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+                        conversationModal.show();
+
+                        // Load messages and scroll to bottom after loading
+                        if (typeof loadMessages === 'function') {
+                            loadMessages(userId, function() {
+                                const $conversation = $('#conversationContent');
+                                $conversation.scrollTop($conversation[0].scrollHeight);
+                            });
+                        }
+                        // Mark messages as read
+                        $.post('phpFile/globalSide/markMessageRead.php', { other_user_id: userId }, function() {
+                            if (typeof loadChats === 'function') loadChats();
+                        });
+                    } else {
+                        alert('User not found.');
+                    }
+                });
             });
             $friendList.append($li);
         });
@@ -1699,7 +1731,5 @@ $.ajaxSetup({
         }
     }
 });
-
-
 
 
