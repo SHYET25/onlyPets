@@ -12,8 +12,14 @@ $resultPost = $conn->query($sqlPost);
 $postStats = $resultPost->fetch_assoc();
 $stats['total_posts'] = $postStats['total_posts'];
 
+// Get reports count
+$sqlPost = "SELECT COUNT(*) AS total_reports FROM reports";
+$resultPost = $conn->query($sqlPost);
+$reportsStats = $resultPost->fetch_assoc();
+$stats['total_reports'] = $reportsStats['total_reports'];
+
 // Get active users
-$sqlActive = "SELECT COUNT(*) AS active_users FROM user WHERE state = 'active'";
+$sqlActive = "SELECT COUNT(*) AS active_users FROM user WHERE status = 1";
 $resultActive = $conn->query($sqlActive);
 $activeStats = $resultActive->fetch_assoc();
 $stats['active_users'] = $activeStats['active_users'];
@@ -31,10 +37,10 @@ $suspendedStats = $resultSuspended->fetch_assoc();
 $stats['suspended_users'] = $suspendedStats['suspended_users'];
 
 // Get new users this month (requires created_at column)
-// $sqlNewMonth = "SELECT COUNT(*) AS new_users_this_month FROM user WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())";
-// $resultNewMonth = $conn->query($sqlNewMonth);
-// $newMonthStats = $resultNewMonth->fetch_assoc();
-// $stats['new_users_this_month'] = $newMonthStats['new_users_this_month'];
+$sqlNewWeek = "SELECT COUNT(*) AS new_users_this_week FROM user WHERE otp_created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+$resultNewWeek = $conn->query($sqlNewWeek);
+$newWeekStats = $resultNewWeek->fetch_assoc();
+$stats['new_users_this_week'] = $newWeekStats['new_users_this_week'];
 
 header('Content-Type: application/json');
 echo json_encode($stats);

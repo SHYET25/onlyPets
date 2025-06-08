@@ -38,16 +38,17 @@ $owner_email = $_SESSION['userEmail'];
 
 // Get inputs
 $pet_name = $_POST['pet_name'];
-$pet_type = $_POST['pet_type'];
-$pet_breed = $_POST['pet_breed'];
-$pet_birthdate = $_POST['pet_birthdate'];
-$pet_gender = $_POST['pet_gender'];
-$pet_color = $_POST['pet_color'];
-$pet_eye_color = $_POST['pet_eye_color'];
-$pet_allergies = $_POST['pet_allergies'];
-$pet_medical_conditions = $_POST['pet_medical_conditions'];
-$pet_weight = $_POST['pet_weight'];
-$pet_size = $_POST['pet_size'];
+$pet_name = $_POST['pet_name'] ?? '';
+$pet_type = $_POST['pet_type'] ?? '';
+$pet_breed = $_POST['pet_breed'] ?? '';
+$pet_birthdate = $_POST['pet_birthdate'] ?? '';
+$pet_gender = $_POST['pet_gender'] ?? '';
+$pet_color = $_POST['pet_color'] ?? '';
+$pet_eye_color = $_POST['pet_eye_color'] ?? '';
+$pet_allergies = $_POST['pet_allergies'] ?? '';
+$pet_medical_conditions = $_POST['pet_medical_conditions'] ?? '';
+$pet_weight = $_POST['pet_weight'] ?? 0;
+$pet_size = $_POST['pet_size'] ?? '';
 
 $pet_img_base64 = $_POST['pet_img'];
 $vac_img_base64 = $_POST['pet_vaccine_img'];
@@ -60,12 +61,17 @@ if (!$pet_img || !$vac_img) {
     exit;
 }
 
+// $sql = "INSERT INTO pet_info (
+//     pet_custom_id, pet_owner_email, pet_name, pet_type, pet_breed, pet_birthdate, pet_gender,
+//     pet_color, pet_eye_color, pet_allergies, pet_medical_conditions,
+//     pet_weight, pet_size, pet_img, pet_vaccine_img
+// ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 $sql = "INSERT INTO pet_info (
-    pet_custom_id, pet_owner_email, pet_name, pet_type, pet_breed, pet_birthdate, pet_gender,
-    pet_color, pet_eye_color, pet_allergies, pet_medical_conditions,
+    pet_custom_id, pet_owner_email, pet_name, pet_type, pet_breed, pet_birthdate, 
+    pet_gender, pet_color, pet_eye_color, pet_allergies, pet_medical_conditions,
     pet_weight, pet_size, pet_img, pet_vaccine_img
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
 
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
@@ -73,13 +79,20 @@ if (!$stmt) {
     exit;
 }
 
+// $stmt->bind_param(
+//     "ssssssssssdssss",
+//     $pet_custom_id, $owner_email, $pet_name, $pet_type, $pet_breed, $pet_birthdate, $pet_gender,
+//     $pet_color, $pet_eye_color, $pet_allergies, $pet_medical_conditions,
+//     $pet_weight, $pet_size, $pet_img, $vac_img
+// );
+
+
 $stmt->bind_param(
     "ssssssssssdssss",
     $pet_custom_id, $owner_email, $pet_name, $pet_type, $pet_breed, $pet_birthdate, $pet_gender,
     $pet_color, $pet_eye_color, $pet_allergies, $pet_medical_conditions,
     $pet_weight, $pet_size, $pet_img, $vac_img
 );
-
 
 if ($stmt->execute()) {
     echo json_encode(['status' => 'success', 'message' => 'Pet added successfully!']);

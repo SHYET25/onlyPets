@@ -18,6 +18,8 @@
     <!-- Page CSS and JS -->
     <link rel="stylesheet" href="cssFile/userSide/ownerProfile.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
     <style>
    
 
@@ -123,61 +125,79 @@
             position: absolute;
             top: 80px;
             right: 100px;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 8px;
-            width: 400px; /* Adjusted width for better visibility */
-            max-height: 400px;
+            background: #fff;
+            box-shadow: 0 8px 32px rgba(56,182,255,0.15), 0 1.5px 8px rgba(0,0,0,0.08);
+            border-radius: 18px;
+            width: 370px;
+            max-height: 500px;
             overflow-y: auto;
-            padding: 15px;
-            z-index: 1000;
-            transition: opacity 0.3s ease;
+            padding: 0;
+            z-index: 1050;
+            border: none;
         }
 
         .chat-message {
             display: flex;
-            margin-bottom: 20px;
-            align-items: flex-start;
-            padding: 5px;
-            border-bottom: 1px solid #f5f5f5;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            background: transparent;
+            position: relative;
         }
         
         .chat-message:last-child {
             border-bottom: none;
         }
         
+        .chat-message:hover {
+            background: #eaf6ff;
+            box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+        }
+        
         .profile-img {
-            width: 45px; /* Adjusted size for better proportion */
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 15px;
+            border: 2px solid #38b6ff22;
+            background: #f3f3f3;
         }
         
         .message-details {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            gap: 2px;
+            min-width: 0;
         }
         
         .name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 3px;
+            font-weight: 700;
+            color: #1976d2;
+            font-size: 1.05rem;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .message {
-            font-size: 13px;
             color: #555;
-            line-height: 1.4;
-            margin-bottom: 5px;
+            font-size: 0.97rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
         }
         
         .time {
-            font-size: 11px;
+            font-size: 0.85rem;
             color: #aaa;
             align-self: flex-end;
+            margin-top: 2px;
         }
         
         /* Hover effect for messages */
@@ -750,6 +770,180 @@
             scrollbar-gutter: stable; /* Prevent scrollbar shift */
             
         }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+            box-shadow: none;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+        }
+
+        /* Add Pet Modal Custom Design */
+        #addPetModal .modal-content {
+            border-radius: 18px;
+            background: linear-gradient(135deg, #e3f6ff 60%, #fff 100%);
+            box-shadow: 0 8px 32px rgba(56,182,255,0.15);
+            border: none;
+            padding: 0;
+        }
+        #addPetModal .modal-header {
+            border-bottom: none;
+            background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+            color: #fff;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+        #addPetModal .modal-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        #addPetModal .btn-close {
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 1;
+            box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+        }
+        #addPetModal .modal-body {
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+        }
+        #addPetModal .form-label {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 0.3rem;
+        }
+        #addPetModal .form-control,
+        #addPetModal .form-select {
+            border-radius: 0.75rem;
+            border: 1.5px solid #b6e0fa;
+            background: #fafdff;
+            font-size: 1rem;
+            margin-bottom: 0.7rem;
+            box-shadow: none;
+            transition: border-color 0.2s;
+        }
+        #addPetModal .form-control:focus,
+        #addPetModal .form-select:focus {
+            border-color: #38b6ff;
+            box-shadow: 0 0 0 2px #38b6ff33;
+        }
+        #addPetModal .select2-container--default .select2-selection--single {
+            border-radius: 0.75rem;
+            border: 1.5px solid #b6e0fa;
+            background: #fafdff;
+            height: 38px;
+            display: flex;
+            align-items: center;
+        }
+        #addPetModal .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+        }
+        #addPetModal .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+        }
+        #addPetModal .modal-footer {
+            border-top: none;
+            background: transparent;
+            padding-bottom: 2rem;
+            padding-top: 0;
+        }
+        #addPetModal .btn-primary {
+            background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.7rem 2.5rem;
+            box-shadow: 0 4px 16px rgba(56,182,255,0.15);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+            letter-spacing: 1px;
+        }
+        #addPetModal .btn-primary:hover, #addPetModal .btn-primary:focus {
+            background: linear-gradient(90deg, #1e90ff 0%, #38b6ff 100%);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(56,182,255,0.25);
+            transform: translateY(-2px) scale(1.04);
+        }
+
+        /* Conversation modal improvements */
+#conversationModal .modal-content {
+    border-radius: 18px;
+    background: linear-gradient(135deg, #e3f6ff 60%, #fff 100%);
+    box-shadow: 0 8px 32px rgba(56,182,255,0.15);
+    border: none;
+    padding: 0;
+}
+
+#conversationModal .modal-header {
+    border-bottom: none;
+    background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+    color: #fff;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+}
+
+#conversationModal .modal-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+#conversationModal .modal-body {
+    background: #fafdff;
+    padding: 1.5rem 1.2rem 1rem 1.2rem;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#conversationModal .modal-footer {
+    border-top: none;
+    background: #fafdff;
+    padding: 1rem 1.2rem;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+}
+
+#conversationModal #messageInput {
+    border-radius: 20px;
+    border: 1.5px solid #b6e0fa;
+    background: #fff;
+    font-size: 1rem;
+    margin-right: 8px;
+    box-shadow: none;
+    transition: border-color 0.2s;
+}
+
+#conversationModal #sendButton {
+    border-radius: 20px;
+    background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    transition: background 0.3s;
+}
+
+#conversationModal #sendButton:hover {
+    background: linear-gradient(90deg, #1e90ff 0%, #38b6ff 100%);
+}
     </style>
 
     
@@ -782,8 +976,11 @@
                 </a>
 
                 <!-- Chat Icon -->
-                <a href="#" class="nav-link" id="chatIcon">
-                    <i class="fas fa-comments fa-lg me-3"></i>
+                <a href="#" class="nav-link position-relative" id="chatIcon">
+                    <i class="fas fa-comments fa-lg"></i>
+                    <span id="chatBadge" style="display:inline-block; position:absolute; top:2px; right:2px; background:red; color:white; border-radius:50%; width:18px; height:18px; font-size:12px; text-align:center; line-height:18px;">
+                        1
+                    </span>
                 </a>
 
                 <!-- Notification Icon -->
@@ -795,24 +992,6 @@
     </nav>
 
     <div id="chatDropdown">
-        <h4>Chats</h4>
-        <hr>
-        <div class="chat-message" data-user="John Doe" data-text="Hey! How are you doing today? I wanted to ask about...">
-            <img class="profile-img" src="media/images/profiles/213.jpg" alt="Profile Picture">
-            <div class="message-details">
-                <p class="name">John Doe</p>
-                <p class="message">Hey! How are you doing today? I wanted to ask about...</p>
-                <span class="time">10:30 AM</span>
-            </div>
-        </div>
-        <div class="chat-message" data-user="Jane Smith" data-text="I'm good! Let's catch up soon.">
-            <img class="profile-img" src="media/images/profiles/321.jpg" alt="Profile Picture">
-            <div class="message-details">
-                <p class="name">Jane Smith</p>
-                <p class="message">I'm good! Let's catch up soon.</p>
-                <span class="time">10:32 AM</span>
-            </div>
-        </div>
     </div>
     
     <div class="modal fade" id="conversationModal" tabindex="-1" aria-labelledby="conversationModalTitle" aria-hidden="true">
@@ -826,8 +1005,12 @@
                     <!-- Chat content will be dynamically loaded here -->
                 </div>
                 <div class="modal-footer">
-                    <input type="text" id="messageInput" class="form-control me-2" placeholder="Type a message...">
-                    <button type="button" class="btn btn-primary" id="sendButton">Send</button>
+                    <div class="input-group">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Type a message...">
+                        <button type="button" class="btn btn-primary" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1480,11 +1663,17 @@
                             </div>
                             <div class="mb-3">
                                 <label for="pet_type" class="form-label">Pet Type</label>
-                                <input type="text" class="form-control" id="pet_type">
+                                <select class="form-select select2" id="pet_type" required>
+                                    <option value="">Select Type</option>
+                                    <!-- Options will be loaded by JS -->
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="pet_breed" class="form-label">Breed</label>
-                                <input type="text" class="form-control" id="pet_breed">
+                                <select class="form-select select2" id="pet_breed" required>
+                                    <option value="">Select Breed</option>
+                                    <!-- Options will be loaded by JS -->
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="pet_birthdate" class="form-label">Birthdate</label>
@@ -1497,7 +1686,7 @@
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="pet_color" class="form-label">Color</label>
                                 <input type="text" class="form-control" id="pet_color">
                             </div>
@@ -1520,7 +1709,7 @@
                             <div class="mb-3">
                                 <label for="pet_size" class="form-label">Size</label>
                                 <input type="text" class="form-control" id="pet_size">
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="pet_img" class="form-label">Pet Profile Image</label>
                                 <input type="file" class="form-control" id="pet_img" accept="image/*">
@@ -1532,7 +1721,7 @@
                             
                         </div>
                         <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-primary" id="savePetBtn">Save Pet</button>
+                            <button type="button" class="btn btn-primary" id="savePetBtn">Done</button>
                         </div>
                     </div>
                 </div>
@@ -1550,6 +1739,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="jsFile/globalSide/getSessionInfo.js"></script>
     <script src="jsFile/userSide/ownerProfile.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
     // JS for the loading page
     function showLoadingScreen() {
@@ -1702,7 +1892,260 @@
             viewChatModal.show();
         });
 
-    // JS for the Side Bar ------------------------------------------------------
+        // JS for the Side Bar ------------------------------------------------------
+
+        // Pet Type and Breed Selection
+        $(document).ready(function() {
+            // Fetch all pet types and breeds from the new PHP endpoint
+            $.getJSON('phpFile/globalSide/getPetTypesBreeds.php', function(data) {
+                // Store the breeds for each type in a JS object for quick lookup
+                let typeBreedsMap = {};
+                $('#pet_type').empty().append('<option value="">Select Type</option>');
+                data.forEach(function(item) {
+                    $('#pet_type').append(`<option value="${item.id}">${item.pet_type}</option>`);
+                    typeBreedsMap[item.id] = item.pet_breeds; // pet_breeds is an array
+
+                });
+
+                // When pet type changes, update breeds dropdown
+                $('#pet_type').on('change', function() {
+
+                    let selectedId = $(this).val();
+                    $('#pet_breed').empty().append('<option value="">Select Breed</option>');
+                    if (selectedId && typeBreedsMap[selectedId]) {
+                        typeBreedsMap[selectedId].forEach(function(breed) {
+                            $('#pet_breed').append(`<option value="${breed}">${breed}</option>`);
+                        });
+                    }
+                    $('#pet_breed').trigger('change.select2');
+                });
+            });
+
+            // Initialize Select2 for both dropdowns
+            $('#pet_type').select2({
+                dropdownParent: $('#addPetModal'),
+                width: '100%',
+                placeholder: "Select Type"
+            });
+            $('#pet_breed').select2({
+                dropdownParent: $('#addPetModal'),
+                width: '100%',
+                placeholder: "Select Breed",
+                language: {
+                    noResults: function(params) {
+                        // If no pet type is selected, show custom message
+                        if (!$('#pet_type').val()) {
+                            return "Select your Pet Type first";
+                        }
+                        return "No results found";
+                    }
+                }
+            });
+        });
+
+        
+
+        let currentChatUserId = null;
+
+        var sessionUserId = null;
+        $.getJSON('phpFile/globalSide/getSessionInfo.php', function(response) {
+            if (response.status === "success" && response.data.user_id) {
+                sessionUserId = response.data.user_id;
+                loadChats();
+            } else {
+                alert("Not logged in or session error.");
+            }
+        });
+        let chatListInterval = null;
+        let conversationInterval = null;
+        let isConversationOpen = false;
+
+        function loadChats() {
+            $.get('phpFile/globalSide/getChats.php', function(data) {
+                let users = data;
+                if (typeof data === "string") {
+                    try {
+                        users = JSON.parse(data);
+                    } catch (e) {
+                        users = [];
+                    }
+                }
+                let html = `
+                    <div class="px-3 pt-3 pb-2">
+                        <h5 class="fw-bold mb-0" style="color:#1976d2;">Chats</h5>
+                    </div>
+                    <hr class="my-0">
+                `;
+                let hasUnread = false; // Track if any chat has unread messages
+                let unreadTotal = 0;
+                users.forEach(user => {
+                    if (user.unread_count && user.unread_count > 0) {
+                        hasUnread = true;
+                        unreadTotal += user.unread_count;
+                    }
+                    html += `
+                        <div class="chat-message" data-user-id="${user.id}" data-user-name="${user.name}">
+                            <img class="profile-img" src="${user.profile_img || 'media/images/profiles/default.jpg'}" alt="Profile Picture">
+                            <div class="message-details">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="name">${user.name}</span>
+                                    <span class="time">${user.sent_at || ''}</span>
+                                </div>
+                                <span class="message">${user.last_message || ''}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#chatDropdown').html(html);
+
+                // Show or hide the badge
+                if (hasUnread) {
+                    $('#chatBadge').text(unreadTotal).show();
+                } else {
+                    $('#chatBadge').hide();
+                }
+                // Add click event to open chat modal
+               $('.chat-message').click(function() {
+                currentChatUserId = $(this).data('user-id');
+                $('#userName').text($(this).data('user-name'));
+                loadMessages(currentChatUserId);
+
+                // Mark messages as read for this conversation
+                $.post('phpFile/globalSide/markMessageRead.php', { other_user_id: currentChatUserId }, function(res) {
+                    loadChats(); // Refresh badge after marking as read
+                });
+
+                // Stop chat list polling when modal is open
+                if (chatListInterval) clearInterval(chatListInterval);
+
+                // Start conversation polling
+                if (conversationInterval) clearInterval(conversationInterval);
+                conversationInterval = setInterval(function() {
+                    loadMessages(currentChatUserId);
+                }, 2000);
+
+                isConversationOpen = true;
+                const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+                conversationModal.show();
+            });
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $('#chatDropdown').html('<div class="text-danger text-center py-4">Failed to load chats.</div>');
+            });
+        }
+
+        // Start polling chat list every 5 seconds (when modal is closed)
+        function startChatListPolling() {
+            if (chatListInterval) clearInterval(chatListInterval);
+            chatListInterval = setInterval(function() {
+                if (!isConversationOpen) loadChats();
+            }, 3000);
+        }
+
+        // Stop conversation polling and resume chat list polling when modal closes
+        $('#conversationModal').on('hidden.bs.modal', function () {
+            if (conversationInterval) clearInterval(conversationInterval);
+            isConversationOpen = false;
+            startChatListPolling();
+        });
+
+        // Initial load and polling
+        $(document).ready(function() {
+            loadChats();
+            startChatListPolling();
+        });
+
+
+
+        // Load messages for a given user
+        function loadMessages(userId) {
+            $.get('phpFile/globalSide/getConversation.php', { user_id: userId }, function(data) {
+                let messages = data;
+                if (typeof data === "string") {
+                    try {
+                        messages = JSON.parse(data);
+                    } catch (e) {
+                        messages = [];
+                    }
+                }
+
+                let html = '';
+                messages.forEach(msg => {
+                    const isMe = msg.sender_id == sessionUserId;
+                    html += `
+                        <div class="d-flex ${isMe ? 'justify-content-end' : 'justify-content-start'} mb-2">
+                            <div class="${isMe ? 'bg-primary text-white' : 'bg-light'} p-2 rounded shadow-sm" style="max-width:70%;">
+                                <strong>${isMe ? 'You' : msg.user_fname + ' ' + msg.user_lname}:</strong>
+                                ${msg.message}
+                                <div class="small text-muted text-end">${msg.sent_at}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const $conversation = $('#conversationContent');
+                $conversation.html(html || '<div class="text-center text-muted">No messages yet.</div>');
+
+                // ✅ Scroll to bottom after loading messages
+                $conversation.scrollTop($conversation[0].scrollHeight);
+                });
+        }
+
+        // When opening the chat modal
+        $('.chat-message').click(function() {
+            currentChatUserId = $(this).data('user-id');
+            $('#userName').text($(this).data('user-name'));
+
+            loadMessages(currentChatUserId);
+
+            // Start polling every 2 seconds
+            if (conversationInterval) clearInterval(conversationInterval);
+            conversationInterval = setInterval(function() {
+                loadMessages(currentChatUserId);
+            }, 2000); // Changed to 2000ms (2s) from 300ms to avoid spamming server
+
+            const conversationModal = new bootstrap.Modal(document.getElementById('conversationModal'));
+            conversationModal.show();
+        });
+
+        // Scroll to bottom again when modal is fully shown (optional, but safe)
+        $('#conversationModal').on('shown.bs.modal', function () {
+            const $conversation = $('#conversationContent');
+            $conversation.scrollTop($conversation[0].scrollHeight);
+        });
+
+        // Stop polling when modal closes
+        $('#conversationModal').on('hidden.bs.modal', function () {
+            if (conversationInterval) clearInterval(conversationInterval);
+            conversationInterval = null;
+            currentChatUserId = null;
+        });
+
+        // Send message on button click
+        $('#sendButton').click(function() {
+            const message = $('#messageInput').val().trim();
+            if (!message || !currentChatUserId) return;
+
+            $.post('phpFile/globalSide/sendMessage.php', {
+                receiver_id: currentChatUserId,
+                message: message
+            }, function(response) {
+                $('#messageInput').val('');
+                loadMessages(currentChatUserId); // Refresh conversation
+                loadChats(); // Optional: refresh sidebar/chat list
+            }, 'json');
+        });
+
+        // Optional: Send on Enter key
+        $('#messageInput').keypress(function(e) {
+            if (e.which === 13) {
+                $('#sendButton').click();
+                return false;
+            }
+        });
+
+        $(document).ready(function() {
+            $('#chatBadge').show().text('1');
+        });
     </script>
 </body>
 </html>

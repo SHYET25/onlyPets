@@ -5,47 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background: #f8f9fa;
-        }
-        .card {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, #e3f0ff 0%, #f8f9fa 100%);
+            min-height: 100vh;
         }
         .dashboard-header {
             margin-bottom: 2rem;
+            background: linear-gradient(90deg, #0d6efd 60%, #6ea8fe 100%);
+            color: #fff;
+            border-radius: 1rem;
+            padding: 2rem 1rem 1.5rem 1rem;
+            box-shadow: 0 4px 24px rgba(13,110,253,0.08);
+        }
+        .dashboard-header h2 {
+            color: #fff !important;
+            letter-spacing: 1px;
         }
         .stat-label {
             font-size: 1.1rem;
             color: #6c757d;
         }
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
+            color: #0d6efd;
         }
-        .chart-container {
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(13,110,253,0.06);
+            border: none;
+        }
+        .card-header {
+            background: #f1f7ff;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #0d6efd;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .card-body {
+            background: #fafdff;
+            border-radius: 0 0 1rem 1rem;
+        }
+        .border {
+            border: 2px solid #e3eafc !important;
+        }
+        .bg-light {
+            background: #f6faff !important;
+        }
+        .table thead th {
+            background: #e3f0ff;
+            color: #0d6efd;
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f6faff;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #e3f0ff;
+        }
+        .search-bar {
+            max-width: 280px;
+            border-radius: 2rem;
+            border: 1px solid #b6d4fe;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0d6efd;
+            letter-spacing: 0.5px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 160px;
+            gap: 0.5rem;
         }
-        canvas {
-            max-width: 120px !important;
-            max-height: 120px !important;
+        .section-title i {
+            font-size: 1.3rem;
+        }
+        .btn-outline-dark {
+            border-radius: 2rem;
+        }
+        .modal-content {
+            border-radius: 1rem;
+        }
+        .fw-bold {
+            color: #0d6efd !important;
+        }
+        .search-bar, .form-control {
+            border-radius: 2rem !important;
+            border: 1px solid #b6d4fe !important;
+        }
+        .card {
+            border-radius: 1rem !important;
+            box-shadow: 0 2px 8px rgba(13,110,253,0.06);
+            border: none !important;
+        }
+        .btn-sm.rounded-circle {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .btn-light:hover, .btn-outline-danger:hover {
+            background: #e9ecef;
+        }
+        .btn-outline-danger:hover {
+            background: #f8d7da;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <div class="dashboard-header text-center mb-4">
-            <h2 class="fw-bold">Admin Dashboard</h2>
-            <p class="text-muted">Overview of users and posts statistics</p>
+        <!-- Header -->
+        <div class="dashboard-header text-center mb-4 shadow">
+            <h2 class="fw-bold mb-1"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+            <p class="text-light">Overview of users, posts, and reports</p>
         </div>
          <!-- User Stats Section -->
         <div class="row">
             <div class="col-md-4">
-                <div class="card text-center">
+                <div class="card text-center border-primary">
                     <div class="card-body">
                         <div class="stat-label">Total Users</div>
                         <div class="stat-value" id="stat-total">Loading...</div>
@@ -53,26 +137,24 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-center">
+                <div class="card text-center border-success">
                     <div class="card-body">
                         <div class="stat-label">Total Posts</div>
                         <div class="stat-value" id="stat-total-posts">Loading...</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 d-flex flex-column align-items-center">
-                <div class="card w-100">
-                    <div class="card-header text-center">
-                        <strong>Statistics</strong>
+            <div class="col-md-4">
+                <div class="card text-center border-danger">
+                    <div class="card-body">
+                        <div class="stat-label">Total Reports</div>
+                        <div class="stat-value" id="stat-total-reports">Loading...</div>
                     </div>
-                    <div class="card-body chart-container">
-                        <canvas id="combinedPieChart" width="120" height="120"></canvas>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-5 p-5">
+
+        <div class="row p-5">
             <div class="col-md-3">
                 <div class="border rounded p-2 text-center bg-light">
                     <div class="fw-bold" id="activeUsers">0</div>
@@ -93,20 +175,45 @@
             </div>
             <div class="col-md-3">
                 <div class="border rounded p-2 text-center bg-light">
-                    <div class="fw-bold" id="newUsersThisMonth">0</div>
-                    <div class="text-muted">New Users This Month</div>
+                    <div class="fw-bold" id="newUsersThisWeek">0</div>
+                    <div class="text-muted">New Users This Week</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Statistics -->
+        <div class="row">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <div class="card w-100">
+                    <div class="card-header text-center">
+                        <strong><i class="bi bi-pie-chart-fill"></i> Users, Posts, Reports</strong>
+                    </div>
+                    <div class="card-body chart-container d-flex justify-content-center align-items-center">
+                        <canvas id="mainPieChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <div class="card w-100">
+                    <div class="card-header text-center">
+                        <strong><i class="bi bi-people-fill"></i> User Status Breakdown</strong>
+                    </div>
+                    <div class="card-body chart-container d-flex justify-content-center align-items-center">
+                        <canvas id="statusPieChart" width="300" height="300"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Reports Section -->
-        <div class="row p-5">
+        <div class="row mt-5">
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Reports Overview</strong>
+                        <span class="section-title mb-0"><i class="bi bi-flag-fill"></i> Reports Overview</span>
+                        <input type="text" id="reportSearch" class="form-control form-control-md search-bar" placeholder="Search by name or email">
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <div class="border rounded p-2 text-center bg-light">
@@ -130,13 +237,14 @@
                         <div>
                             <strong>Recent Reports</strong>
                             <div class="table-responsive">
-                                <table class="table table-sm table-bordered mt-2 mb-0">
+                                <table class="table table-sm table-bordered table-striped table-hover mt-2 mb-0">
                                     <thead>
                                         <tr>
                                             <th>Reported User</th>
                                             <th>Reason</th>
                                             <th>Date</th>
                                             <th>Status</th>
+                                            <th>View</th>
                                         </tr>
                                     </thead>
                                     <tbody id="recentReportsTable">
@@ -151,15 +259,15 @@
         </div>
 
         <!-- User List Section -->
-        <div class="row p-5">
+        <div class="row mt-5 mb-5">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>User List</strong>
-                        <input type="text" id="userSearch" class="form-control form-control-sm w-25" placeholder="Search by name or email">
+                        <span class="section-title mb-0"><i class="bi bi-person-lines-fill"></i> User List</span>
+                        <input type="text" id="userSearch" class="form-control form-control-md w-25" placeholder="Search by name or email">
                     </div>
-                    <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
-                        <table class="table table-bordered mb-0" id="userTable">
+                    <div class="card-body p-3" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-sm table-bordered table-striped table-hover mt-2 mb-0" id="userTable">
                             <thead>
                                 <tr>
                                     <th>First Name</th>
@@ -251,63 +359,122 @@
 <script>
     $(function() {
         let allUsers = [];
+        let allReports = [];
 
         // Fetch and display user stats
         $.get('phpFile/globalSide/getUserStats.php', function(data) {
             $('#stat-total').text(data.total_users);
             $('#stat-total-posts').text(data.total_posts);
+            $('#stat-total-reports').text(data.total_reports);
             $('#activeUsers').text(data.active_users);
             $('#bannedUsers').text(data.banned_users);
             $('#suspendedUsers').text(data.suspended_users);
-            $('#newUsersThisMonth').text(data.new_users_this_month);
-            // Combined pie chart for users vs posts
-            var ctxCombined = document.getElementById('combinedPieChart').getContext('2d');
-            new Chart(ctxCombined, {
-                type: 'pie',
-                data: {
-                    labels: ['Users', 'Posts'],
-                    datasets: [{
-                        data: [data.total_users, data.total_posts],
-                        backgroundColor: ['#0d6efd', '#198754'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    plugins: {
-                        legend: { display: true, position: 'bottom' }
-                    }
+            $('#newUsersThisWeek').text(data.new_users_this_week);
+        // First pie chart: Users, Posts, Reports
+        var ctxMain = document.getElementById('mainPieChart').getContext('2d');
+        new Chart(ctxMain, {
+            type: 'pie',
+            data: {
+                labels: ['Users', 'Posts', 'Reports'],
+                datasets: [{
+                    data: [data.total_users, data.total_posts, data.total_reports],
+                    backgroundColor: ['#0d6efd', '#198754', '#dc3545'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom' }
                 }
-            });
-
-            // Fetch and display reports overview and recent reports
-            $.get('phpFile/globalSide/getReportsOverview.php', function(data) {
-                $('#totalReports').text(data.totalReports);
-                $('#unresolvedReports').text(data.unresolvedReports);
-                $('#mostReportedUser').text(data.mostReportedUser || 'None');
-
-                let rows = '';
-                if (data.recentReports && data.recentReports.length > 0) {
-                    data.recentReports.forEach(function(report) {
-                        rows += `<tr>
-                            <td>${report.reported_user}</td>
-                            <td>${report.reason}</td>
-                            <td>${report.date}</td>
-                            <td>${report.status}</td>
-                        </tr>`;
-                    });
-                } else {
-                    rows = '<tr><td colspan="4" class="text-center text-muted">No recent reports</td></tr>';
-                }
-                $('#recentReportsTable').html(rows);
-            }, 'json').fail(function() {
-                $('#recentReportsTable').html('<tr><td colspan="4" class="text-center text-danger">Failed to load reports</td></tr>');
-            });
-
-        }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
-            $('#stat-total, #stat-total-posts').text('Error');
-            console.error('Stats AJAX error:', textStatus, errorThrown, jqXHR.responseText);
+            }
         });
+
+        // Second pie chart: Active, Banned, Suspended, New This Week
+        var ctxStatus = document.getElementById('statusPieChart').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'pie',
+            data: {
+                labels: ['Active', 'Banned', 'Suspended', 'New This Week'],
+                datasets: [{
+                    data: [
+                        data.active_users,
+                        data.banned_users,
+                        data.suspended_users,
+                        data.new_users_this_week
+                    ],
+                    backgroundColor: ['#198754', '#dc3545', '#ffc107', '#0dcaf0'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom' }
+                }
+            }
+        });
+
+        // Fetch and display reports overview and recent reports
+        $.get('phpFile/globalSide/getReportsOverview.php', function(data) {
+        $('#totalReports').text(data.totalReports);
+        $('#unresolvedReports').text(data.unresolvedReports);
+        $('#mostReportedUser').text(data.mostReportedUser || 'None');
+
+        allReports = data.recentReports || [];
+        renderReportsTable(allReports);
+
+        // Attach search handler after data is loaded
+        $('#reportSearch').on('input', function() {
+            const search = $(this).val().toLowerCase();
+            const filtered = allReports.filter(report =>
+                (report.reported_user && report.reported_user.toLowerCase().includes(search)) ||
+                (report.reason && report.reason.toLowerCase().includes(search)) ||
+                (report.status && report.status.toLowerCase().includes(search))
+            );
+            renderReportsTable(filtered);
+        });
+        }, 'json').fail(function() {
+            $('#recentReportsTable').html('<tr><td colspan="5" class="text-center text-danger">Failed to load reports</td></tr>');
+        });
+
+            $('#reportSearch').on('input', function() {
+            const search = $(this).val().toLowerCase();
+            const filtered = allReports.filter(report =>
+                (report.reported_user && report.reported_user.toLowerCase().includes(search)) ||
+                (report.reason && report.reason.toLowerCase().includes(search)) ||
+                (report.status && report.status.toLowerCase().includes(search))
+            );
+            renderReportsTable(filtered);
+        });
+        function renderReportsTable(reports) {
+            let rows = '';
+            if (reports && reports.length > 0) {
+                reports.forEach(function(report) {
+                    rows += `<tr>
+                        <td>${report.reported_user}</td>
+                        <td>${report.reason}</td>
+                        <td>${report.date}</td>
+                        <td>${report.status}</td>
+                        <td style ="text-align: center;">
+                            <button class="btn btn-outline-dark btn-sm rounded-pill border-0" title="View Details" 
+                            onclick="viewReport('${report.type}', '${report.reported_user_id}', '${report.post_id ? report.post_id : ''}')">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                });
+            } else {
+                rows = '<tr><td colspan="5" class="text-center text-muted">No recent reports</td></tr>';
+            }
+            $('#recentReportsTable').html(rows);
+        }
+
+                }, 'json').fail(function() {
+                    $('#stat-total').text('Error');
+                    $('#stat-total-posts').text('Error');
+                    console.error('Failed to load user stats');
+                });
 
         // Fetch and display user list in the table
         $.get('phpFile/globalSide/getUserList.php', function(users) {
@@ -336,15 +503,26 @@
                     <td>${user.user_email}</td>
                     <td>${user.state ? user.state.charAt(0).toUpperCase() + user.state.slice(1) : ''}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm me-1" onclick="banUser('${user.user_email}')">Ban</button>
-                        <button class="btn btn-secondary btn-sm me-1" onclick="suspendUser('${user.user_email}')">Suspend</button>
-                        <button class="btn btn-danger btn-sm me-1" onclick="deleteUser('${user.user_email}')">Delete</button>`;
-                if (user.state !== 'active') {
-                    rows += `<button class="btn btn-success btn-sm me-1" onclick="activateUser('${user.user_email}')">Activate</button>`;
-                }
-                rows += `</td>
+                        <button class="btn btn-light btn-sm rounded-circle me-1 border" title="Ban User" onclick="banUser('${user.user_email}')">
+                            <i class="bi bi-slash-circle"></i>
+                        </button>
+                        <button class="btn btn-light btn-sm rounded-circle me-1 border" title="Suspend User" onclick="suspendUser('${user.user_email}')">
+                            <i class="bi bi-pause-circle"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm rounded-circle me-1 border" title="Delete User" onclick="deleteUser('${user.user_email}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        ${user.state !== 'active' ? `
+                        <button class="btn btn-light btn-sm rounded-circle me-1 border" title="Activate User" onclick="activateUser('${user.user_email}')">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                        ` : ''}
+                    </td>
                     <td>
-                        <button class="btn btn-dark btn-sm" onclick="viewHistory('${user.user_email}')">View History</button>
+                        <button class="btn btn-outline-dark btn-sm rounded-pill border-0" title="View Details" 
+                        onclick="viewHistory('${user.user_email}')">View History
+                        <i class="bi bi-eye-fill"></i>
+                        </button>
                     </td>
                 </tr>`;
             });
@@ -433,6 +611,34 @@
             if (diffHr > 0) return `Login ${diffHr} hr${diffHr > 1 ? 's' : ''} ago`;
             if (diffMin > 0) return `Login ${diffMin} min${diffMin > 1 ? 's' : ''} ago`;
             return `Login just now`;
+        }
+
+        function viewReport(type, user_id, post_id = '') {
+            $.get('phpFile/globalSide/getReportsOverview.php', { type: type, user_id: user_id, post_id: post_id }, function(data) {
+                let html = '';
+                if (data && !data.error) {
+                    if (type === 'account') {
+                        html = `<strong>User Account Info</strong><hr>
+                            <b>Name:</b> ${data.user_fname} ${data.user_lname}<br>
+                            <b>Email:</b> ${data.user_email}<br>
+                            <b>Contact:</b> ${data.user_contact}<br>
+                            <b>Status:</b> ${data.state}<br>
+                            <img src="path/to/user/images/${data.user_img}" alt="User Image" class="img-thumbnail mt-2" style="max-width:100px;">`;
+                    } else if (type === 'post') {
+                        html = `<strong>Post Details</strong><hr>
+                            <b>Posted by:</b> ${data.user_fname} ${data.user_lname} (${data.user_email})<br>
+                            <b>Date:</b> ${data.date_posted}<br>
+                            <b>Caption:</b> ${data.post_caption}<br>
+                            <b>Images:</b><br>
+                            <img src="path/to/post/images/${data.post_images}" alt="Post Image" class="img-thumbnail mt-2" style="max-width:100px;">`;
+                    }
+                } else {
+                    html = 'No details found.';
+                }
+                $('#userHistoryModalBody').html(html);
+                var modal = new bootstrap.Modal(document.getElementById('userHistoryModal'));
+                modal.show();
+            }, 'json');
         }
 
         function viewHistory(email) {
