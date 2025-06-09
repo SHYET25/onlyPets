@@ -35,7 +35,7 @@ $('#btnLog').click(function(e) {
                 if (res.role === 'user') {
                     window.location.href = 'ownerHome.html';
                 } else if (res.role === 'veterinarian') {
-                    window.location.href = 'ownerHome.html';
+                    window.location.href = 'vetPage.html';
                 } else {
                     alert('Unknown user role. Please contact support.');
                     location.reload();
