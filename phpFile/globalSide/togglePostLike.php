@@ -55,6 +55,17 @@ $update->bind_param('si', $new_likes_json, $post_id);
 $update->execute();
 $update->close();
 
+// Log like/unlike activity in session_activity_logs (direct DB insert)
+$activity = $liked ? 'post_like' : 'post_unlike';
+$activity_description = $liked ? 'Liked a post' : 'Unliked a post';
+$created_at = date('Y-m-d H:i:s');
+$activity_type = 'like';
+$act_id = 0;
+$stmt = $conn->prepare("INSERT INTO session_activity_logs (user_email, activity_type, activity, activity_description, act_id, post_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param('sssssis', $user_email, $activity_type, $activity, $activity_description, $act_id, $post_id, $created_at);
+$stmt->execute();
+$stmt->close();
+
 // Send notification if liked and not liking own post
 if ($liked) {
     // Get post owner (correct column: poster_email)

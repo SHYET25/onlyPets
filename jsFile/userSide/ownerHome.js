@@ -380,15 +380,13 @@ $(document).on('click', '.like-btn', function() {
         $btn.data('liked', false);
         $btn.removeClass('liked');
         $btn.find('i').removeClass('fa-solid fa-thumbs-up text-primary').addClass('fa-regular fa-thumbs-up');
-        $btn.contents().filter(function() { return this.nodeType === 3; }).remove(); // Remove text node
-        $btn.append(' Like ');
+        $btn.find('.like-btn-text').text('Like');
         likeCount = Math.max(0, likeCount - 1);
     } else {
         $btn.data('liked', true);
         $btn.addClass('liked');
         $btn.find('i').removeClass('fa-regular fa-thumbs-up').addClass('fa-solid fa-thumbs-up text-primary');
-        $btn.contents().filter(function() { return this.nodeType === 3; }).remove(); // Remove text node
-        $btn.append(' Liked ');
+        $btn.find('.like-btn-text').text('Liked');
         likeCount = likeCount + 1;
     }
     $btn.find('.like-count').text(likeCount);

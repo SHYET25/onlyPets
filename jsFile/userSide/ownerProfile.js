@@ -1061,7 +1061,11 @@ $('#searchInput').on('keydown', function(e) {
                         const likeCount = likesArr.length;
                         // Comments
                         let commentCount = 0;
-                        if (typeof post.comment_count !== 'undefined') commentCount = post.comment_count;
+                        if (post.comment_count !== undefined) {
+                            commentCount = post.comment_count;
+                        } else if (Array.isArray(post.comments)) {
+                            commentCount = post.comments.length;
+                        }
                         // Media
                         let mediaHtml = '';
                         if (post.post_images) {
@@ -1245,7 +1249,11 @@ $('#searchInputModal').on('keydown', function(e) {
                         const likeCount = likesArr.length;
                         // Comments
                         let commentCount = 0;
-                        if (typeof post.comment_count !== 'undefined') commentCount = post.comment_count;
+                        if (post.comment_count !== undefined) {
+                            commentCount = post.comment_count;
+                        } else if (Array.isArray(post.comments)) {
+                            commentCount = post.comments.length;
+                        }
                         // Media
                         let mediaHtml = '';
                         if (post.post_images) {
@@ -1492,6 +1500,175 @@ $(document).on('click', '.recent-search-item', function() {
 $('#searchModal').on('hidden.bs.modal', function() {
     $('#searchSuggestions').hide().empty();
     $('#searchInput').val('');
+});
+
+// --- SETTINGS MODAL LOGIC ---
+$(document).on('click', '.settings-link', function(e) {
+    e.preventDefault();
+    const $modal = $('#settingsModal');
+    if ($modal.length === 0) {
+        alert('Settings modal not found in DOM.');
+        return;
+    }
+    // Show modal using Bootstrap 5
+    const modalInstance = new bootstrap.Modal($modal[0]);
+    modalInstance.show();
+
+    // Fetch session info to get location
+    $.get('phpFile/globalSide/getSessionInfo.php', function(res) {
+        if (res.status === 'success' && res.data) {
+            const data = res.data;
+            let locText = 'Not set';
+            if (data.user_location) {
+                try {
+                    const locObj = JSON.parse(data.user_location);
+                    if (locObj && typeof locObj.lat === 'number' && typeof locObj.lng === 'number') {
+                        locText = `Lat: ${locObj.lat.toFixed(5)}, Lng: ${locObj.lng.toFixed(5)}`;
+                    }
+                } catch(e) {}
+            }
+            $('#settingsLocation').text(locText);
+            if ($('#location').length) {
+                $('#location').text(locText);
+            }
+        }
+    }, 'json');
+
+    // Populate Account Info tab with user info from profile
+    $('#settingsProfileImg').attr('src', $('#profile').attr('src') || 'media/images/default-profile.png');
+    $('#settingsFullName').text($('#fullName').text() || 'Full Name');
+    $('#settingsEmail').text($('#email').text() || 'Email');
+    $('#settingsContact').text($('#contact').text() || 'Contact');
+    // If you have a location field on the profile, use it; else default
+    // (location now handled above)
+
+    // Tab switching logic
+    $modal.find('.settings-tab').off('click').on('click', function() {
+        const tab = $(this).data('tab');
+        $modal.find('.settings-tab').removeClass('active');
+        $(this).addClass('active');
+        $modal.find('.settings-tab-content').hide();
+        if (tab === 'account-info') {
+            $modal.find('#settingsAccountInfo').show();
+        } else if (tab === 'activity-log') {
+            $modal.find('#settingsActivityLog').show();
+            loadSettingsActivityLogs();
+        } else if (tab === 'pet-info') {
+            $modal.find('#settingsPetInfo').show();
+            loadSettingsPetInfo();
+        }
+    });
+});
+
+// Placeholder functions for loading tab content
+function loadSettingsAccountInfo() {
+    $('#settingsAccountInfo').html('<div class="text-center text-muted">Account info loaded here.</div>');
+}
+function loadSettingsActivityLogs() {
+    $('#settingsActivityLog').html('<div class="text-center text-muted">Activity log loaded here.</div>');
+}
+function loadSettingsPetInfo() {
+  $('#settingsPetInfoLoading').show();
+  $('#settingsPetInfoList').empty();
+  $.ajax({
+    url: 'phpFile/globalSide/fetchOwnedPets.php', // Use the correct endpoint for full pet info
+    type: 'POST',
+    dataType: 'json',
+    success: function(response) {
+      $('#settingsPetInfoLoading').hide();
+      if (response.status === 'success' && Array.isArray(response.pets) && response.pets.length > 0) {
+        // Group pets by pet_id (for vaccination info)
+        let petsGrouped = {};
+        response.pets.forEach(pet => {
+          const id = pet.pet_id;
+          if (!petsGrouped[id]) {
+            petsGrouped[id] = {
+              info: pet,
+              vaccinations: []
+            };
+          }
+          if (pet.vaccine_name && pet.vaccination_date) {
+            petsGrouped[id].vaccinations.push({
+              name: pet.vaccine_name,
+              date: pet.vaccination_date,
+              remarks: pet.remarks
+            });
+          }
+        });
+        let html = '';
+        Object.entries(petsGrouped).forEach(([id, { info, vaccinations }]) => {
+          const img = info.pet_img ? `media/images/petPics/${info.pet_img}` : 'media/images/default-profile.png';
+          html += `
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center">
+                  <img src="${img}" class="rounded-circle mb-3 shadow" style="width:90px;height:90px;object-fit:cover;border:3px solid #38b6ff22;">
+                  <h5 class="fw-bold mb-1">${info.pet_name || 'Unnamed Pet'}</h5>
+                  <div class="mb-1 text-muted small">${info.pet_type || ''} ${info.pet_breed ? '• ' + info.pet_breed : ''}</div>
+                  <div class="mb-1"><span class="badge bg-info text-dark">${info.pet_gender || ''}</span> <span class="badge bg-light text-dark">${info.pet_color || ''}</span></div>
+                  <div class="mb-2 text-muted" style="font-size:0.95em;">Born: ${info.pet_birthdate || 'N/A'}</div>
+                  <button class="btn btn-outline-primary btn-sm view-pet-details-btn" data-pet-id="${info.pet_id}"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        $('#settingsPetInfoList').html(html);
+      } else {
+        $('#settingsPetInfoList').html('<div class="text-center text-muted">No pets found for your account.</div>');
+      }
+    },
+    error: function() {
+      $('#settingsPetInfoLoading').hide();
+      $('#settingsPetInfoList').html('<div class="text-danger text-center">Failed to fetch pet info.</div>');
+    }
+  });
+}
+
+// --- PET DETAILS MODAL HANDLER FOR PET INFO TAB ---
+$(document).on('click', '.view-pet-details-btn', function() {
+  const petId = $(this).data('pet-id');
+  if (!petId) return;
+  // Fetch pet details from backend (or reuse already loaded data if available)
+  $.ajax({
+    url: 'phpFile/globalSide/fetchUserPets.php',
+    type: 'POST',
+    dataType: 'json',
+    success: function(response) {
+      if (response.status === 'success' && Array.isArray(response.pets)) {
+        const pet = response.pets.find(p => p.pet_id == petId);
+        if (pet) {
+          const img = pet.pet_img ? `media/images/petPics/${pet.pet_img}` : 'media/images/default-profile.png';
+          const vacImg = pet.pet_vaccine_img ? `<img src="media/images/vacPics/${pet.pet_vaccine_img}" class="img-fluid rounded mb-2" alt="Vaccine" style="max-width:120px;max-height:120px;object-fit:cover;">` : '';
+          const html = `
+            <div class="row">
+              <div class="col-md-4 text-center mb-3">
+                <img src="${img}" class="img-fluid rounded mb-3" alt="${pet.pet_name}" style="max-width:160px;max-height:160px;object-fit:cover;">
+                ${vacImg}
+              </div>
+              <div class="col-md-8">
+                <h5 class="mb-2">${pet.pet_name}</h5>
+                <p><strong>Type:</strong> ${pet.pet_type || ''}</p>
+                <p><strong>Breed:</strong> ${pet.pet_breed || ''}</p>
+                <p><strong>Birthdate:</strong> ${pet.pet_birthdate || ''}</p>
+                <p><strong>Gender:</strong> ${pet.pet_gender || ''}</p>
+                <p><strong>Color:</strong> ${pet.pet_color || ''}</p>
+                <p><strong>Eye Color:</strong> ${pet.pet_eye_color || ''}</p>
+                <p><strong>Weight:</strong> ${pet.pet_weight || ''} kg</p>
+                <p><strong>Size:</strong> ${pet.pet_size || ''}</p>
+                <p><strong>Allergies:</strong> ${pet.pet_allergies || 'None'}</p>
+                <p><strong>Medical Conditions:</strong> ${pet.pet_medical_conditions || 'None'}</p>
+                <p><strong>Created At:</strong> ${pet.pet_created_at || ''}</p>
+              </div>
+            </div>
+          `;
+          $('#petDetailsBody').html(html);
+          const modal = new bootstrap.Modal(document.getElementById('petDetailsModal'));
+          modal.show();
+        }
+      }
+    }
+  });
 });
 
 

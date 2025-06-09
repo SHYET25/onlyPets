@@ -944,6 +944,149 @@
 #conversationModal #sendButton:hover {
     background: linear-gradient(90deg, #1e90ff 0%, #38b6ff 100%);
 }
+
+/* MODERN MODAL DESIGN ENHANCEMENTS */
+#settingsModal .modal-content,
+#commentModal .modal-content,
+#petDetailsModal .modal-content,
+#addPetModal .modal-content,
+#searchModal .modal-content {
+  border-radius: 22px;
+  background: linear-gradient(135deg, #e3f6ff 60%, #fff 100%);
+  box-shadow: 0 8px 32px rgba(56,182,255,0.18), 0 1.5px 8px rgba(0,0,0,0.08);
+  border: none;
+  padding: 0;
+  overflow: hidden;
+}
+#settingsModal .modal-header,
+#commentModal .modal-header,
+#petDetailsModal .modal-header,
+#addPetModal .modal-header,
+#searchModal .modal-header {
+  border-bottom: none;
+  background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%);
+  color: #fff;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+  padding-top: 1.3rem;
+  padding-bottom: 1.3rem;
+  box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+}
+#settingsModal .modal-title,
+#commentModal .modal-title,
+#petDetailsModal .modal-title,
+#addPetModal .modal-title,
+#searchModal .modal-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+#settingsModal .btn-close,
+#commentModal .btn-close,
+#petDetailsModal .btn-close,
+#addPetModal .btn-close,
+#searchModal .btn-close {
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  border: none;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition: background 0.3s;
+  box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+}
+#settingsModal .btn-close:hover,
+#commentModal .btn-close:hover,
+#petDetailsModal .btn-close:hover,
+#addPetModal .btn-close:hover,
+#searchModal .btn-close:hover {
+  background: rgba(255,255,255,0.4);
+}
+#settingsModal .modal-body,
+#commentModal .modal-body,
+#petDetailsModal .modal-body,
+#addPetModal .modal-body,
+#searchModal .modal-body {
+  background: #fafdff;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+}
+#settingsModal .tab-content {
+  background: #fafdff;
+  border-radius: 1rem;
+  border: 1px solid #e0e0e0;
+  margin-top: -1px;
+  padding: 2rem 1rem 1rem 1rem;
+}
+#settingsModal .nav-tabs .nav-link.active {
+  color: #38b6ff;
+  background: #e3f6ff;
+  border: none;
+  border-bottom: 3px solid #38b6ff;
+  font-weight: 700;
+  border-radius: 1rem 1rem 0 0;
+}
+#settingsModal .nav-tabs .nav-link {
+  color: #555;
+  font-weight: 500;
+  transition: color 0.3s, background 0.3s;
+  border-radius: 1rem 1rem 0 0;
+  margin-right: 2px;
+}
+#settingsModal .nav-tabs .nav-link:hover {
+  color: #38b6ff;
+  background: #e3f6ff;
+}
+#settingsModal .tab-pane {
+  min-height: 200px;
+}
+#settingsModal .card {
+  border-radius: 18px;
+  background: linear-gradient(135deg, #e3f6ff 60%, #fff 100%);
+  border: none;
+  box-shadow: 0 4px 16px rgba(56,182,255,0.10);
+}
+#settingsModal .rounded-circle {
+  border: 4px solid #38b6ff22;
+  box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+}
+#settingsModal .fw-bold {
+  color: #1976d2;
+}
+#settingsModal .fw-semibold {
+  color: #1976d2;
+}
+#settingsModal .table {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+#settingsModal .table th {
+  background: #e3f6ff;
+  color: #1976d2;
+  font-weight: 700;
+}
+#settingsModal .table td {
+  background: #fff;
+}
+#settingsModal .btn-primary, #settingsModal .btn-success, #settingsModal .btn-secondary {
+  border-radius: 30px;
+  font-weight: 700;
+  padding: 0.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(56,182,255,0.08);
+  border: none;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+#settingsModal .btn-primary:hover, #settingsModal .btn-success:hover, #settingsModal .btn-secondary:hover {
+  background: linear-gradient(90deg, #1e90ff 0%, #38b6ff 100%);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(56,182,255,0.18);
+  transform: translateY(-2px) scale(1.04);
+}
     </style>
 
     
@@ -1122,7 +1265,6 @@
         <!-- Top Links -->
         <div class="top-links">
             <a href="ownerHome.html" class="loading-link"><i class="fas fa-home deactive"></i></a>
-            <a href="ownerMarket.html" class="loading-link"><i class="fas fa-store deactive"></i></a>
             <a href="ownerVet.html" class="loading-link"><i class="fas fa-stethoscope deactive"></i></a>
             <a href="ownerCommunity.html" class="loading-link"><i class="fas fa-users deactive"></i></a>
         </div>
@@ -1410,27 +1552,27 @@
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-                            <!-- <div class="mb-3">
+                            <!-- <div class="mb-3>
                                 <label for="pet_color" class="form-label">Color</label>
                                 <input type="text" class="form-control" id="pet_color">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3>
                                 <label for="pet_eye_color" class="form-label">Eye Color</label>
                                 <input type="text" class="form-control" id="pet_eye_color">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3>
                                 <label for="pet_allergies" class="form-label">Allergies</label>
                                 <textarea class="form-control" id="pet_allergies" rows="2"></textarea>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3>
                                 <label for="pet_medical_conditions" class="form-label">Medical Conditions</label>
                                 <textarea class="form-control" id="pet_medical_conditions" rows="2"></textarea>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3>
                                 <label for="pet_weight" class="form-label">Weight (kg)</label>
                                 <input type="number" class="form-control" id="pet_weight" step="0.01">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3>
                                 <label for="pet_size" class="form-label">Size</label>
                                 <input type="text" class="form-control" id="pet_size">
                             </div> -->
@@ -1454,7 +1596,89 @@
         
     </div>
 
-    
+    <!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-primary text-white" style="background: linear-gradient(90deg, #38b6ff 0%, #85d2ff 100%); border-top-left-radius: 22px; border-top-right-radius: 22px;">
+        <h5 class="modal-title d-flex align-items-center gap-2" id="settingsModalLabel"><i class="fas fa-cog me-2"></i>Settings</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <ul class="nav nav-tabs mb-3 justify-content-center" id="settingsTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active settings-tab px-4 py-2" id="account-info-tab" data-bs-toggle="tab" data-tab="account-info" type="button" role="tab"><i class="fas fa-user me-1"></i>Account Info</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link settings-tab px-4 py-2" id="activity-log-tab" data-bs-toggle="tab" data-tab="activity-log" type="button" role="tab"><i class="fas fa-list-alt me-1"></i>Activity Log</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link settings-tab px-4 py-2" id="pet-info-tab" data-bs-toggle="tab" data-tab="pet-info" type="button" role="tab"><i class="fas fa-paw me-1"></i>Pet Info</button>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active settings-tab-content" id="settingsAccountInfo" role="tabpanel">
+            <div class="row justify-content-center align-items-center g-4">
+              <div class="col-md-4 text-center mb-3">
+                <div class="position-relative d-inline-block">
+                  <img id="settingsProfileImg" src="media/images/default-profile.png" class="rounded-circle mb-3 shadow" style="width:120px;height:120px;object-fit:cover;border:4px solid #38b6ff22;box-shadow:0 2px 8px rgba(56,182,255,0.08);">
+                  <span class="position-absolute bottom-0 end-0 translate-middle p-2 bg-success border border-light rounded-circle" style="width:28px;height:28px;">
+                    <i class="fas fa-check text-white"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <h4 class="fw-bold mb-2" id="settingsFullName">Full Name</h4>
+                <div class="mb-2 d-flex align-items-center gap-2">
+                  <i class="fas fa-envelope text-primary"></i>
+                  <span id="settingsEmail" class="fw-semibold">Email</span>
+                </div>
+                <div class="mb-2 d-flex align-items-center gap-2">
+                  <i class="fas fa-phone text-primary"></i>
+                  <span id="settingsContact" class="fw-semibold">Contact</span>
+                </div>
+                <div class="mb-2 d-flex align-items-center gap-2">
+                  <i class="fas fa-map-marker-alt text-danger"></i>
+                  <span class="text-muted small">Location:</span>
+                  <span class="fw-semibold ms-2" id="settingsLocation">Not set</span>
+                  <button class="btn btn-outline-primary btn-sm ms-2" id="setLocationBtn" title="Add Location"><i class="fas fa-map-marker-alt"></i> Add Location</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade settings-tab-content" id="settingsActivityLog" role="tabpanel" style="display:none;">
+            <div class="text-center text-muted">Loading activity log...</div>
+          </div>
+          <div class="tab-pane fade settings-tab-content" id="settingsPetInfo" role="tabpanel" style="display:none;">
+            <div class="text-center text-muted" id="settingsPetInfoLoading">Loading pet info...</div>
+            <div id="settingsPetInfoList" class="row g-3 mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Settings Modal -->
+
+<!-- Google Maps Location Modal -->
+<div class="modal fade" id="locationMapModal" tabindex="-1" aria-labelledby="locationMapModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="locationMapModalLabel">Select Your Location</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="googleMap" style="width: 100%; height: 400px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="saveLocationBtn">Save Location</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Google Maps API (replace YOUR_API_KEY with your actual key) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNwLkQpUFsUSpxq1dbw-_VqWsy2PQaU9Q"></script>
     
 
   
@@ -1744,7 +1968,7 @@
 
                 // Start conversation polling
                 if (conversationInterval) clearInterval(conversationInterval);
-                conversationInterval = setInterval(function() {
+                               conversationInterval = setInterval(function() {
                     loadMessages(currentChatUserId);
                 }, 2000);
 
@@ -1874,6 +2098,45 @@
 
         $(document).ready(function() {
             $('#chatBadge').show().text('1');
+        });
+
+        // Load pet info in settings modal
+        function loadSettingsPetInfo() {
+  $('#settingsPetInfoLoading').show();
+  $('#settingsPetInfoList').empty();
+  $.get('phpFile/globalSide/fetchUserPets.php', function(res) {
+    $('#settingsPetInfoLoading').hide();
+    if (res.status === 'success' && Array.isArray(res.pets) && res.pets.length > 0) {
+      let html = '';
+      res.pets.forEach(function(pet) {
+        const img = pet.pet_img ? `media/images/petPics/${pet.pet_img}` : 'media/images/default-profile.png';
+        html += `
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-sm h-100">
+            <img src="${img}" class="card-img-top" alt="${pet.pet_name}" style="height:140px;object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title mb-1">${pet.pet_name}</h5>
+              <div class="mb-1"><strong>Type:</strong> ${pet.pet_type || ''}</div>
+              <div class="mb-1"><strong>Breed:</strong> ${pet.pet_breed || ''}</div>
+              <div class="mb-1"><strong>Birthdate:</strong> ${pet.pet_birthdate || ''}</div>
+              <div class="mb-1"><strong>Gender:</strong> ${pet.pet_gender || ''}</div>
+              <div class="mb-1"><strong>Color:</strong> ${pet.pet_color || ''}</div>
+              <div class="mb-1"><strong>Weight:</strong> ${pet.pet_weight || ''} kg</div>
+            </div>
+          </div>
+        </div>
+        `;
+      });
+      $('#settingsPetInfoList').html(html);
+    } else {
+      $('#settingsPetInfoList').html('<div class="text-muted text-center">No pets found.</div>');
+    }
+  }, 'json');
+}
+
+        // Load pet info when the tab is opened
+        $('#pet-info-tab').on('click', function() {
+            loadSettingsPetInfo();
         });
     </script>
 </body>

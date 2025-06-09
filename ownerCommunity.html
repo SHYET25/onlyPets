@@ -560,54 +560,56 @@
             background-color: #85d2ff;
             border-color: #85d2ff;
         }
+/* Shared styling for both inviteCard and rejectedInviteCard */
+#inviteCard,
+#rejectedInviteCard {
+    width: 100%;
+    height: 60px; /* Collapsed height */
+    overflow: hidden;
+    transition: height 0.6s ease;
+    border-radius: 15px;
+    text-align: center;
+    background-color: #85d2ff;
+    border: 1px solid #85d2ff;
+}
 
-        #inviteCard {
-            width: 100%; /* Default width in "public" */
-            height: 60px; /* Collapsed height */
-            overflow: hidden; /* Hide content when collapsed */
-            transition: height 0.6s ease; /* Smooth transition for height */
-            border-radius: 15px;
-            text-align: center;
-            background-color: #85d2ff;
-            border-color: #85d2ff;
-        }
+/* Hover effect to expand */
+#inviteCard:hover,
+#rejectedInviteCard:hover {
+    height: 40%;
+}
 
-        #inviteCard:hover {
-            height: 40%; /* Expand to a fixed height on hover */
-        }
-        
-        /* Add this fallback to ensure consistent behavior */
-        #inviteCard:focus,
-        #inviteCard:active {
-            width: 100%; /* Maintain 100% width if focused or active */
-            height: 220px; /* Set height to same as hover to maintain consistency */
-        }
+/* Fallback focus/active effect */
+#inviteCard:focus,
+#inviteCard:active,
+#rejectedInviteCard:focus,
+#rejectedInviteCard:active {
+    height: 220px;
+    width: 100%;
+}
 
-        #inviteCard h5{
-            font-weight: 900;
-         }
+/* Title font styling */
+#inviteCard h5,
+#rejectedInviteCard h5 {
+    font-weight: 900;
+}
+
+/* Inner list scroll area */
+#inviteList,
+#rejectedInviteList {
+    height: 100%;
+    overflow: hidden;
+    scrollbar-gutter: stable;
+}
+
+/* Enable scroll on hover */
+#inviteList:hover,
+#rejectedInviteList:hover {
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
 
 
-        #inviteList {
-       
-            height: 100%;
-            overflow: hidden;
-            scrollbar-gutter: stable; /* Prevent scrollbar shift */
-            
-        }
-
-       #inviteList:hover {
-            overflow: auto; /* Add scroll if content overflows */
-            scrollbar-gutter: stable; /* Prevent scrollbar shift */
-            
-        }
-
-        .invites:hover {
-            background-color: #f1f1f1;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
 
         .allignments {
             text-align: left;
@@ -991,7 +993,7 @@
         <!-- Top Links -->
         <div class="top-links">
             <a href="ownerHome.html" class="loading-link"><i class="fas fa-home deactive"></i></a>
-            <a href="ownerMarket.html" class="loading-link"><i class="fas fa-store deactive"></i></a>
+            
             <a href="ownerVet.html" class="loading-link"><i class="fas fa-stethoscope deactive"></i></a>
             <a href="ownerCommunity.html" class="loading-link"><i class="fas fa-users active"></i></a>
         </div>
@@ -1012,74 +1014,58 @@
             <div id="middleContent" class="col-md-3">
                 <div id="inviteCard" class="card p-3 shadow">
                     <div class="d-flex justify-content-center align-items-center position-relative mb-2">
-                        <h5 class="text-center mb-0">Event Invites</h5>
+                        <h5 class="text-center mb-0">Accepted Invites</h5>
                         <span class="badge bg-danger rounded-pill position-absolute end-0">3</span>
                     </div>
-                    <ul id="inviteList" class="list-unstyled mt-3">
-                        <!-- Invite 1 -->
-                        <a class="googleMapInvite" href="https://www.google.com/maps/place/Imus+City+Plaza/@14.4289951,120.9185429,15z/data=!4m10!1m2!2m1!1simus+park!3m6!1s0x3397d2f49ad11aaf:0xf90dd57f9d1bae3a!8m2!3d14.4289951!4d120.9365673!15sCglpbXVzIHBhcmtaCyIJaW11cyBwYXJrkgEJY2l0eV9wYXJrmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU5QTnpsWWRIUm5SUkFC4AEA-gEECAAQRw!16s%2Fg%2F11f2_qy5cb?entry=ttu&g_ep=EgoyMDI1MDEyMi4wIKXMDSoASAFQAw%3D%3D">
-                            <li class="invites d-flex align-items-center justify-content-between mb-3">
-                                <div class="d-flex align-items-center">
-                                    <img src="media/images/petPics/retriever.jpg" alt="Buddy" class="rounded-circle me-3" width="40" height="40">
-                                    <div class="text-start">
-                                        <strong>Buddy</strong>
-                                        <p class="mb-0">Dog Meetup</p>
-                                        <small>2025-02-10 at 3:00 PM</small>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-success btn-sm me-2">✔</button>
-                                    <button class="btn btn-danger btn-sm">✖</button>
-                                </div>
-                            </li>
-                        </a>
-                        <hr>
-                        <!-- Invite 2 -->
-                        <a class="googleMapInvite" href="https://www.google.com/maps/place/Paw+%26+Bean+Cafe/@14.4387909,120.9306644,17z/data=!3m1!4b1!4m6!3m5!1s0x3397d3467bd45d61:0xf030036b5e79914b!8m2!3d14.4387909!4d120.9332447!16s%2Fg%2F11s78905m9?entry=ttu&g_ep=EgoyMDI1MDEyMi4wIKXMDSoASAFQAw%3D%3D">
-                            <li class="invites d-flex align-items-center justify-content-between mb-3">
-                                <div class="d-flex align-items-center">
-                                    <img src="media/images/petPics/siamese.jpg" alt="Max" class="rounded-circle me-3" width="40" height="40">
-                                    <div class="text-start">
-                                        <strong>Max</strong>
-                                        <p class="mb-0">Paw Party at Pet Café</p>
-                                        <small>2025-02-11 at 5:30 PM</small>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-success btn-sm me-2">✔</button>
-                                    <button class="btn btn-danger btn-sm">✖</button>
-                                </div>
-                            </li>
-                        </a>
-                        <hr>
-                        <!-- Invite 3 -->
-                        <li class="invites d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center">
-                                <img src="media/images/petPics/pig.jpg" alt="Bella" class="rounded-circle me-3" width="40" height="40">
-                                <div class="text-start">
-                                    <strong>Bella</strong>
-                                    <p class="mb-0">Morning Walk</p>
-                                    <small>2025-02-12 at 8:00 AM</small>
-                                </div>
-                            </div>
-                            <div>
-                                <button class="btn btn-success btn-sm me-2">✔</button>
-                                <button class="btn btn-danger btn-sm">✖</button>
-                            </div>
-                        </li>
-                    </ul>
+                    <div id="inviteList">
+                        
+                    </div>
                 </div>
+
+                <div id="rejectedInviteCard" class="card p-3 shadow mt-4">
+                <div class="d-flex justify-content-center align-items-center position-relative mb-2">
+                    <h5 class="text-center mb-0 text-secondary">Rejected Invites</h5>
+                    <span class="badge bg-secondary rounded-pill position-absolute end-0" id="rejectedInviteCount">0</span>
+                </div>
+                <div id="rejectedInviteList">
+                    <!-- Rejected invites will be rendered here by JS -->
+                </div>
+            </div>
+                
                 
 
                 <div id="petMateList" class="card p-3 cardPet">
-                    <div class="petMateH5">
-                        <h5 class="">Furs Around ME</h5>
-                    </div>
-
-                    <div id="map" style="height: 500px; width: 100%; margin-top:10px;"></div>
-
-                    
-                </div>
+  <div class="petMateH5">
+    <h5 class="">Furs Around ME</h5>
+  </div>
+  <div id="google-map" style="height: 350px; width: 100%; border-radius: 12px;"></div>
+</div>
+<!-- Google Maps JS API (replace YOUR_API_KEY with your actual key) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNwLkQpUFsUSpxq1dbw-_VqWsy2PQaU9Q"></script>
+<script>
+  let map, marker;
+  function initGoogleMap() {
+    const defaultLocation = { lat: 14.4134, lng: 120.9370 };
+    map = new google.maps.Map(document.getElementById('google-map'), {
+      center: defaultLocation,
+      zoom: 13,
+    });
+    marker = new google.maps.Marker({
+      position: defaultLocation,
+      map,
+      draggable: true,
+    });
+    marker.addListener('dragend', function () {
+      map.setCenter(marker.getPosition());
+    });
+  }
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof google !== 'undefined') initGoogleMap();
+    else {
+      window.initGoogleMap = initGoogleMap;
+    }
+  });
+</script>
 
                 
                 
@@ -1117,9 +1103,6 @@
                                 </button>
                                 <button class="btn btn-light btn-sm me-2">
                                     <i class="fas fa-calendar-times"></i> Decline Invite
-                                </button>
-                                <button class="btn btn-light btn-sm">
-                                    <i class="fas fa-share"></i> Share Event
                                 </button>
                             </div>
                         </div>
@@ -1221,16 +1204,40 @@
                         <h5>Send an Invite</h5>
                         <br>
                         <div class="mb-3">
-                            <select class="form-select" id="vetSelect" required>
+                            <select class="form-select" id="groupSelect" required>
                                 <option value="" disabled selected>Select a Group</option>
                                 <option value="Dr. Sarah Vet">Park Playgroup</option>
                                 <option value="Dr. Alex Vet">Riverside Walks</option>
                                 <option value="Dr. Alex Vet">Cuddle Club</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="eventTitle" placeholder="Enter event title" required>
+                        </div>
                         <textarea id="postText" class="form-control mb-2" rows="3" placeholder="What's your invite?"></textarea>
-                        <input type="file" id="postImage" class="form-control mb-2">
+                        <input type="file" id="postImage" class="form-control mb-2" multiple>
+                        <button id="addLocationBtn" class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#locationModal">
+                            <i class="fas fa-map-marker-alt"></i> Add Location
+                        </button>
                         <button id="postButton" class="btn btn-warning w-100">Post</button>
+                    </div>
+                    <!-- Location Modal -->
+                    <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="locationModalLabel">Select Location</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="height: 500px;">
+                                    <div id="googleMapContainer" style="width: 100%; height: 100%;"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="selectLocationBtn">Select Location</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- Comment Modal -->
                     <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
@@ -1317,13 +1324,13 @@
                                         <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
                                         <div class="row g-2">
                                             <div class="col-4">
-                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
                                             </div>
                                             <div class="col-4">
-                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
                                             </div>
                                             <div class="col-4">
-                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail">
+                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
                                             </div>
                                         </div>
                                     </div>
@@ -1535,6 +1542,7 @@
                                                         <!-- Sample caption -->
                                                         <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
                                                         
+
                                                         <!-- Photo Grid with Modal Trigger -->
                                                         <div class="row g-2">
                                                             <div class="col-4">
@@ -1572,6 +1580,7 @@
                                             </div>
                                         </div>
                             
+
                                         <div id="publicContainer" class=" hidden">
                                             <div class="post-list">
                                                 <div class="post-card card p-3 mb-4">
@@ -1632,55 +1641,6 @@
                                                                 <div class="fw-bold">John Doe</div>
                                                                 <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="post-content mb-3">
-                                                        <!-- Sample caption -->
-                                                        <p>This is a sample caption describing the photos below. Buddy enjoying a sunny day at the park!</p>
-                                                        
-                                                        <!-- Photo Grid with Modal Trigger -->
-                                                        <div class="row g-2">
-                                                            <div class="col-4">
-                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy in the park" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy playing with a ball" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <img src="media/images/posts/buddy.jpg" alt="Buddy resting" class="img-fluid rounded img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="showImage(this)">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="post-footer d-flex justify-content-between align-items-center">
-                                                        <div class="tagged-users">
-                                                            <span class="text-muted">Tagged: </span>
-                                                            <span class="tagged-user">Alex Johnson, Samantha Lee</span>
-                                                        </div>
-                                                        <div class="post-time text-muted">
-                                                            <span>Posted on: 2025-01-11 14:30</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="post-actions d-flex justify-content-start mt-3">
-                                                        <button class="btn btn-light btn-sm me-2">
-                                                            <i class="fas postFas fa-thumbs-up"></i> Like
-                                                        </button>
-                                                        <button class="btn btn-light btn-sm me-2" data-bs-toggle="modal" data-bs-target="#commentModal">
-                                                            <i class="fas postFas fa-comment"></i> Comment
-                                                        </button>
-                                                        <button class="btn btn-light btn-sm"  data-bs-toggle="modal" data-bs-target="#shareModal">
-                                                            <i class="fas postFas fa-share"></i> Share
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="post-card card p-3 mb-4">
-                                                    <div class="post-header d-flex align-items-center mb-3">
-                                                        <img src="media/images/profiles/123.jpg" alt="User Profile" class="profile-img me-3">
-                                                        <div>
-                                                            <div class="d-flex">
-                                                                <div class="fw-bold">John Doe</div>
-                                                                <span id="postScopeContainer"><i id="postScope" class="fa-solid fa-earth-americas"></i></span>
-                                                            </div>
-                                                            <div class="text-muted">Pet: Buddy</div>
                                                         </div>
                                                     </div>
                                                     <div class="post-content mb-3">
@@ -1873,6 +1833,7 @@
         });
 
         // Close the dropdown if clicked outside
+       
         $(document).click(function(event) {
             if (!$(event.target).closest('#chatIcon, #chatDropdown').length) {
                 $('#chatDropdown').hide();
@@ -1964,10 +1925,11 @@
                 .addTo(map)
                 .bindPopup(popupContent);
         });
-
+    
 
 
     // JS for the Side Bar ------------------------------------------------------
     </script>
+    <script src="jsFile/userSide/ownerCommunity.js"></script>
 </body>
 </html>
