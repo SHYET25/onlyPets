@@ -12,7 +12,7 @@ if (!$email || !$role) {
 }
 
 if ($role === 'user') {
-    $stmt = $conn->prepare("SELECT user_id, user_fname, user_lname, user_email, user_pass, user_contact, user_img FROM user WHERE user_email = ?");
+    $stmt = $conn->prepare("SELECT user_id, user_fname, user_lname, user_email, user_pass, user_contact, user_img, user_location FROM user WHERE user_email = ?");
 } elseif ($role === 'veterinarian') {
     $stmt = $conn->prepare("SELECT vet_id, vet_email, vet_pass, vet_fname, vet_lname, vet_contact, vet_img FROM veterinarian WHERE vet_email = ?");
 } else {
