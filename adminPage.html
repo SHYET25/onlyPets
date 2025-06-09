@@ -121,7 +121,6 @@
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Header -->
         <div class="dashboard-header text-center mb-4 shadow">
             <h2 class="fw-bold mb-1"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
             <p class="text-light">Overview of users, posts, and reports</p>
@@ -279,7 +278,7 @@
                             </thead>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
+        
                             </tbody>
                         </table>
                     </div>
@@ -346,7 +345,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="userHistoryModalBody">
-                <!-- Content will be injected here -->
             </div>
             </div>
         </div>
@@ -361,7 +359,6 @@
         let allUsers = [];
         let allReports = [];
 
-        // Fetch and display user stats
         $.get('phpFile/globalSide/getUserStats.php', function(data) {
             $('#stat-total').text(data.total_users);
             $('#stat-total-posts').text(data.total_posts);
@@ -370,7 +367,7 @@
             $('#bannedUsers').text(data.banned_users);
             $('#suspendedUsers').text(data.suspended_users);
             $('#newUsersThisWeek').text(data.new_users_this_week);
-        // First pie chart: Users, Posts, Reports
+   
         var ctxMain = document.getElementById('mainPieChart').getContext('2d');
         new Chart(ctxMain, {
             type: 'pie',
@@ -390,7 +387,7 @@
             }
         });
 
-        // Second pie chart: Active, Banned, Suspended, New This Week
+        
         var ctxStatus = document.getElementById('statusPieChart').getContext('2d');
         new Chart(ctxStatus, {
             type: 'pie',
@@ -415,7 +412,7 @@
             }
         });
 
-        // Fetch and display reports overview and recent reports
+        
         $.get('phpFile/globalSide/getReportsOverview.php', function(data) {
         $('#totalReports').text(data.totalReports);
         $('#unresolvedReports').text(data.unresolvedReports);
@@ -424,7 +421,7 @@
         allReports = data.recentReports || [];
         renderReportsTable(allReports);
 
-        // Attach search handler after data is loaded
+       
         $('#reportSearch').on('input', function() {
             const search = $(this).val().toLowerCase();
             const filtered = allReports.filter(report =>
@@ -476,7 +473,7 @@
                     console.error('Failed to load user stats');
                 });
 
-        // Fetch and display user list in the table
+        
         $.get('phpFile/globalSide/getUserList.php', function(users) {
             allUsers = users;
             renderUserTable(users);
@@ -485,7 +482,7 @@
             console.error('User list AJAX error:', textStatus, errorThrown, jqXHR.responseText);
         });
 
-        // Search/filter functionality
+        
         $('#userSearch').on('input', function() {
             const search = $(this).val().toLowerCase();
             const filtered = allUsers.filter(user =>
@@ -532,7 +529,7 @@
             $('#userTable tbody').html(rows);
         }
     });
-        // Show modal and store email
+       
         function banUser(email) {
             $('#banUserEmail').val(email);
             var banModal = new bootstrap.Modal(document.getElementById('banModal'));
@@ -545,7 +542,6 @@
             suspendModal.show();
         }
 
-        // Handle ban confirmation
         $('#confirmBanBtn').on('click', function() {
             var email = $('#banUserEmail').val();
             var days = $('#banDuration').val();
@@ -574,7 +570,6 @@
             suspendModal.hide();
         });
 
-        // Update adminAction to accept days
         function adminAction(email, action, confirmMsg, successMsg, days = null) {
             if (confirm(confirmMsg)) {
                 const data = { email: email, action: action };

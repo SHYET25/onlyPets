@@ -677,14 +677,15 @@
             border-radius: 50%;
             object-fit: cover;
         }
-        .pet-img-profile {
-            width: 90%;
-            height: 90%;
-            border-radius: 50%;
-            object-fit: cover;
-            aspect-ratio: 1/1;
-            margin-left: 3px;
-        }
+      .pet-img-profile {
+        margin-left: 3px;
+        width: 90%;
+        height: 90%;
+        border-radius: 50%;
+        object-fit: cover;
+        aspect-ratio: 1 / 1; /* Ensures width and height are always equal */
+        display: block;
+      }
 
 
         .pet-item:hover {
@@ -1561,6 +1562,33 @@ $(document).ready(function() {
             // Optionally check response
             window.location.href = 'index.html'; // Change to your login page
         });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: 'phpFile/globalSide/getSessionInfo.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                const data = response.data;
+                const role = response.role;
+                let profileImg = 'media/images/default-profile.png';
+                if (role === 'veterinarian' && data.vet_img) {
+                    profileImg = `media/images/profiles/${data.vet_img}`;
+                } else if (role === 'user' && data.user_img) {
+                    profileImg = `media/images/profiles/${data.user_img}`;
+                }
+                $('#sideProfile').attr('src', profileImg);
+            } else {
+                $('#sideProfile').attr('src', 'media/images/default-profile.png');
+            }
+        },
+        error: function() {
+            $('#sideProfile').attr('src', 'media/images/default-profile.png');
+        }
     });
 });
 </script>

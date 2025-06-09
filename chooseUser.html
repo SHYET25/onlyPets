@@ -115,17 +115,14 @@
             const confirmation = confirm(`You have selected ${selectedPet}. Would you like to proceed?`);
 
             if (confirmation) {
-                // Redirect to the next page upon confirmation
                 window.location.href = "ownerHome.html";
             } else {
-                // Allow the user to pick another pet
-                selectedPet = ''; // Reset the selection
+                selectedPet = '';
             }
         }
 
         function addNewPet() {
             alert("Add a new pet functionality coming soon!");
-            // You can implement the functionality to add a new pet here
         }
     </script>
 

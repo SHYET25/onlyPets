@@ -689,13 +689,15 @@
             object-fit: cover;
         }
 
-        .pet-img-profile {
-            width: 90%;
-            height: 90%;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-left: 3px;
-        }
+      .pet-img-profile {
+        margin-left: 3px;
+        width: 90%;
+        height: 90%;
+        border-radius: 50%;
+        object-fit: cover;
+        aspect-ratio: 1 / 1; /* Ensures width and height are always equal */
+        display: block;
+      }
 
 
         .pet-item:hover {
@@ -1027,7 +1029,6 @@
         <!-- Top Links -->
         <div class="top-links">
             <a href="ownerHome.html" class="loading-link"><i class="fas fa-home deactive"></i></a>
-            <a href="ownerMarket.html" class="loading-link"><i class="fas fa-store deactive"></i></a>
             <a href="ownerVet.html" class="loading-link"><i class="fas fa-stethoscope active"></i></a>
             <a href="ownerCommunity.html" class="loading-link"><i class="fas fa-users deactive"></i></a>
         </div>
@@ -1380,17 +1381,6 @@
     });
     </script>
     <script>
-$(document).ready(function() {
-    $.get('phpFile/globalSide/getSessionInfo.php', function(res) {
-        if (typeof res === 'string') res = JSON.parse(res);
-        if (res.status === 'success' && res.role === 'user' && res.user) {
-            let img = res.user.user_img ? `media/images/profiles/${res.user.user_img}` : 'media/images/default-profile.png';
-            $('#sideProfile').attr('src', img);
-        } else {
-            $('#sideProfile').attr('src', 'media/images/default-profile.png');
-        }
-    });
-});
 </script>
 <script>
 $(document).ready(function() {
@@ -1423,6 +1413,7 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>
 </body>
 </html>

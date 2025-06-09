@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>OnlyPets | Reset Password</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Your CSS -->
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="container" style="background: #38b6ff; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
@@ -21,7 +21,6 @@
             <label for="confirmPass" class="fw-bold">Confirm Password</label>
             <input type="password" id="confirmPass" class="form-control" placeholder="Confirm new password">
         </div>
-        <!-- Place this inside your form, replacing the old checklist -->
         <div class="password-checklist mb-3 mt-2 p-3">
             <div class="checklist-item" id="item-length">
                 <i class="fa fa-circle-xmark text-danger me-2" id="chk-length"></i>
@@ -52,7 +51,6 @@
         <div id="resetError" class="text-danger text-center" style="display:none;"></div>
     </div>
 
-    <!-- Bootstrap & FontAwesome CDN for icons and styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
@@ -87,11 +85,9 @@
             align-items: center;
             margin-bottom: 2px;
         }
-        /* Add this to your <style> section */
         .password-checklist {
             display: none;
         }
-        /* Add to your <style> section */
         #submitNewPassword {
             position: relative;
         }
@@ -112,7 +108,6 @@
     </style>
 
     <script>
-        // Extract email and token from URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -121,11 +116,9 @@
         const email = getQueryParam('email');
         const token = getQueryParam('token');
 
-        // Live password checklist
         $('#newPass').on('input', function () {
             const pass = $(this).val();
 
-            // Show checklist if user types at least 1 character, else hide
             if (pass.length > 0) {
                 $('.password-checklist').show();
             } else {
@@ -143,7 +136,6 @@
             const newPass = $('#newPass').val();
             const confirmPass = $('#confirmPass').val();
 
-            // Password validation
             if (!newPass || !confirmPass) {
                 $('#resetError').text("Please fill out both fields.").show();
                 return;
@@ -165,7 +157,6 @@
                 return;
             }
 
-            // Show spinner and disable button
             $('#submitNewPassword .btn-text').text('Submitting...');
             $('#submitNewPassword .spinner-border').removeClass('d-none');
             $('#submitNewPassword .error-x').addClass('d-none');
@@ -186,7 +177,7 @@
                         $('#submitNewPassword .btn-text').text('Submit');
                         $('#submitNewPassword').prop('disabled', false);
                         alert(res.message);
-                        window.location.href = 'index.html'; // redirect to login
+                        window.location.href = 'index.html';
                     } else {
                         $('#submitNewPassword .btn-text').text('Error');
                         $('#submitNewPassword .error-x').removeClass('d-none');

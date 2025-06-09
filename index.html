@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="cssFile/userSide/logIn.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
-        /* Animation for exit transitions */
         .exit {
             opacity: 0;
             transform: scale(0.9);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
-        /* Style for the collapsible section */
         #forgotPasswordCollapse {
             overflow: hidden;
             transition: max-height 0.3s ease, opacity 0.3s ease;
@@ -29,7 +27,6 @@
             opacity: 1;
         }
 
-        /* Input with button inside */
         .input-with-icon {
             position: relative;
         }
@@ -61,7 +58,6 @@
             transform: translateY(-50%) scale(0.95);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        /* Add to your <style> section */
         .btn-icon {
             display: flex;
             align-items: center;
@@ -136,7 +132,6 @@
                             <span class="error-x d-none"><i class="fas fa-times text-danger"></i></span>
                         </button>
                     </div>                 
-                    <!-- Forgot Password & Don't have an account Links -->
                     <div class="w-75">
                         <a href="#" class="d-block mb-2 mt-5" id="forgotPasswordLink">Forgot Password?</a>
                         <div id="forgotPasswordCollapse" class="mt-3">
@@ -150,6 +145,7 @@
                             </div>
                         </div>
                         <a href="signUp.html" class="d-block">Don't have an account? Sign Up</a>
+                        <a href="vetSignUp.html" class="d-block mt-3">Vet Sign Up?</a>
                     </div>
                 </div>
                 <img src="media/images/utilities/paw.png" alt="Paw Image" class="paw">
@@ -165,22 +161,17 @@
         $('#submitForgotPassword').click(function () {
             var $btn = $(this);
             var $icon = $btn.find('.btn-icon');
-            // Show spinner
             $icon.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
             $btn.prop('disabled', true);
 
-            // Simulate async (replace with your AJAX)
             setTimeout(function () {
-                // Show check
                 $icon.html('<i class="fas fa-check" style="color:white"></i>');
                 setTimeout(function () {
-                    // Restore paper plane after 1s and enable button
                     $icon.html('<i class="fas fa-paper-plane"></i>');
                     $btn.prop('disabled', false);
                 }, 2500);
-            }, 1500); // Simulate 1.5s loading
+            }, 1500);
         });
-        // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordField = document.getElementById('indexPass');
             const icon = this.querySelector('i');
@@ -189,9 +180,7 @@
             icon.classList.toggle('fa-eye-slash');
         });
 
-        // Add exit animation on login button click
 
-        // Toggle forgot password section
         document.getElementById('forgotPasswordLink').addEventListener('click', function (e) {
             e.preventDefault();
             document.getElementById('forgotPasswordCollapse').classList.toggle('active');
@@ -205,10 +194,8 @@
         $btn.find('.checkmark').addClass('d-none');
         $btn.find('.error-x').addClass('d-none');
 
-        // Simulate AJAX (replace with your real AJAX)
         setTimeout(function () {
-            // Simulate login result
-            var isSuccess = true; // Change to true to simulate success
+            var isSuccess = true;
 
             $btn.find('.spinner-border').addClass('d-none');
             if (isSuccess) {
@@ -218,7 +205,6 @@
                     $btn.find('.checkmark').addClass('d-none');
                     $btn.find('.btn-text').text('Log in');
                     $btn.prop('disabled', false);
-                    // window.location.href = 'yourHomePage.html'; // Uncomment for redirect
                 }, 2000);
             } else {
                 $btn.find('.error-x').removeClass('d-none');

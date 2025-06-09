@@ -667,13 +667,15 @@
             object-fit: cover;
         }
 
-        .pet-img-profile {
-            width: 90%;
-            height: 90%;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-left: 3px;
-        }
+      .pet-img-profile {
+        margin-left: 3px;
+        width: 90%;
+        height: 90%;
+        border-radius: 50%;
+        object-fit: cover;
+        aspect-ratio: 1 / 1; /* Ensures width and height are always equal */
+        display: block;
+      }
 
 
         .pet-item:hover {
@@ -999,7 +1001,9 @@
         </div>
     
         <!-- Bottom Icon -->
-        <a href="ownerProfile.html" class="bottom-icon pet-item-profile"><img src="media/images/petPics/retriever.jpg" alt="Pet 1" class="pet-img-profile me-2"></a>
+      <a href="ownerProfile.html" class="bottom-icon pet-item-profile"
+        ><img src="" id="sideProfile" alt="Pet 1" class="pet-img-profile me-2"
+      /></a>
     </div>
     
     
@@ -1796,7 +1800,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <script src="jsFile/globalSide/getSessionInfo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
     // JS for the loading page
@@ -1926,7 +1930,17 @@
                 .bindPopup(popupContent);
         });
     
-
+$(document).ready(function() {
+    $.get('phpFile/globalSide/getSessionInfo.php', function(res) {
+        if (typeof res === 'string') res = JSON.parse(res);
+        if (res.status === 'success' && res.role === 'user' && res.user) {
+            let img = res.user.user_img ? `media/images/profiles/${res.user.user_img}` : 'media/images/default-profile.png';
+            $('#sideProfile').attr('src', img);
+        } else {
+            $('#sideProfile').attr('src', 'media/images/default-profile.png');
+        }
+    });
+});
 
     // JS for the Side Bar ------------------------------------------------------
     </script>

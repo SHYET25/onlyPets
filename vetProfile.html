@@ -84,8 +84,8 @@
     $(document).ready(function() {
         $.get('phpFile/globalSide/getSessionInfo.php', function(res) {
             if (typeof res === 'string') res = JSON.parse(res);
-            if (res.status === 'success' && res.role === 'veterinarian' && res.vet) {
-                const vet = res.vet;
+            if (res.status === 'success' && res.role === 'veterinarian' && res.data) {
+                const vet = res.data;
                 $('#vetProfileImg').attr('src', vet.vet_img ? 'media/images/profiles/' + vet.vet_img : 'media/images/default-profile.png');
                 $('#vetProfileName').text('Dr. ' + vet.vet_fname + ' ' + vet.vet_lname);
                 $('#vetProfileLicense').text('License: ' + (vet.vet_license || 'N/A'));

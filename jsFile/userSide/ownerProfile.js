@@ -1671,4 +1671,3 @@ $(document).on('click', '.view-pet-details-btn', function() {
   });
 });
 
-
